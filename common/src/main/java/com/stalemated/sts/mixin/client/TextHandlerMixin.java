@@ -3,7 +3,7 @@ package com.stalemated.sts.mixin.client;
 
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.util.TooltipTextUtil;
+import com.stalemated.sts.util.TooltipWrapUtil;
 import net.minecraft.client.font.TextHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,6 +31,6 @@ public abstract class TextHandlerMixin {
 
     @Unique
     private boolean rst$wrappingConditions() {
-        return TooltipDimensionManager.isCurrentTooltipItemTooltip && ConfigManager.getConfig().custom_tooltip_dimensions && !TooltipTextUtil.isHandlingCustomWrap;
+        return TooltipDimensionManager.isCurrentTooltipItemTooltip && ConfigManager.getConfig().custom_tooltip_dimensions && !TooltipWrapUtil.isHandlingCustomWrap;
     }
 }

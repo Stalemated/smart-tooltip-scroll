@@ -1,7 +1,7 @@
 package com.stalemated.sts.resize.overflow.strategies;
 
+import com.stalemated.lib.util.style.TooltipStyleUtils;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategy;
-import com.stalemated.sts.util.TooltipTextUtil;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.text.MutableText;
@@ -41,13 +41,13 @@ public class TruncateOverflowStrategy implements TitleOverflowStrategy {
         }
 
         TooltipComponent titleComponent = components.get(0);
-        Optional<OrderedText> extracted = TooltipTextUtil.getExtractedTextValue(titleComponent);
+        Optional<OrderedText> extracted = TooltipStyleUtils.getExtractedTextValue(titleComponent);
 
         if (extracted.isPresent()) {
             OrderedText value = extracted.get();
 
             if (textRenderer.getWidth(value) > maxTitleWidth) {
-                MutableText mutable = TooltipTextUtil.convertOrderedTextToMutable(value);
+                MutableText mutable = TooltipStyleUtils.convertOrderedTextToMutable(value);
                 List<TooltipComponent> mutableComponents = new ArrayList<>(components);
 
                 mutableComponents.set(0, TooltipComponent.of(truncateTitle(mutable, textRenderer, maxTitleWidth).asOrderedText()));
@@ -64,7 +64,7 @@ public class TruncateOverflowStrategy implements TitleOverflowStrategy {
         int availableWidth = Math.max(indicatorWidth, maxWidth - indicatorWidth - SCROLLBAR_WIDTH);
 
         StringVisitable truncated = textRenderer.trimToWidth(title, availableWidth);
-        MutableText rebuilt = TooltipTextUtil.preserveStyles(truncated);
+        MutableText rebuilt = TooltipStyleUtils.preserveStyles(truncated);
 
         rebuilt.append(Text.literal(truncatedIndicator).setStyle(title.getStyle()));
         return rebuilt;

@@ -2,13 +2,14 @@ package com.stalemated.sts.resize;
 
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.lib.helper.PlatformHelper;
+import com.stalemated.lib.util.style.TooltipStyleUtils;
 import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.config.STSConfig;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.scroll.components.ScrollableTooltipComponent;
-import com.stalemated.sts.util.TooltipTextUtil;
+import com.stalemated.sts.util.TooltipWrapUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -113,7 +114,7 @@ public class TooltipDimensionManager {
             pinned = TitleOverflowStrategyFactory.getStrategy().processComponentPhase(pinned, currentTextRenderer, titleMaxWidth);
             processedTitleComponentList = new ArrayList<>(pinned);
             // Two-pass approach: not discounting the scrollbar's width
-            scrollableContent = TooltipTextUtil.wrapComponents(scrollableContentRaw, scaledTooltipWidth, currentTextRenderer, false);
+            scrollableContent = TooltipWrapUtil.wrapComponents(scrollableContentRaw, scaledTooltipWidth, currentTextRenderer, false);
         }
 
         List<TooltipComponent> combined = new ArrayList<>();
@@ -128,7 +129,7 @@ public class TooltipDimensionManager {
             }
 
             // 2nd pass: discounts the scrollbar width
-            scrollableContent = TooltipTextUtil.wrapComponents(scrollableContentRaw, scaledTooltipWidth - ScrollableTooltipComponent.SCROLLBAR_WIDTH, currentTextRenderer, false);
+            scrollableContent = TooltipWrapUtil.wrapComponents(scrollableContentRaw, scaledTooltipWidth - ScrollableTooltipComponent.SCROLLBAR_WIDTH, currentTextRenderer, false);
 
             int pinnedHeight = 0;
             if (pinnedHeightPredictor != null) {
@@ -161,7 +162,7 @@ public class TooltipDimensionManager {
         if (expectedTitleString != null && !expectedTitleString.isEmpty()) {
             StringBuilder accumulated = new StringBuilder();
             for (int i = 0; i < components.size(); i++) {
-                accumulated.append(TooltipTextUtil.getComponentString(components.get(i)).replace(" ", ""));
+                accumulated.append(TooltipStyleUtils.getComponentString(components.get(i)).replace(" ", ""));
                 if (accumulated.length() >= expectedTitleString.length()) {
                     splitIndex = i + 1;
                     break;

@@ -6,7 +6,6 @@
     "DrawContextMixin",
     "MouseMixin",
     "TextHandlerMixin",
-    "accessor.OrderedTextTooltipComponentAccessor",
     "compat.iceberg.IcebergTooltipsMixin"
   ],
   "injectors": {

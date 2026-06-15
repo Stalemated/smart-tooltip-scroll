@@ -1,9 +1,9 @@
 package com.stalemated.sts.fabric.compat.component;
 
 import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
+import com.stalemated.lib.component.IndentedTextTooltipComponent;
 import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.resize.components.IndentedTextTooltipComponent;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;

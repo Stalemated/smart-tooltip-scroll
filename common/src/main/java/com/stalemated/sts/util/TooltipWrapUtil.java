@@ -1,11 +1,11 @@
 package com.stalemated.sts.util;
 
+import com.stalemated.lib.component.IndentedTextTooltipComponent;
 import com.stalemated.lib.helper.PlatformHelper;
+import com.stalemated.lib.util.style.TooltipStyleUtils;
 import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.resize.components.IndentedTextTooltipComponent;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.mixin.client.accessor.OrderedTextTooltipComponentAccessor;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.text.*;
@@ -14,77 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
-public class TooltipTextUtil {
+public class TooltipWrapUtil {
     public static boolean isHandlingCustomWrap = false;
-
-    private static class StyleAccumulator {
-        private final MutableText result = Text.empty();
-        private final StringBuilder currentText = new StringBuilder();
-        private Style currentStyle = Style.EMPTY;
-
-        void append(Style style, String text) {
-            flushIfStyleChanged(style);
-            currentText.append(text);
-        }
-
-        void append(Style style, int codePoint) {
-            flushIfStyleChanged(style);
-            currentText.appendCodePoint(codePoint);
-        }
-
-        private void flushIfStyleChanged(Style newStyle) {
-            if (!newStyle.equals(currentStyle) && !currentText.isEmpty()) {
-                result.append(Text.literal(currentText.toString()).setStyle(currentStyle));
-                currentText.setLength(0);
-            }
-            currentStyle = newStyle;
-        }
-
-        MutableText build() {
-            if (!currentText.isEmpty()) {
-                result.append(Text.literal(currentText.toString()).setStyle(currentStyle));
-                currentText.setLength(0);
-            }
-            return result;
-        }
-    }
-
-    public static MutableText preserveStyles(StringVisitable visitable) {
-        StyleAccumulator acc = new StyleAccumulator();
-        visitable.visit((style, string) -> {
-            acc.append(style, string);
-            return Optional.empty();
-        }, Style.EMPTY);
-        return acc.build();
-    }
-
-    public static MutableText convertOrderedTextToMutable(OrderedText orderedText) {
-        StyleAccumulator acc = new StyleAccumulator();
-        orderedText.accept((index, style, codePoint) -> {
-            acc.append(style, codePoint);
-            return true;
-        });
-        return acc.build();
-    }
-
-    public static Optional<OrderedText> getExtractedTextValue(TooltipComponent comp) {
-        if (comp instanceof OrderedTextTooltipComponentAccessor accessor) {
-            return Optional.ofNullable(accessor.getText());
-        }
-        return Optional.empty();
-    }
-
-    public static String getComponentString(TooltipComponent comp) {
-        StringBuilder sb = new StringBuilder();
-        Optional<OrderedText> extracted = TooltipTextUtil.getExtractedTextValue(comp);
-
-        extracted.ifPresent(value -> value.accept((index, style, codePoint) -> {
-            sb.appendCodePoint(codePoint);
-            return true;
-        }));
-        return sb.toString();
-    }
 
     public static List<TooltipComponent> wrapComponents(List<TooltipComponent> components, int targetWidth, TextRenderer textRenderer, boolean isTitle) {
         List<TooltipComponent> wrappedComponents = new ArrayList<>();
@@ -93,13 +24,13 @@ public class TooltipTextUtil {
             boolean wrappedFallback = false;
 
             if (textRenderer != null) {
-                Optional<OrderedText> extracted = getExtractedTextValue(comp);
+                Optional<OrderedText> extracted = TooltipStyleUtils.getExtractedTextValue(comp);
 
                 if (extracted.isPresent()) {
                     OrderedText value = extracted.get();
 
                     if (textRenderer.getWidth(value) > targetWidth) {
-                        MutableText mutable = convertOrderedTextToMutable(value);
+                        MutableText mutable = TooltipStyleUtils.convertOrderedTextToMutable(value);
                         wrappedFallback = handleCustomWrap(targetWidth, textRenderer, wrappedComponents, mutable, isTitle);
                     }
                 }
@@ -123,7 +54,7 @@ public class TooltipTextUtil {
             int currentOffset = 0;
             if (isTitle) {
                 if (i == 0) {
-                    if (convertOrderedTextToMutable(w).getString().isBlank()) {
+                    if (TooltipStyleUtils.convertOrderedTextToMutable(w).getString().isBlank()) {
                         continue;
                     }
                 } else {

@@ -30,7 +30,7 @@ ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.smart_tooltip_scroll]]
-modId = "s-lib"
+modId = "s_lib"
 mandatory = true
 versionRange = "[0.0.1,)"
 ordering = "AFTER"

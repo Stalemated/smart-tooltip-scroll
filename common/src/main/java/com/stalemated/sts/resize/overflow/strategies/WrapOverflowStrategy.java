@@ -1,7 +1,7 @@
 package com.stalemated.sts.resize.overflow.strategies;
 
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategy;
-import com.stalemated.sts.util.TooltipTextUtil;
+import com.stalemated.sts.util.TooltipWrapUtil;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.text.Text;
@@ -20,6 +20,6 @@ public class WrapOverflowStrategy implements TitleOverflowStrategy {
         if (components.isEmpty() || textRenderer == null) {
             return components;
         }
-        return TooltipTextUtil.wrapComponents(components, maxTitleWidth, textRenderer, true);
+        return TooltipWrapUtil.wrapComponents(components, maxTitleWidth, textRenderer, true);
     }
 }
