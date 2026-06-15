@@ -1,19 +1,19 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
-issueTrackerURL = "https://github.com/Stalemated/custom-tooltip-api/issues"
+issueTrackerURL = "https://github.com/Stalemated/smart-tooltip-scroll/issues"
 license = "MIT"
 clientSideOnly = true
 
 [[mods]]
 modId = "smart_tooltip_scroll"
 version = "${version}"
-displayName = "Resized Scrollable Tooltips"
+displayName = "Smart Tooltip Scroll"
 authors = "Stalemated"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Dynamically resizes and scrolls oversized tooltips while keeping the item title anchored.
 '''
-logoFile = "META-INF/icon.jpg"
-displayURL = "https://www.curseforge.com/minecraft/mc-mods/custom-tooltip-api"
+logoFile = "META-INF/icon.png"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/smart-tooltip-scroll"
 
 [[dependencies.smart_tooltip_scroll]]
 modId = "forge"

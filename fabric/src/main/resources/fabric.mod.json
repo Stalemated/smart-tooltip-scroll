@@ -3,17 +3,17 @@
   "id": "smart_tooltip_scroll",
   "version": "${version}",
   "name": "Smart Tooltip Scroll",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Dynamically resizes and scrolls oversized tooltips while keeping the item title anchored.",
   "authors": [
     "Stalemated"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/custom-tooltip-api",
-    "sources": "https://github.com/Stalemated/custom-tooltip-api",
-    "issues": "https://github.com/Stalemated/custom-tooltip-api/issues"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/smart-tooltip-scroll",
+    "sources": "https://github.com/Stalemated/smart-tooltip-scroll",
+    "issues": "https://github.com/Stalemated/smart-tooltip-scroll/issues"
   },
   "license": "MIT",
-  "icon": "icon.jpg",
+  "icon": "icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
