@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/resized_scrollable_tooltips.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/resized_scrollable_tooltips.fabric.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/resized_scrollable_tooltips.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/resized_scrollable_tooltips.fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge/resized_scrollable_tooltips.forge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/forge/resized_scrollable_tooltips.forge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge/resized_scrollable_tooltips.forge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/forge/resized_scrollable_tooltips.forge.test.iml" />
+    </modules>
+  </component>
+</project>

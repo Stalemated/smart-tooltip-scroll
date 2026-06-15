@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "resized_scrollable_tooltips",
+  "version": "${version}",
+  "name": "Resized Scrollable Tooltips",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Stalemated"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/custom-tooltip-api",
+    "sources": "https://github.com/Stalemated/custom-tooltip-api",
+    "issues": "https://github.com/Stalemated/custom-tooltip-api/issues"
+  },
+  "license": "MIT",
+  "icon": "icon.jpg",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.stalemated.rst.fabric.ResizedScrollableTooltipsFabric"
+    ],
+    "modmenu": [
+      "com.stalemated.rst.fabric.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "rst.mixins.json",
+    "rst-fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*",
+    "yet_another_config_lib_v3": ">=3.6.2"
+  }
+}

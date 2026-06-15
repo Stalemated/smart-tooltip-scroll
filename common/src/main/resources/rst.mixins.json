@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.stalemated.rst.mixin.client",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "DrawContextMixin",
+    "MouseMixin",
+    "TextHandlerMixin",
+    "accessor.OrderedTextTooltipComponentAccessor",
+    "compat.iceberg.IcebergTooltipsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
