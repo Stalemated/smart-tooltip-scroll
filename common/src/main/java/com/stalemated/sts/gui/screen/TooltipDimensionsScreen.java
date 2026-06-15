@@ -17,9 +17,9 @@ public class TooltipDimensionsScreen {
         STSConfig config = ConfigManager.getConfig();
 
         return YetAnotherConfigLib.createBuilder()
-                .title(Text.translatable("customtooltips.tooltip_dimensions_screen.title"))
+                .title(Text.translatable("sts.tooltip_dimensions_screen.title"))
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.translatable("customtooltips.tooltip_dimensions_screen.title"))
+                        .name(Text.translatable("sts.tooltip_dimensions_screen.title"))
                         .group(createCustomDimensionsGroup(config))
                         .group(createScrollingGroup(config))
                         .build())
@@ -30,8 +30,8 @@ public class TooltipDimensionsScreen {
 
     private static OptionGroup createCustomDimensionsGroup(STSConfig config) {
         var maxWidth = Option.<Integer>createBuilder()
-                .name(Text.translatable("customtooltips.tooltip_dimensions_screen.max_width_percentage"))
-                .description(OptionDescription.of(Text.translatable("customtooltips.tooltip_dimensions_screen.max_width_percentage.description")))
+                .name(Text.translatable("sts.tooltip_dimensions_screen.max_width_percentage"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.max_width_percentage.description")))
                 .binding(
                         50,
                         () -> config.max_width_percentage,
@@ -43,8 +43,8 @@ public class TooltipDimensionsScreen {
                 .build();
 
         var maxHeight = Option.<Integer>createBuilder()
-                .name(Text.translatable("customtooltips.tooltip_dimensions_screen.max_height_percentage"))
-                .description(OptionDescription.of(Text.translatable("customtooltips.tooltip_dimensions_screen.max_height_percentage.description")))
+                .name(Text.translatable("sts.tooltip_dimensions_screen.max_height_percentage"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.max_height_percentage.description")))
                 .binding(
                         50,
                         () -> config.max_height_percentage,
@@ -56,8 +56,8 @@ public class TooltipDimensionsScreen {
                 .build();
 
         var enableCustomDimensions = Option.<Boolean>createBuilder()
-                .name(Text.translatable("customtooltips.tooltip_dimensions_screen.enable_custom_dimensions"))
-                .description(OptionDescription.of(Text.translatable("customtooltips.tooltip_dimensions_screen.enable_custom_dimensions.description")))
+                .name(Text.translatable("sts.tooltip_dimensions_screen.enable_custom_dimensions"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.enable_custom_dimensions.description")))
                 .binding(
                         false,
                         () -> config.custom_tooltip_dimensions,
@@ -67,19 +67,19 @@ public class TooltipDimensionsScreen {
                 .build();
 
         var titleOverflowMode = Option.<TitleOverflowMode>createBuilder()
-                .name(Text.translatable("customtooltips.tooltip_dimensions_screen.title_overflow_mode"))
-                .description(OptionDescription.of(Text.translatable("customtooltips.tooltip_dimensions_screen.title_overflow_mode.description")))
+                .name(Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode.description")))
                 .binding(
                         TitleOverflowMode.SCROLL,
                         () -> config.title_overflow_mode,
                         val -> config.title_overflow_mode = val
                 )
                 .controller(opt -> SimpleEnumDropdownControllerBuilder.create(opt)
-                        .formatValue(mode -> Text.translatable("customtooltips.tooltip_dimensions_screen.title_overflow_mode." + mode.name().toLowerCase())))
+                        .formatValue(mode -> Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode." + mode.name().toLowerCase())))
                 .build();
 
         return OptionGroup.createBuilder()
-                .name(Text.translatable("customtooltips.tooltip_dimensions_screen.category.custom_dimensions"))
+                .name(Text.translatable("sts.tooltip_dimensions_screen.category.custom_dimensions"))
                 .option(enableCustomDimensions)
                 .option(maxHeight)
                 .option(maxWidth)
@@ -89,10 +89,10 @@ public class TooltipDimensionsScreen {
 
     private static OptionGroup createScrollingGroup(STSConfig config) {
         var lockContainerScrolling = Option.<Boolean>createBuilder()
-                .name(Text.translatable("customtooltips.tooltip_dimensions_screen.lock_container_scrolling"))
+                .name(Text.translatable("sts.tooltip_dimensions_screen.lock_container_scrolling"))
                 .description(OptionDescription.of(
-                        Text.translatable("customtooltips.tooltip_dimensions_screen.lock_container_scrolling.description"),
-                        Text.translatable("customtooltips.tooltip_dimensions_screen.lock_container_scrolling.warning")
+                        Text.translatable("sts.tooltip_dimensions_screen.lock_container_scrolling.description"),
+                        Text.translatable("sts.tooltip_dimensions_screen.lock_container_scrolling.warning")
                 ))
                 .binding(
                         true,
@@ -103,7 +103,7 @@ public class TooltipDimensionsScreen {
                 .build();
 
         return OptionGroup.createBuilder()
-                .name(Text.translatable("customtooltips.tooltip_dimensions_screen.category.scrolling"))
+                .name(Text.translatable("sts.tooltip_dimensions_screen.category.scrolling"))
                 .option(lockContainerScrolling)
                 .build();
     }
