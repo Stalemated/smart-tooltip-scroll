@@ -2,6 +2,7 @@ package com.stalemated.sts.resize;
 
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.lib.helper.PlatformHelper;
+import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.lib.util.style.TooltipStyleUtils;
 import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
@@ -69,7 +70,7 @@ public class TooltipDimensionManager {
     }
 
     public static List<Text> enforceWidthLimit(List<Text> text) {
-        isCurrentTooltipItemTooltip = nextTooltipIsItem;
+        isCurrentTooltipItemTooltip = SharedTooltipState.forceCustomDimensions || nextTooltipIsItem;
         nextTooltipIsItem = false;
 
         if (!config.custom_tooltip_dimensions || !isCurrentTooltipItemTooltip || text.isEmpty()) {
