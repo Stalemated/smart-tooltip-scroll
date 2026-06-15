@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'resized_scrollable_tooltips'
+rootProject.name = 'smart-tooltip-scroll'
 
 include 'common'
 include 'fabric'

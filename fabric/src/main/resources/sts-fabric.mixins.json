@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.stalemated.sts.fabric.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "com.stalemated.sts.fabric.mixin.compat.TierifyCompatPlugin",
+  "client": [
+    "com.stalemated.sts.fabric.mixin.compat.tierify.TieredTooltipMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -5,7 +5,7 @@ license = "MIT"
 clientSideOnly = true
 
 [[mods]]
-modId = "resized_scrollable_tooltips"
+modId = "smart_tooltip_scroll"
 version = "${version}"
 displayName = "Resized Scrollable Tooltips"
 authors = "Stalemated"
@@ -15,21 +15,28 @@ This is an example description! Tell everyone what your mod is about!
 logoFile = "META-INF/icon.jpg"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/custom-tooltip-api"
 
-[[dependencies.resized_scrollable_tooltips]]
+[[dependencies.smart_tooltip_scroll]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "CLIENT"
 
-[[dependencies.resized_scrollable_tooltips]]
+[[dependencies.smart_tooltip_scroll]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "CLIENT"
 
-[[dependencies.resized_scrollable_tooltips]]
+[[dependencies.smart_tooltip_scroll]]
+modId = "s-lib"
+mandatory = true
+versionRange = "[3.6.2,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.smart_tooltip_scroll]]
 modId = "yet_another_config_lib_v3"
 mandatory = true
 versionRange = "[3.6.2,)"

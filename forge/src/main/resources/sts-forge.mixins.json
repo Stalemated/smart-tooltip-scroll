@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.stalemated.sts.forge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "rst-forge.refmap.json",
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

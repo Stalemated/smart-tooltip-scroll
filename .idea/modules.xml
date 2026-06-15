@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/resized_scrollable_tooltips.common.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/resized_scrollable_tooltips.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/resized_scrollable_tooltips.fabric.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/resized_scrollable_tooltips.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/resized_scrollable_tooltips.fabric.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge/resized_scrollable_tooltips.forge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/forge/resized_scrollable_tooltips.forge.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge/resized_scrollable_tooltips.forge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/forge/resized_scrollable_tooltips.forge.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/smart-tooltip-scroll.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/smart-tooltip-scroll.fabric.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/smart-tooltip-scroll.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/smart-tooltip-scroll.fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge/smart-tooltip-scroll.forge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/forge/smart-tooltip-scroll.forge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge/smart-tooltip-scroll.forge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/forge/smart-tooltip-scroll.forge.test.iml" />
     </modules>
   </component>
 </project>

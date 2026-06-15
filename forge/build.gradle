@@ -4,11 +4,11 @@ plugins {
 
 loom {
     forge {
-        mixinConfig "rst.mixins.json"
-        mixinConfig "rst-forge.mixins.json"
+        mixinConfig "sts.mixins.json"
+        mixinConfig "sts-forge.mixins.json"
     }
     mixin {
-        defaultRefmapName = "rst-forge.refmap.json"
+        defaultRefmapName = "sts-forge.refmap.json"
     }
 }
 
@@ -37,8 +37,8 @@ configurations {
 dependencies {
     forge "net.minecraftforge:forge:$rootProject.forge_version"
 
-    // StaleLib common code
-    modImplementation("com.stalemated.lib:stalelib-forge:${rootProject.stalelib_version}")
+    // S-Lib common code
+    modImplementation("com.stalemated.lib:s-lib-forge:${rootProject.s_lib_version}")
 
     // YACL
     modImplementation "dev.isxander:yet-another-config-lib:${rootProject.yacl_version}-forge"
