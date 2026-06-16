@@ -26,13 +26,13 @@ import java.util.List;
 public abstract class TieredTooltipMixin {
 
     @Inject(method = "renderTieredTooltipFromComponents", at = @At("HEAD"))
-    private static void customtooltips$captureContext(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
+    private static void rst$captureContext(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
         TooltipDimensionManager.setState(context, textRenderer);
         TooltipDimensionManager.isCurrentTooltipItemTooltip = true;
     }
 
     @ModifyVariable(method = "renderTieredTooltipFromComponents", at = @At("HEAD"), index = 2, argsOnly = true)
-    private static List<TooltipComponent> customtooltips$applyDimensions(List<TooltipComponent> components) {
+    private static List<TooltipComponent> rst$applyDimensions(List<TooltipComponent> components) {
         List<TooltipComponent> processedList = components;
         boolean hasLT = FabricLoader.getInstance().isModLoaded("legendarytooltips");
 
@@ -53,15 +53,15 @@ public abstract class TieredTooltipMixin {
         return processedList;
     }
 
-    @Inject(method = "renderTooltipBackground", at = @At("HEAD"))
-    private static void customtooltips$overrideTierifyBackground(DrawContext context, int x, int y, int width, int height, int z, int backgroundColor, int colorStart, int colorEnd, CallbackInfo ci) {
+    @Inject(method = "renderTooltipBackground", at = @At("HEAD"), order = 900)
+    private static void rst$getTooltipPosition(DrawContext context, int x, int y, int width, int height, int z, int backgroundColor, int colorStart, int colorEnd, CallbackInfo ci) {
         if (FabricLoader.getInstance().isModLoaded("legendarytooltips")) {
             TierifyLegendaryBridge.setTooltipPosition(x, y, width);
         }
     }
 
-    @Inject(method = "renderTieredTooltipFromComponents", at = @At("TAIL"))
-    private static void customtooltips$clearContext(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
+    @Inject(method = "renderTieredTooltipFromComponents", at = @At("TAIL"), order = 900)
+    private static void rst$clearContext(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
         if (FabricLoader.getInstance().isModLoaded("legendarytooltips")) {
             TierifyLegendaryBridge.drawSeparator(context, components);
         }
