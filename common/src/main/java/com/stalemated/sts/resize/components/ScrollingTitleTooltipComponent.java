@@ -16,7 +16,6 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
     private final int maxTitleWidth;
     private static final double SCROLL_SPEED = 25.0;
     private static final long PAUSE_MS = 2000L;
-    private static final int offset = LegendaryTooltipsCompat.getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack());
     public static boolean isTierifyTooltip = false;
 
     public ScrollingTitleTooltipComponent(OrderedText text, int maxTitleWidth) {
@@ -33,6 +32,7 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
     @Override
     public int getWidth(TextRenderer textRenderer) {
         int textWidth = textRenderer.getWidth(this.text);
+        int offset = LegendaryTooltipsCompat.getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack());
         return Math.min(textWidth, this.maxTitleWidth + (isTierifyTooltip ? 0 : offset));
     }
 
@@ -43,6 +43,8 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
             textRenderer.draw(this.text, (float) x, (float) y, -1, true, matrix, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
             return;
         }
+
+        int offset = LegendaryTooltipsCompat.getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack());
         int overflowWidth = isTierifyTooltip ? textWidth - this.maxTitleWidth : textWidth - this.maxTitleWidth - offset;
         int identity = getStringFromOrderedText(this.text).hashCode();
         long elapsedTime = ScrollMathUtil.getTooltipElapsedTime(identity);
