@@ -1,14 +1,16 @@
 package com.stalemated.sts.resize.components;
 
 import com.stalemated.sts.compat.LegendaryTooltipsCompat;
+import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.render.VertexConsumerProvider;
 import org.joml.Matrix4f;
 
 import java.util.List;
 
-public class WrappedTitleTooltipComponent implements TooltipComponent {
+public class WrappedTitleTooltipComponent implements TooltipComponent, StsManagedTitle {
 
     private final List<TooltipComponent> wrappedLines;
 
@@ -46,7 +48,7 @@ public class WrappedTitleTooltipComponent implements TooltipComponent {
     }
 
     @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, net.minecraft.client.gui.DrawContext context) {
+    public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
         int currentY = y;
         for (int i = 0; i < this.wrappedLines.size(); i++) {
             TooltipComponent line = this.wrappedLines.get(i);

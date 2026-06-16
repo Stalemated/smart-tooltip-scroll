@@ -2,6 +2,7 @@ package com.stalemated.sts.resize.components;
 
 import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
@@ -11,7 +12,7 @@ import net.minecraft.text.OrderedText;
 import org.joml.Matrix4f;
 import com.stalemated.lib.util.math.ScrollMathUtil;
 
-public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent implements TooltipComponent {
+public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent implements TooltipComponent, StsManagedTitle {
     private final OrderedText text;
     private final int maxTitleWidth;
     private static final double SCROLL_SPEED = 25.0;

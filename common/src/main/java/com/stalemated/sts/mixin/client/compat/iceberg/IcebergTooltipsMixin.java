@@ -1,6 +1,6 @@
 package com.stalemated.sts.mixin.client.compat.iceberg;
 
-import com.stalemated.sts.resize.components.ScrollingTitleTooltipComponent;
+import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public class IcebergTooltipsMixin {
     @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;I)Ljava/util/List;", at = @At("HEAD"), cancellable = true)
     private static void onCenterTitle(List<TooltipComponent> components, TextRenderer font, int width, CallbackInfoReturnable<List<TooltipComponent>> cir) {
         for (TooltipComponent comp : components) {
-            if (comp instanceof ScrollingTitleTooltipComponent) {
+            if (comp instanceof StsManagedTitle) {
                 cir.setReturnValue(new ArrayList<>(components));
                 return;
             }
@@ -29,7 +29,7 @@ public class IcebergTooltipsMixin {
     @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;II)Ljava/util/List;", at = @At("HEAD"), cancellable = true)
     private static void onCenterTitleWithLines(List<TooltipComponent> components, TextRenderer font, int width, int titleLines, CallbackInfoReturnable<List<TooltipComponent>> cir) {
         for (TooltipComponent comp : components) {
-            if (comp instanceof ScrollingTitleTooltipComponent) {
+            if (comp instanceof StsManagedTitle) {
                 cir.setReturnValue(new ArrayList<>(components));
                 return;
             }
