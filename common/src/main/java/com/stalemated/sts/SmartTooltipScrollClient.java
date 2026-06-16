@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 @Environment(EnvType.CLIENT)
 public final class SmartTooltipScrollClient {
-    public static final String MOD_ID = "resized_scrollable_tooltips";
+    public static final String MOD_ID = "smart_tooltip_scroll";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static void init() {
