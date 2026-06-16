@@ -1,5 +1,6 @@
 package com.stalemated.sts.mixin.client;
 
+import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import net.minecraft.client.font.TextRenderer;
@@ -30,7 +31,9 @@ public abstract class DrawContextMixin {
 
     @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"), argsOnly = true, index = 2)
     private List<TooltipComponent> rst$applyDimensionsHeight(List<TooltipComponent> components) {
-        if (ConfigManager.getConfig().custom_tooltip_dimensions && TooltipDimensionManager.isCurrentTooltipItemTooltip) {
+        boolean isValidTooltip = TooltipDimensionManager.isCurrentTooltipItemTooltip || SharedTooltipState.forceCustomDimensions;
+
+        if (ConfigManager.getConfig().custom_tooltip_dimensions && isValidTooltip) {
             return TooltipDimensionManager.enforceHeightLimit(components);
         }
         return components;
