@@ -27,4 +27,7 @@ dependencies {
     modCompileOnly "curse.maven:legendary-tooltips-fabric-542478:4940615"
     // Iceberg (IDE Common compat)
     modCompileOnly "curse.maven:iceberg-fabric-539382:5838145"
+
+    // EMI
+    modCompileOnly "dev.emi:emi-xplat-intermediary:${rootProject.emi_version}:api"
 }
