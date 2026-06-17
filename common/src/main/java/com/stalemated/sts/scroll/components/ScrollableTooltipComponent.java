@@ -11,8 +11,6 @@ import org.joml.Matrix4f;
 
 import java.util.List;
 
-import static com.stalemated.sts.resize.TooltipDimensionManager.TITLE_BODY_VERTICAL_GAP;
-
 public class ScrollableTooltipComponent implements TooltipComponent {
     private final List<TooltipComponent> components;
     private final int maxHeight;
@@ -68,7 +66,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
 
         int scroll = TooltipScrollManager.getScrollOffset();
         vertexConsumers.draw();
-        context.enableScissor(x, y - TITLE_BODY_VERTICAL_GAP, x + this.maxTextWidth, y + this.maxHeight);
+        context.enableScissor(x, y, x + this.maxTextWidth, y + this.maxHeight);
         int currentY = y - scroll;
 
         for (TooltipComponent component : components) {
@@ -84,7 +82,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
     public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
         int scroll = TooltipScrollManager.getScrollOffset();
 
-        context.enableScissor(x, y - TITLE_BODY_VERTICAL_GAP, x + this.maxTextWidth, y + this.maxHeight);
+        context.enableScissor(x, y, x + this.maxTextWidth, y + this.maxHeight);
         int currentY = y - scroll;
 
         for (TooltipComponent component : components) {

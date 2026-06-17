@@ -1,6 +1,5 @@
 package com.stalemated.sts.resize.components;
 
-import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -30,8 +29,8 @@ public class WrappedTitleTooltipComponent implements TooltipComponent, StsManage
     @Override
     public int getHeight() {
         int totalHeight = 0;
-        for (int i = 0; i < this.wrappedLines.size(); i++) {
-            totalHeight += this.wrappedLines.get(i).getHeight() + TooltipDimensionManager.getPaddingOffset(i, this.wrappedLines.size());
+        for (TooltipComponent wrappedLine : this.wrappedLines) {
+            totalHeight += wrappedLine.getHeight();
         }
         return totalHeight;
     }
@@ -39,22 +38,18 @@ public class WrappedTitleTooltipComponent implements TooltipComponent, StsManage
     @Override
     public void drawText(TextRenderer textRenderer, int x, int y, Matrix4f matrix, VertexConsumerProvider.Immediate vertexConsumers) {
         int currentY = y;
-        for (int i = 0; i < this.wrappedLines.size(); i++) {
-            TooltipComponent line = this.wrappedLines.get(i);
-
+        for (TooltipComponent line : this.wrappedLines) {
             line.drawText(textRenderer, x, currentY, matrix, vertexConsumers);
-            currentY += line.getHeight() + TooltipDimensionManager.getPaddingOffset(i, this.wrappedLines.size());
+            currentY += line.getHeight();
         }
     }
 
     @Override
     public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
         int currentY = y;
-        for (int i = 0; i < this.wrappedLines.size(); i++) {
-            TooltipComponent line = this.wrappedLines.get(i);
-
+        for (TooltipComponent line : this.wrappedLines) {
             line.drawItems(textRenderer, x, currentY, context);
-            currentY += line.getHeight() + TooltipDimensionManager.getPaddingOffset(i, this.wrappedLines.size());
+            currentY += line.getHeight();
         }
     }
 }

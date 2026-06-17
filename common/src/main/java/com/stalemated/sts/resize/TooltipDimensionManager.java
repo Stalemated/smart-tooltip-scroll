@@ -91,7 +91,7 @@ public class TooltipDimensionManager {
         int totalHeight = 0;
 
         for (int i = 0; i < components.size(); i++) {
-            totalHeight += components.get(i).getHeight() + getPaddingOffset(i, components.size());
+            totalHeight += components.get(i).getHeight() + getPaddingOffset(i);
         }
         return totalHeight;
     }
@@ -135,13 +135,12 @@ public class TooltipDimensionManager {
             int pinnedHeight = 0;
             if (pinnedHeightPredictor != null) {
                 pinnedHeight = pinnedHeightPredictor.apply(pinned);
-                pinnedHeight += TITLE_BODY_VERTICAL_GAP;
             } else {
                 for (int i = 0; i < pinned.size(); i++) {
-                    pinnedHeight += pinned.get(i).getHeight() + getPaddingOffset(i, pinned.size());
+                    pinnedHeight += pinned.get(i).getHeight() + getPaddingOffset(i);
                 }
             }
-            int scrollableHeight = scaledTooltipHeight - pinnedHeight - (IS_LT_LOADED ? 0 : TITLE_BODY_VERTICAL_GAP);
+            int scrollableHeight = scaledTooltipHeight - pinnedHeight;
             int availableHeight = Math.max(scrollableHeight, MIN_TOOLTIP_HEIGHT);
 
             List<TooltipComponent> finalList = new ArrayList<>(pinned);
@@ -218,10 +217,7 @@ public class TooltipDimensionManager {
         return 0;
     }
 
-    public static int getPaddingOffset(int componentSize, int i) {
-        if (IS_LT_LOADED) {
-            return LegendaryTooltipsCompat.getLTOffset(i, componentSize);
-        }
-        return 0;
+    public static int getPaddingOffset(int i) {
+        return (i == 0) ? TITLE_BODY_VERTICAL_GAP : 0;
     }
 }

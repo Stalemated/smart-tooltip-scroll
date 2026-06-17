@@ -42,14 +42,14 @@ public class TierifyLegendaryBridge {
             LegendaryTieredWrapper wrapper = getLegendaryTieredWrapper(components);
 
             newList.add(0, wrapper);
-            if (TooltipDimensionManager.processedTitleComponentList.size() > 1) newList.add(1, new PaddingComponent(2));
+            if (TooltipDimensionManager.processedTitleComponentList.size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
 
             return newList;
         }
         List<TooltipComponent> titleComponentList = new ArrayList<>(components.subList(0, titleSize));
         newList.add(0, new WrappedTitleTooltipComponent(titleComponentList));
+        if (TooltipDimensionManager.processedTitleComponentList.size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
 
-        if (TooltipDimensionManager.processedTitleComponentList.size() > 1) newList.add(1, new PaddingComponent(2));
         return newList;
     }
 
@@ -103,15 +103,17 @@ public class TierifyLegendaryBridge {
             int firstLineHeight = pinned.get(0).getHeight();
             int yOffset = Math.max(0, (extraWidth - firstLineHeight) / 2);
             int wrapperHeight = Math.max(extraWidth, yOffset * 2 + titleHeight - TITLE_BODY_VERTICAL_GAP);
-            int paddingHeight = TooltipDimensionManager.getPaddingOffset(0, pinned.size());
+            int paddingHeight = TooltipDimensionManager.getPaddingOffset(0);
+            if (pinned.size() > 1) paddingHeight += TITLE_BODY_VERTICAL_GAP; // Compensate for PaddingComponent
             
             return wrapperHeight + paddingHeight;
         }
 
         int rawPinnedHeight = 0;
         for (int i = 0; i < pinned.size(); i++) {
-            rawPinnedHeight += pinned.get(i).getHeight() + TooltipDimensionManager.getPaddingOffset(i, pinned.size());
+            rawPinnedHeight += pinned.get(i).getHeight() + TooltipDimensionManager.getPaddingOffset(i);
         }
+        if (pinned.size() > 1) rawPinnedHeight += TITLE_BODY_VERTICAL_GAP; // Compensate for PaddingComponent
         return rawPinnedHeight;
     }
 }
