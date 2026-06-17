@@ -23,6 +23,9 @@ public class SmartTooltipScrollMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.contains("compat.iceberg")) {
             return PlatformHelper.INSTANCE.isModLoaded("iceberg");
         }
+        if (mixinClassName.contains("compat.emi")) {
+            return PlatformHelper.INSTANCE.isModLoaded("emi");
+        }
         return true;
     }
 

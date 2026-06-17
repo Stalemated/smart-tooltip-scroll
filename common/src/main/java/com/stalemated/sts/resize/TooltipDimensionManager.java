@@ -34,6 +34,7 @@ public class TooltipDimensionManager {
 
     public static boolean nextTooltipIsItem = false;
     public static boolean isCurrentTooltipItemTooltip = false;
+    public static boolean isPreWrappedTitle = false;
     public static String expectedTitleString = "";
     public static List<TooltipComponent> processedTitleComponentList = new ArrayList<>();
     public static List<TooltipComponent> bodyComponentList = new ArrayList<>();
@@ -110,6 +111,11 @@ public class TooltipDimensionManager {
         List<TooltipComponent> scrollableContent = new ArrayList<>(scrollableContentRaw);
         processedTitleComponentList = new ArrayList<>(pinned);
         bodyComponentList = scrollableContent;
+
+        // EMI compat
+        if (isPreWrappedTitle && pinned.size() > 1 && ConfigManager.getConfig().title_overflow_mode != TitleOverflowMode.WRAP) {
+            pinned = TooltipWrapUtil.mergeComponents(pinned);
+        }
 
         if (currentTextRenderer != null) {
             pinned = TitleOverflowStrategyFactory.getStrategy().processComponentPhase(pinned, currentTextRenderer, titleMaxWidth);
@@ -197,6 +203,7 @@ public class TooltipDimensionManager {
         currentTextRenderer = null;
         currentComponents = null;
         expectedTitleString = "";
+        isPreWrappedTitle = false;
         processedTitleComponentList.clear();
         bodyComponentList.clear();
         isCurrentTooltipItemTooltip = false;

@@ -6,7 +6,8 @@
     "DrawContextMixin",
     "MouseMixin",
     "TextHandlerMixin",
-    "compat.iceberg.IcebergTooltipsMixin"
+    "compat.iceberg.IcebergTooltipsMixin",
+    "compat.emi.EmiStackMixin"
   ],
   "injectors": {
     "defaultRequire": 1
