@@ -1,6 +1,6 @@
 package com.stalemated.sts.resize.components;
 
-import com.stalemated.sts.compat.LegendaryTooltipsCompat;
+import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -31,7 +31,7 @@ public class WrappedTitleTooltipComponent implements TooltipComponent, StsManage
     public int getHeight() {
         int totalHeight = 0;
         for (int i = 0; i < this.wrappedLines.size(); i++) {
-            totalHeight += this.wrappedLines.get(i).getHeight() + LegendaryTooltipsCompat.getLTOffset(i, this.wrappedLines.size());
+            totalHeight += this.wrappedLines.get(i).getHeight() + TooltipDimensionManager.getPaddingOffset(i, this.wrappedLines.size());
         }
         return totalHeight;
     }
@@ -43,7 +43,7 @@ public class WrappedTitleTooltipComponent implements TooltipComponent, StsManage
             TooltipComponent line = this.wrappedLines.get(i);
 
             line.drawText(textRenderer, x, currentY, matrix, vertexConsumers);
-            currentY += line.getHeight() + LegendaryTooltipsCompat.getLTOffset(i, this.wrappedLines.size());
+            currentY += line.getHeight() + TooltipDimensionManager.getPaddingOffset(i, this.wrappedLines.size());
         }
     }
 
@@ -54,7 +54,7 @@ public class WrappedTitleTooltipComponent implements TooltipComponent, StsManage
             TooltipComponent line = this.wrappedLines.get(i);
 
             line.drawItems(textRenderer, x, currentY, context);
-            currentY += line.getHeight() + LegendaryTooltipsCompat.getLTOffset(i, this.wrappedLines.size());
+            currentY += line.getHeight() + TooltipDimensionManager.getPaddingOffset(i, this.wrappedLines.size());
         }
     }
 }

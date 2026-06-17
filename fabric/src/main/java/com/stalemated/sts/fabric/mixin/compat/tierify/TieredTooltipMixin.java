@@ -3,9 +3,8 @@ package com.stalemated.sts.fabric.mixin.compat.tierify;
 
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.fabric.compat.TierifyLegendaryBridge;
-import com.stalemated.sts.resize.TitleOverflowMode;
 import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.resize.components.ScrollingTitleTooltipComponent;
+import com.stalemated.sts.state.StateManager;
 import draylar.tiered.api.BorderTemplate;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.font.TextRenderer;
@@ -27,7 +26,7 @@ public abstract class TieredTooltipMixin {
 
     @Inject(method = "renderTieredTooltipFromComponents", at = @At("HEAD"))
     private static void rst$captureContext(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
-        TooltipDimensionManager.setState(context, textRenderer);
+        TooltipDimensionManager.setState(context, textRenderer, components);
         TooltipDimensionManager.isCurrentTooltipItemTooltip = true;
     }
 
@@ -41,7 +40,7 @@ public abstract class TieredTooltipMixin {
         }
 
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
-            if (ConfigManager.getConfig().title_overflow_mode == TitleOverflowMode.SCROLL) ScrollingTitleTooltipComponent.isTierifyTooltip = true;
+            StateManager.isTierifyTooltip = true;
             processedList = TooltipDimensionManager.enforceHeightLimit(components);
         }
 
@@ -65,7 +64,7 @@ public abstract class TieredTooltipMixin {
         if (FabricLoader.getInstance().isModLoaded("legendarytooltips")) {
             TierifyLegendaryBridge.drawSeparator(context, components);
         }
-        if (ConfigManager.getConfig().title_overflow_mode == TitleOverflowMode.SCROLL) ScrollingTitleTooltipComponent.isTierifyTooltip = false;
+        StateManager.isTierifyTooltip = false;
 
         TooltipDimensionManager.clearState();
     }

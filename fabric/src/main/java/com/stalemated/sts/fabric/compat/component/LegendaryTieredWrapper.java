@@ -2,7 +2,6 @@ package com.stalemated.sts.fabric.compat.component;
 
 import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
-import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -25,7 +24,7 @@ public class LegendaryTieredWrapper implements TooltipComponent {
         this.titleComponents = titleComponents;
         ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
         this.modelComponent = new ItemModelComponent(currentStack);
-        this.extraWidth = LegendaryTooltipsCompat.getItemModelComponentWidth(currentStack);
+        this.extraWidth = TooltipDimensionManager.getModelOffset();
     }
 
     private int getTitleHeight() {

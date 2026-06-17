@@ -1,7 +1,7 @@
 package com.stalemated.sts.resize.components;
 
-import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -17,7 +17,6 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
     private final int maxTitleWidth;
     private static final double SCROLL_SPEED = 25.0;
     private static final long PAUSE_MS = 2000L;
-    public static boolean isTierifyTooltip = false;
 
     public ScrollingTitleTooltipComponent(OrderedText text, int maxTitleWidth) {
         super(text);
@@ -33,8 +32,8 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
     @Override
     public int getWidth(TextRenderer textRenderer) {
         int textWidth = textRenderer.getWidth(this.text);
-        int offset = LegendaryTooltipsCompat.getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack());
-        return Math.min(textWidth, this.maxTitleWidth + (isTierifyTooltip ? 0 : offset));
+        int offset = TooltipDimensionManager.getModelOffset();
+        return Math.min(textWidth, this.maxTitleWidth + (StateManager.isTierifyTooltip ? 0 : offset));
     }
 
     @Override
@@ -45,13 +44,13 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
             return;
         }
 
-        int offset = LegendaryTooltipsCompat.getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack());
-        int overflowWidth = isTierifyTooltip ? textWidth - this.maxTitleWidth : textWidth - this.maxTitleWidth - offset;
+        int offset = TooltipDimensionManager.getModelOffset();
+        int overflowWidth = StateManager.isTierifyTooltip ? textWidth - this.maxTitleWidth : textWidth - this.maxTitleWidth - offset;
         int identity = getStringFromOrderedText(this.text).hashCode();
         long elapsedTime = ScrollMathUtil.getTooltipElapsedTime(identity);
         int scrollOffset = ScrollMathUtil.calculateScrollOffset(overflowWidth, SCROLL_SPEED, PAUSE_MS, elapsedTime);
-        int startX = x + (isTierifyTooltip ? 0 : offset);
-        int endX = x + this.maxTitleWidth + (isTierifyTooltip ? 0 : offset);
+        int startX = x + (StateManager.isTierifyTooltip ? 0 : offset);
+        int endX = x + this.maxTitleWidth + (StateManager.isTierifyTooltip ? 0 : offset);
 
         vertexConsumers.draw();
 

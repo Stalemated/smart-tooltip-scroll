@@ -1,7 +1,6 @@
 package com.stalemated.sts.scroll.components;
 
 import com.stalemated.lib.util.math.MathUtils;
-import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import net.minecraft.client.font.TextRenderer;
@@ -42,7 +41,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
                 if (pinWidth > maxPinnedWidth) maxPinnedWidth = pinWidth;
             }
         }
-        int offset = LegendaryTooltipsCompat.getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack());
+        int offset = TooltipDimensionManager.getModelOffset();
 
         this.maxWidth = MathUtils.clamp(Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth + offset), TooltipDimensionManager.MIN_TOOLTIP_WIDTH, maxWidth);
         this.maxTextWidth = MathUtils.clamp(Math.max(maxComponentWidth, maxPinnedWidth + offset), TooltipDimensionManager.MIN_TOOLTIP_WIDTH, maxWidth - SCROLLBAR_WIDTH);

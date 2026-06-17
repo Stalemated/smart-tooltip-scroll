@@ -3,7 +3,7 @@ package com.stalemated.sts.resize;
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.lib.helper.PlatformHelper;
 import com.stalemated.lib.util.style.TooltipStyleUtils;
-import com.stalemated.sts.compat.LegendaryTooltipsCompat;
+import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
 import com.stalemated.sts.scroll.TooltipScrollManager;
@@ -25,6 +25,7 @@ public class TooltipDimensionManager {
     public static DrawContext currentContext = null;
     public static TextRenderer currentTextRenderer = null;
     public static ItemStack currentStack = null;
+    public static List<TooltipComponent> currentComponents = null;
     private static final int MIN_TOOLTIP_HEIGHT = 32;
     public static final int MIN_TOOLTIP_WIDTH = 64;
     public static final int TOOLTIP_PADDING_X = 8;
@@ -37,6 +38,8 @@ public class TooltipDimensionManager {
     public static List<TooltipComponent> processedTitleComponentList = new ArrayList<>();
     public static List<TooltipComponent> bodyComponentList = new ArrayList<>();
     public static Function<List<TooltipComponent>, Integer> pinnedHeightPredictor = null;
+
+    private static final boolean IS_LT_LOADED = PlatformHelper.INSTANCE.isModLoaded("legendarytooltips");
 
     private static final DimensionCache widthCache = new DimensionCache(TOOLTIP_PADDING_X, MIN_TOOLTIP_WIDTH);
     private static final DimensionCache heightCache = new DimensionCache(TOOLTIP_PADDING_Y, MIN_TOOLTIP_HEIGHT);
@@ -76,7 +79,7 @@ public class TooltipDimensionManager {
         }
 
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-        int maxTitleWidth = getScaledTooltipWidth() - LegendaryTooltipsCompat.getItemModelComponentWidth(currentStack);
+        int maxTitleWidth = getScaledTooltipWidth() - getModelOffset();
 
         List<Text> processed = TitleOverflowStrategyFactory.getStrategy().processTextPhase(text, textRenderer, maxTitleWidth);
         expectedTitleString = "";
@@ -88,7 +91,7 @@ public class TooltipDimensionManager {
         int totalHeight = 0;
 
         for (int i = 0; i < components.size(); i++) {
-            totalHeight += components.get(i).getHeight() + LegendaryTooltipsCompat.getLTOffset(i, components.size());
+            totalHeight += components.get(i).getHeight() + getPaddingOffset(i, components.size());
         }
         return totalHeight;
     }
@@ -99,7 +102,7 @@ public class TooltipDimensionManager {
         int splitIndex = getSplitIndex(components);
         int scaledTooltipWidth = getScaledTooltipWidth();
         int scaledTooltipHeight = getScaledTooltipHeight();
-        int componentWidth = LegendaryTooltipsCompat.getItemModelComponentWidth(currentStack);
+        int componentWidth = getModelOffset();
         int titleMaxWidth = scaledTooltipWidth - componentWidth;
 
         List<TooltipComponent> pinned = new ArrayList<>(components.subList(0, splitIndex));
@@ -135,10 +138,10 @@ public class TooltipDimensionManager {
                 pinnedHeight += TITLE_BODY_VERTICAL_GAP;
             } else {
                 for (int i = 0; i < pinned.size(); i++) {
-                    pinnedHeight += pinned.get(i).getHeight() + LegendaryTooltipsCompat.getLTOffset(i, pinned.size());
+                    pinnedHeight += pinned.get(i).getHeight() + getPaddingOffset(i, pinned.size());
                 }
             }
-            int scrollableHeight = scaledTooltipHeight - pinnedHeight - (PlatformHelper.INSTANCE.isModLoaded("legendarytooltips") ? 0 : TITLE_BODY_VERTICAL_GAP);
+            int scrollableHeight = scaledTooltipHeight - pinnedHeight - (IS_LT_LOADED ? 0 : TITLE_BODY_VERTICAL_GAP);
             int availableHeight = Math.max(scrollableHeight, MIN_TOOLTIP_HEIGHT);
 
             List<TooltipComponent> finalList = new ArrayList<>(pinned);
@@ -153,8 +156,12 @@ public class TooltipDimensionManager {
 
     // Compat
     public static int getSplitIndex(List<TooltipComponent> components) {
-        int splitIndex = LegendaryTooltipsCompat.getSplitIndex(components);
-        if (splitIndex != 1) return splitIndex;
+        int splitIndex = 1;
+
+        if (IS_LT_LOADED) {
+            splitIndex = LegendaryTooltipsCompat.getSplitIndex(components, splitIndex);
+            if (splitIndex != 1) return splitIndex;
+        }
 
         // Vanilla Forge logic
         if (expectedTitleString != null && !expectedTitleString.isEmpty()) {
@@ -179,15 +186,17 @@ public class TooltipDimensionManager {
         return currentStack;
     }
 
-    public static void setState(DrawContext context, TextRenderer textRenderer) {
+    public static void setState(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components) {
         currentContext = context;
         currentTextRenderer = textRenderer;
+        currentComponents = components;
     }
 
     public static void clearState() {
         currentStack = null;
         currentContext = null;
         currentTextRenderer = null;
+        currentComponents = null;
         expectedTitleString = "";
         processedTitleComponentList.clear();
         bodyComponentList.clear();
@@ -200,5 +209,19 @@ public class TooltipDimensionManager {
 
     public static int getScaledTooltipWidth() {
         return widthCache.get(MinecraftClient.getInstance().getWindow().getScaledWidth(), ConfigManager.getConfig().max_width_percentage);
+    }
+
+    public static int getModelOffset() {
+        if (IS_LT_LOADED) {
+            return LegendaryTooltipsCompat.getItemModelComponentWidth(currentStack);
+        }
+        return 0;
+    }
+
+    public static int getPaddingOffset(int componentSize, int i) {
+        if (IS_LT_LOADED) {
+            return LegendaryTooltipsCompat.getLTOffset(i, componentSize);
+        }
+        return 0;
     }
 }

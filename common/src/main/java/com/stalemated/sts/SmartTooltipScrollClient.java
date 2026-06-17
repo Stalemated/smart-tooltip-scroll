@@ -1,5 +1,7 @@
 package com.stalemated.sts;
 
+import com.stalemated.lib.helper.PlatformHelper;
+import com.stalemated.sts.compat.emi.EmiCompat;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import net.fabricmc.api.EnvType;
@@ -15,6 +17,10 @@ public final class SmartTooltipScrollClient {
 
     public static void init() {
         ConfigManager.register();
+        
+        if (PlatformHelper.INSTANCE.isModLoaded("emi")) {
+            EmiCompat.init();
+        }
     }
 
     public static void onItemTooltip(ItemStack stack) {

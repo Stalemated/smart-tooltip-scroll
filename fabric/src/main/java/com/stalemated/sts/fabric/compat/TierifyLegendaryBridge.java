@@ -3,7 +3,6 @@ package com.stalemated.sts.fabric.compat;
 import com.anthonyhilyard.legendarytooltips.config.LegendaryTooltipsConfig;
 import com.anthonyhilyard.legendarytooltips.tooltip.PaddingComponent;
 import com.anthonyhilyard.legendarytooltips.tooltip.TooltipDecor;
-import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.fabric.compat.component.LegendaryTieredWrapper;
 import com.stalemated.sts.resize.TooltipDimensionManager;
@@ -93,7 +92,7 @@ public class TierifyLegendaryBridge {
     }
 
     public static int getPredictedPinnedHeight(List<TooltipComponent> pinned) {
-        int extraWidth = LegendaryTooltipsCompat.getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack());
+        int extraWidth = TooltipDimensionManager.getModelOffset();
         
         if (extraWidth > 0 && !pinned.isEmpty()) {
             int titleHeight = 0;
@@ -104,14 +103,14 @@ public class TierifyLegendaryBridge {
             int firstLineHeight = pinned.get(0).getHeight();
             int yOffset = Math.max(0, (extraWidth - firstLineHeight) / 2);
             int wrapperHeight = Math.max(extraWidth, yOffset * 2 + titleHeight - TITLE_BODY_VERTICAL_GAP);
-            int paddingHeight = LegendaryTooltipsCompat.getLTOffset(0, pinned.size());
+            int paddingHeight = TooltipDimensionManager.getPaddingOffset(0, pinned.size());
             
             return wrapperHeight + paddingHeight;
         }
 
         int rawPinnedHeight = 0;
         for (int i = 0; i < pinned.size(); i++) {
-            rawPinnedHeight += pinned.get(i).getHeight() + LegendaryTooltipsCompat.getLTOffset(i, pinned.size());
+            rawPinnedHeight += pinned.get(i).getHeight() + TooltipDimensionManager.getPaddingOffset(i, pinned.size());
         }
         return rawPinnedHeight;
     }

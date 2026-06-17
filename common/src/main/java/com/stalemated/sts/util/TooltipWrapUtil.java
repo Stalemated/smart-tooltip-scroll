@@ -3,7 +3,6 @@ package com.stalemated.sts.util;
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
 import com.stalemated.lib.helper.PlatformHelper;
 import com.stalemated.lib.util.style.TooltipStyleUtils;
-import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
 import net.minecraft.client.font.TextRenderer;
@@ -58,7 +57,7 @@ public class TooltipWrapUtil {
                         continue;
                     }
                 } else {
-                    currentOffset = LegendaryTooltipsCompat.getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack());
+                    currentOffset = TooltipDimensionManager.getModelOffset();
                 }
                 titleLines.add(new IndentedTextTooltipComponent(w, currentOffset));
             } else {
