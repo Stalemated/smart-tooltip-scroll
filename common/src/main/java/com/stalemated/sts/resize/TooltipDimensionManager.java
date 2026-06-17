@@ -5,7 +5,6 @@ import com.stalemated.lib.helper.PlatformHelper;
 import com.stalemated.lib.util.style.TooltipStyleUtils;
 import com.stalemated.sts.compat.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
-import com.stalemated.sts.config.STSConfig;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.scroll.components.ScrollableTooltipComponent;
@@ -26,7 +25,6 @@ public class TooltipDimensionManager {
     public static DrawContext currentContext = null;
     public static TextRenderer currentTextRenderer = null;
     public static ItemStack currentStack = null;
-    private static final STSConfig config = ConfigManager.getConfig();
     private static final int MIN_TOOLTIP_HEIGHT = 32;
     public static final int MIN_TOOLTIP_WIDTH = 64;
     public static final int TOOLTIP_PADDING_X = 8;
@@ -72,7 +70,7 @@ public class TooltipDimensionManager {
         isCurrentTooltipItemTooltip = nextTooltipIsItem;
         nextTooltipIsItem = false;
 
-        if (!config.custom_tooltip_dimensions || !isCurrentTooltipItemTooltip || text.isEmpty()) {
+        if (!ConfigManager.getConfig().custom_tooltip_dimensions || !isCurrentTooltipItemTooltip || text.isEmpty()) {
             expectedTitleString = "";
             return text;
         }
@@ -197,10 +195,10 @@ public class TooltipDimensionManager {
     }
 
     public static int getScaledTooltipHeight() {
-        return heightCache.get(MinecraftClient.getInstance().getWindow().getScaledHeight(), config.max_height_percentage);
+        return heightCache.get(MinecraftClient.getInstance().getWindow().getScaledHeight(), ConfigManager.getConfig().max_height_percentage);
     }
 
     public static int getScaledTooltipWidth() {
-        return widthCache.get(MinecraftClient.getInstance().getWindow().getScaledWidth(), config.max_width_percentage);
+        return widthCache.get(MinecraftClient.getInstance().getWindow().getScaledWidth(), ConfigManager.getConfig().max_width_percentage);
     }
 }
