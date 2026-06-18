@@ -8,6 +8,7 @@
 
 ### 📜 Scrollable Tooltips
 - Tooltips that are too tall to fit on your screen can now be scrolled using your mouse wheel.
+- **Smooth Scrolling:** Fluid scroll transition with adjustable smoothness (via a 0.0 to 1.0 slider), powered by dynamic time-based interpolation.
 - **Smart Container Toggles:** Prevent conflicts by disabling scroll behavior in specific containers, like the Creative Inventory.
 
 ### 📐 Resizable Tooltips
@@ -20,11 +21,12 @@ When an item's name is too long for the tooltip, choose exactly how to handle it
 - **Horizontal Scroll:** Animates the title to scroll side-to-side dynamically.
 
 ### 🤝 Compatibility
+- Built-in compatibility with **EMI** item tooltips, featuring scrolling, resizing, and title overflow modes.
 - Full support for **Legendary Tooltips** and **Tierify** (including custom borders and components).
 - Built-in compatibility with **Mouse Tweaks**.
 
 ### 🖥️ In-Game GUI
-Full **YACL + ModMenu** integration. Configure your scrolling and dimension limits instantly from the main menu!
+Full **YACL + ModMenu** integration. Configure your scrolling smoothness and dimension limits instantly from the mod's config.
 
 ---
 

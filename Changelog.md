@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0
+
+### New Features
+- **Smooth Tooltip Scrolling:** Added FPS-independent, time-based smooth scrolling animation. Includes a new config option to adjust the scroll smoothness factor (from `0.0` for instant scrolling up to `1.0` for maximum smoothness).
+- **EMI Compatibility:** Added full compatibility with EMI item tooltips. Features scrolling, resizing, and title overflow strategies within EMI's custom tooltip rendering.
+- **Language Support:** Added Spanish and English localization for the new config options.
+
+### Improvements & Fixes
+- **Compatibility Optimization:** General optimization for mod compatibility functionality. 
+- **Tooltip Resizing Fix:** Fixed a bug where tooltips sometimes failed to resize properly.
+
 ## 1.0.0
 
 **This is the first standalone release of Smart Tooltip Scroll, decoupling all scrolling, resizing, and tooltip dimension logic from Custom Tooltip API into a dedicated mod!**
