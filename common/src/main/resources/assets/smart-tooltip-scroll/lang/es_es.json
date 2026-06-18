@@ -16,5 +16,7 @@
   "sts.tooltip_dimensions_screen.category.scrolling": "Configuración de scroll",
   "sts.tooltip_dimensions_screen.lock_container_scrolling": "Habilitar scroll en contenedores",
   "sts.tooltip_dimensions_screen.lock_container_scrolling.description": "Si está activado, desactiva hacer scroll en diferentes contenedores simultáneamente. Esto previene, por ejemplo, hacer scroll sobre un tooltip mientras estás en el menú del modo creativo. Si está desactivado, ambos hacen scroll al mismo tiempo",
-  "sts.tooltip_dimensions_screen.lock_container_scrolling.warning": "\n§4§lAdvertencia:§r §cMuy probablemente no quieras desactivar esto.§r"
+  "sts.tooltip_dimensions_screen.lock_container_scrolling.warning": "\n§4§lAdvertencia:§r §cMuy probablemente no quieras desactivar esto.§r",
+  "sts.tooltip_dimensions_screen.scroll_smoothness": "Suavidad del Scroll",
+  "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Ajusta la fluidez de la animación de desplazamiento de la tooltip.\n\n§60.0§r: Scroll instantáneo (sin animación)\n§61.0§r: Máxima suavidad"
 }

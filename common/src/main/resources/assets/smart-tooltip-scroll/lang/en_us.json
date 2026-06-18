@@ -16,5 +16,7 @@
   "sts.tooltip_dimensions_screen.category.scrolling": "Scrolling Config",
   "sts.tooltip_dimensions_screen.lock_container_scrolling": "Lock container scrolling",
   "sts.tooltip_dimensions_screen.lock_container_scrolling.description": "If scrolling in different containers simultaneously is locked or disabled. This prevents scrolling a tooltip while in the creative menu for example. If disabled, both scroll at the same time.",
-  "sts.tooltip_dimensions_screen.lock_container_scrolling.warning": "\n§4§lWarning:§r §cYou probably don't want to disable this.§r"
+  "sts.tooltip_dimensions_screen.lock_container_scrolling.warning": "\n§4§lWarning:§r §cYou probably don't want to disable this.§r",
+  "sts.tooltip_dimensions_screen.scroll_smoothness": "Scroll Smoothness",
+  "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Adjusts the smoothness of the tooltip scroll animation.\n\n§60.0§r: Instant scroll (no animation)\n§61.0§r: Maximum smoothness"
 }

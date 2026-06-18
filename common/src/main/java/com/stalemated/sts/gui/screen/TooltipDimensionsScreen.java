@@ -5,10 +5,14 @@ import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.config.STSConfig;
 import com.stalemated.sts.resize.TitleOverflowMode;
 import dev.isxander.yacl3.api.*;
+import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class TooltipDimensionsScreen {
 
@@ -102,8 +106,26 @@ public class TooltipDimensionsScreen {
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
+        var scrollSmoothness = Option.<Float>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.scroll_smoothness"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.scroll_smoothness.description")))
+                .binding(
+                        0.25f,
+                        () -> config.scroll_smoothness,
+                        val -> config.scroll_smoothness = val
+                )
+                .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                        .range(0.0f, 1.0f)
+                        .step(0.01f)
+                        .formatValue(val -> Text.of(
+                                new BigDecimal(Float.toString(val))
+                                .setScale(2, RoundingMode.HALF_UP)
+                                .toString())))
+                .build();
+
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.scrolling"))
+                .option(scrollSmoothness)
                 .option(lockContainerScrolling)
                 .build();
     }

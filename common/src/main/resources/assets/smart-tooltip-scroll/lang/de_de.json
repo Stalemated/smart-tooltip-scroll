@@ -17,5 +17,7 @@
   "sts.tooltip_dimensions_screen.title_overflow_mode.description": "Legt fest, wie das Spiel reagieren soll, wenn der Name des Items, über dem der Mauszeiger schwebt, die maximale Breite eines Tooltips überschreitet.\n\n§6Umwickeln:§r Umwickelt den Namen (teilt es in mehrere Zeilen auf)\n§6Kürzen:§r Kürzt den Namen auf die maximale Breite des Tooltips und fügt '...' am Ende hinzu.\n§6Horizontales Scrollen:§r Der Text wird sanft horizontal vorwärts und dann rückwärts gescrollt, um den gesamten Namen in einer einzigen Zeile anzuzeigen.",
   "sts.tooltip_dimensions_screen.title_overflow_mode.wrap": "Umwickeln",
   "sts.tooltip_dimensions_screen.title_overflow_mode.truncate": "Kürzen",
-  "sts.tooltip_dimensions_screen.title_overflow_mode.scroll": "Horizontales Scrollen"
+  "sts.tooltip_dimensions_screen.title_overflow_mode.scroll": "Horizontales Scrollen",
+  "sts.tooltip_dimensions_screen.scroll_smoothness": "Scroll Smoothness",
+  "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Adjusts the smoothness of the tooltip scroll animation.\n\n§60.0§r: Instant scroll (no animation)\n§61.0§r: Maximum smoothness"
 }

@@ -1,23 +1,36 @@
 package com.stalemated.sts.scroll;
 
 import com.stalemated.lib.util.math.MathUtils;
+import com.stalemated.sts.config.ConfigManager;
 
 public class TooltipScrollManager {
-    private static int scrollOffset = 0;
+    private static int targetScroll = 0;
+    private static int startScroll = 0;
+    private static long scrollStartTime = 0;
+
     private static int maxScroll = 0;
     private static long lastRenderTime = 0;
     private static final int maxUnhoveredRenderTimeMs = 250;
+    private static final int smoothnessTimeMs = 1000;
 
     public static void updateMaxScroll(int newMaxScroll) {
         long currentTime = System.currentTimeMillis();
 
         if (currentTime - lastRenderTime > maxUnhoveredRenderTimeMs) {
-            scrollOffset = 0;
+            targetScroll = 0;
+            startScroll = 0;
+            scrollStartTime = currentTime;
         }
         lastRenderTime = currentTime;
 
         maxScroll = Math.max(0, newMaxScroll);
-        scrollOffset = MathUtils.clamp(scrollOffset, 0, maxScroll);
+        
+        int oldTarget = targetScroll;
+        targetScroll = MathUtils.clamp(targetScroll, 0, maxScroll);
+        if (targetScroll != oldTarget) {
+            startScroll = getScrollOffset();
+            scrollStartTime = currentTime;
+        }
     }
 
     public static boolean scroll(double amount) {
@@ -25,12 +38,35 @@ public class TooltipScrollManager {
 
         int pixelsPerScroll = 15;
         if (System.currentTimeMillis() - lastRenderTime < maxUnhoveredRenderTimeMs) {
-            scrollOffset -= (int) (amount * pixelsPerScroll);
-            scrollOffset = MathUtils.clamp(scrollOffset, 0, maxScroll);
+            startScroll = getScrollOffset();
+            scrollStartTime = System.currentTimeMillis();
+            
+            targetScroll -= (int) (amount * pixelsPerScroll);
+            targetScroll = MathUtils.clamp(targetScroll, 0, maxScroll);
             return true;
         }
         return false;
     }
 
-    public static int getScrollOffset() { return scrollOffset; }
+    public static int getScrollOffset() {
+        if (targetScroll == startScroll) return targetScroll;
+        
+        float smoothness = ConfigManager.getConfig().scroll_smoothness;
+        if (smoothness <= 0.0f) return targetScroll;
+
+        int durationMs = (int) (smoothness * smoothnessTimeMs);
+        if (durationMs <= 0) return targetScroll;
+        
+        long elapsed = System.currentTimeMillis() - scrollStartTime;
+        if (elapsed >= durationMs) {
+            startScroll = targetScroll;
+            return targetScroll;
+        }
+        
+        // Ease-out cubic
+        double t = (double) elapsed / durationMs;
+        double easeOutCubic = 1.0 - Math.pow(1.0 - t, 3.0);
+        
+        return (int) (startScroll + (targetScroll - startScroll) * easeOutCubic);
+    }
 }
