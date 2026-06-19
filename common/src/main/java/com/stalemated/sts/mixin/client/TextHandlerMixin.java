@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(TextHandler.class)
 public abstract class TextHandlerMixin {
 
-    @ModifyVariable(method = "wrapLines(Lnet/minecraft/text/StringVisitable;ILnet/minecraft/text/Style;)Ljava/util/List;", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+    @ModifyVariable(method = "wrapLines(Lnet/minecraft/text/StringVisitable;ILnet/minecraft/text/Style;)Ljava/util/List;", at = @At("HEAD"), argsOnly = true, name = "maxWidth")
     private int rst$disableAutoWrapVisitable(int maxWidth) {
         if (rst$wrappingConditions()) {
             return Integer.MAX_VALUE;
@@ -21,7 +21,7 @@ public abstract class TextHandlerMixin {
         return maxWidth;
     }
 
-    @ModifyVariable(method = "wrapLines(Ljava/lang/String;ILnet/minecraft/text/Style;)Ljava/util/List;", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+    @ModifyVariable(method = "wrapLines(Ljava/lang/String;ILnet/minecraft/text/Style;)Ljava/util/List;", at = @At("HEAD"), argsOnly = true, name = "maxWidth")
     private int rst$disableAutoWrapString(int maxWidth) {
         if (rst$wrappingConditions()) {
             return Integer.MAX_VALUE;

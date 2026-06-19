@@ -1,6 +1,5 @@
 package com.stalemated.sts.scroll;
 
-import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.sts.config.ConfigManager;
 
 public class TooltipScrollManager {
@@ -26,7 +25,7 @@ public class TooltipScrollManager {
         maxScroll = Math.max(0, newMaxScroll);
         
         int oldTarget = targetScroll;
-        targetScroll = MathUtils.clamp(targetScroll, 0, maxScroll);
+        targetScroll = Math.clamp(targetScroll, 0, maxScroll);
         if (targetScroll != oldTarget) {
             startScroll = getScrollOffset();
             scrollStartTime = currentTime;
@@ -42,7 +41,7 @@ public class TooltipScrollManager {
             scrollStartTime = System.currentTimeMillis();
             
             targetScroll -= (int) (amount * pixelsPerScroll);
-            targetScroll = MathUtils.clamp(targetScroll, 0, maxScroll);
+            targetScroll = Math.clamp(targetScroll, 0, maxScroll);
             return true;
         }
         return false;

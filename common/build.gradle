@@ -24,9 +24,9 @@ dependencies {
     modCompileOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
     // Legendary Tooltips (IDE Common compat)
-    modCompileOnly "curse.maven:legendary-tooltips-fabric-542478:4940615"
+    modCompileOnly "curse.maven:legendary-tooltips-fabric-542478:${rootProject.legendary_tooltips_id}"
     // Iceberg (IDE Common compat)
-    modCompileOnly "curse.maven:iceberg-fabric-539382:5838145"
+    modCompileOnly "curse.maven:iceberg-fabric-539382:${rootProject.iceberg_id}"
 
     // EMI
     modCompileOnly "dev.emi:emi-xplat-intermediary:${rootProject.emi_version}"

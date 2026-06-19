@@ -24,15 +24,14 @@
     ]
   },
   "mixins": [
-    "sts.mixins.json",
-    "sts-fabric.mixins.json"
+    "sts.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.10",
-    "minecraft": "~1.20.1",
-    "java": ">=17",
+    "fabricloader": ">=0.19.2",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
     "fabric-api": "*",
-    "s_lib": ">=1.0.0",
-    "yet_another_config_lib_v3": ">=3.6.2"
+    "s_lib": ">=1.0.1+1.21.1",
+    "yet_another_config_lib_v3": ">=3.8.2"
   }
 }

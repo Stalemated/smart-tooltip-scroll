@@ -25,12 +25,12 @@ public abstract class DrawContextMixin {
         TooltipDimensionManager.setState((DrawContext) (Object) this, textRenderer, components);
     }
 
-    @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;Ljava/util/Optional;II)V", at = @At("HEAD"), argsOnly = true, index = 2)
+    @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;Ljava/util/Optional;II)V", at = @At("HEAD"), argsOnly = true, name = "text")
     private List<Text> rst$applyDimensionsWidth(List<Text> text) {
         return TooltipDimensionManager.enforceWidthLimit(text);
     }
 
-    @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"), argsOnly = true, index = 2)
+    @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"), argsOnly = true, name = "components")
     private List<TooltipComponent> rst$applyDimensionsHeight(List<TooltipComponent> components) {
         boolean isItem = TooltipDimensionManager.isCurrentTooltipItemTooltip;
         boolean isForced = SharedTooltipState.forceCustomDimensions;

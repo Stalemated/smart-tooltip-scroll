@@ -23,7 +23,7 @@ public class TruncateOverflowStrategy implements TitleOverflowStrategy {
             return textList;
         }
 
-        Text title = textList.get(0);
+        Text title = textList.getFirst();
         if (textRenderer.getWidth(title) > maxTitleWidth) {
             List<Text> mutableText = new ArrayList<>(textList);
 
@@ -40,7 +40,7 @@ public class TruncateOverflowStrategy implements TitleOverflowStrategy {
             return components;
         }
 
-        TooltipComponent titleComponent = components.get(0);
+        TooltipComponent titleComponent = components.getFirst();
         Optional<OrderedText> extracted = TooltipStyleUtils.getExtractedTextValue(titleComponent);
 
         if (extracted.isPresent()) {

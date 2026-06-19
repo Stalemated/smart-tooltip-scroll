@@ -67,7 +67,7 @@ public class TooltipWrapUtil {
 
         if (isTitle && !titleLines.isEmpty()) {
             if (titleLines.size() == 1) {
-                wrappedComponents.add(titleLines.get(0));
+                wrappedComponents.add(titleLines.getFirst());
             } else {
                 if (PlatformHelper.INSTANCE.isModLoaded("legendarytooltips")) {
                     if (!TooltipDimensionManager.bodyComponentList.isEmpty()) {

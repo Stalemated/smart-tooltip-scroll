@@ -13,6 +13,6 @@ public final class SmartTooltipScrollFabric implements ClientModInitializer {
     public void onInitializeClient() {
         SmartTooltipScrollClient.init();
 
-        ItemTooltipCallback.EVENT.register((stack, context, lines) -> SmartTooltipScrollClient.onItemTooltip(stack));
+        ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> SmartTooltipScrollClient.onItemTooltip(stack));
     }
 }

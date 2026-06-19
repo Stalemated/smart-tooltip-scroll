@@ -7,8 +7,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/smart-tooltip-scroll.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/smart-tooltip-scroll.fabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/smart-tooltip-scroll.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/smart-tooltip-scroll.fabric.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge/smart-tooltip-scroll.forge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/forge/smart-tooltip-scroll.forge.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge/smart-tooltip-scroll.forge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/forge/smart-tooltip-scroll.forge.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/neoforge/smart-tooltip-scroll.neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/neoforge/smart-tooltip-scroll.neoforge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/neoforge/smart-tooltip-scroll.neoforge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/neoforge/smart-tooltip-scroll.neoforge.test.iml" />
     </modules>
   </component>
 </project>

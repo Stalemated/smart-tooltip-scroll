@@ -18,7 +18,7 @@ public class ConfigManager {
     public static boolean configLoadFailed = false;
 
     public static final ConfigClassHandler<STSConfig> HANDLER = ConfigClassHandler.createBuilder(STSConfig.class)
-            .id(new Identifier("sts", "config"))
+            .id(Identifier.of("sts", "config"))
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
                     .setPath(CONFIG_PATH)
                     .setJson5(true)

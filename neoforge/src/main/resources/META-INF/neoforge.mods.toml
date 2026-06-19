@@ -1,0 +1,47 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+issueTrackerURL = "https://github.com/Stalemated/smart-tooltip-scroll/issues"
+license = "MIT"
+clientSideOnly = true
+
+[[mods]]
+modId = "smart_tooltip_scroll"
+version = "${version}"
+displayName = "Smart Tooltip Scroll"
+authors = "Stalemated"
+description = '''
+Dynamically resizes and scrolls oversized tooltips while keeping the item title anchored.
+'''
+logoFile = "META-INF/icon.png"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/smart-tooltip-scroll"
+
+[[mixins]]
+config = "sts.mixins.json"
+
+[[dependencies.smart_tooltip_scroll]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.smart_tooltip_scroll]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.smart_tooltip_scroll]]
+modId = "s_lib"
+type = "required"
+versionRange = "[1.0.1+1.21.1,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.smart_tooltip_scroll]]
+modId = "yet_another_config_lib_v3"
+type = "required"
+versionRange = "[3.8.2,)"
+ordering = "AFTER"
+side = "CLIENT"
