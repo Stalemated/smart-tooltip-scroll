@@ -15,6 +15,9 @@ Dynamically resizes and scrolls oversized tooltips while keeping the item title 
 logoFile = "META-INF/icon.png"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/smart-tooltip-scroll"
 
+[[mixins]]
+config = "sts.mixins.json"
+
 [[dependencies.smart_tooltip_scroll]]
 modId = "forge"
 mandatory = true
@@ -32,7 +35,7 @@ side = "CLIENT"
 [[dependencies.smart_tooltip_scroll]]
 modId = "s_lib"
 mandatory = true
-versionRange = "[1.0.0,)"
+versionRange = "[1.0.2+1.20.1,)"
 ordering = "AFTER"
 side = "CLIENT"
 
