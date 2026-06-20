@@ -21,10 +21,10 @@ public class SmartTooltipScrollMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.contains("compat.iceberg")) {
-            return PlatformHelper.INSTANCE.isModLoaded("iceberg");
+            return PlatformHelper.INSTANCE.isModLoadedAtLaunch("iceberg");
         }
         if (mixinClassName.contains("compat.emi")) {
-            return PlatformHelper.INSTANCE.isModLoaded("emi");
+            return PlatformHelper.INSTANCE.isModLoadedAtLaunch("emi");
         }
         return true;
     }
