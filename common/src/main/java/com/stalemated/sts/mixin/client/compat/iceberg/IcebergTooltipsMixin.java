@@ -16,7 +16,7 @@ import java.util.List;
 @Mixin(targets = "com.anthonyhilyard.iceberg.util.Tooltips")
 public class IcebergTooltipsMixin {
 
-    @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;I)Ljava/util/List;", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "centerTitle*", at = @At("HEAD"), cancellable = true)
     private static void onCenterTitle(List<TooltipComponent> components, TextRenderer font, int width, CallbackInfoReturnable<List<TooltipComponent>> cir) {
         for (TooltipComponent comp : components) {
             if (comp instanceof StsManagedTitle) {
@@ -26,7 +26,7 @@ public class IcebergTooltipsMixin {
         }
     }
 
-    @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;II)Ljava/util/List;", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "centerTitle*", at = @At("HEAD"), cancellable = true)
     private static void onCenterTitleWithLines(List<TooltipComponent> components, TextRenderer font, int width, int titleLines, CallbackInfoReturnable<List<TooltipComponent>> cir) {
         for (TooltipComponent comp : components) {
             if (comp instanceof StsManagedTitle) {
