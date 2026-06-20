@@ -23,7 +23,7 @@
       "com.stalemated.sts.fabric.ModMenuIntegration"
     ]
   },
-  "client": [
+  "mixins": [
     "sts.mixins.json"
   ],
   "depends": {
