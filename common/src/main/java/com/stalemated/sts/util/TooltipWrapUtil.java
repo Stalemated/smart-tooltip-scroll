@@ -1,7 +1,6 @@
 package com.stalemated.sts.util;
 
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
-import com.stalemated.lib.helper.PlatformHelper;
 import com.stalemated.lib.util.style.TooltipStyleUtils;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
@@ -12,6 +11,8 @@ import net.minecraft.text.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.stalemated.sts.resize.TooltipDimensionManager.IS_LT_LOADED;
 
 public class TooltipWrapUtil {
     public static boolean isHandlingCustomWrap = false;
@@ -46,22 +47,20 @@ public class TooltipWrapUtil {
         isHandlingCustomWrap = false;
 
         List<TooltipComponent> titleLines = new ArrayList<>();
+        int currentOffset = TooltipDimensionManager.bodyComponentList.isEmpty() ? TooltipDimensionManager.getModelOffset() : 0;
 
         for (int i = 0; i < wrapped.size(); i++) {
             OrderedText w = wrapped.get(i);
 
-            int currentOffset = 0;
             if (isTitle) {
                 if (i == 0) {
                     if (TooltipStyleUtils.convertOrderedTextToMutable(w).getString().isBlank()) {
                         continue;
                     }
-                } else {
-                    currentOffset = TooltipDimensionManager.getModelOffset();
                 }
                 titleLines.add(new IndentedTextTooltipComponent(w, currentOffset));
             } else {
-                wrappedComponents.add(new IndentedTextTooltipComponent(w, currentOffset));
+                wrappedComponents.add(TooltipComponent.of(w));
             }
         }
 
@@ -69,7 +68,7 @@ public class TooltipWrapUtil {
             if (titleLines.size() == 1) {
                 wrappedComponents.add(titleLines.getFirst());
             } else {
-                if (PlatformHelper.INSTANCE.isModLoaded("legendarytooltips")) {
+                if (IS_LT_LOADED) {
                     if (!TooltipDimensionManager.bodyComponentList.isEmpty()) {
                         wrappedComponents.addAll(titleLines);
                     } else {

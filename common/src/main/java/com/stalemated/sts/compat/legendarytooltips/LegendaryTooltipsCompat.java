@@ -4,7 +4,6 @@ import com.anthonyhilyard.legendarytooltips.config.LegendaryTooltipsConfig;
 import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.anthonyhilyard.iceberg.component.TitleBreakComponent;
 import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
 
@@ -16,7 +15,6 @@ public class LegendaryTooltipsCompat {
         if (stack == null || stack.isEmpty()) return 0;
 
         int offset = LegendaryTooltipsConfig.showModelForItem(stack) ? 24 : 0;
-        if (StateManager.isTierifyTooltip) return offset;
 
         List<TooltipComponent> currentComponents = TooltipDimensionManager.currentComponents;
         if (currentComponents != null) {
@@ -32,13 +30,22 @@ public class LegendaryTooltipsCompat {
     }
 
     public static int getSplitIndex(List<TooltipComponent> components, int splitIndex) {
-        /*for (int i = 0; i < components.size(); i++) {
+        boolean hasTitleBreak = false;
+        for (int i = 0; i < components.size(); i++) {
 
-            if (components.get(i) instanceof TitleBreakComponent || components.get(i) instanceof ItemModelComponent) {
+            if (components.get(i) instanceof TitleBreakComponent) {
                 splitIndex = i + 1;
+                hasTitleBreak = true;
                 break;
             }
-        }*/
+        }
+        if (!hasTitleBreak) {
+            return components.size();
+        }
         return Math.min(splitIndex, components.size());
+    }
+
+    public static int getExtraTitlePadding() {
+        return 9;
     }
 }

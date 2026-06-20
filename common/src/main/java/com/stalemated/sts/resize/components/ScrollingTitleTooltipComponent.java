@@ -1,7 +1,6 @@
 package com.stalemated.sts.resize.components;
 
 import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -26,14 +25,14 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
 
     @Override
     public int getHeight() {
-        return 10;
+        return 10 + TooltipDimensionManager.getExtraTitlePadding();
     }
 
     @Override
     public int getWidth(TextRenderer textRenderer) {
         int textWidth = textRenderer.getWidth(this.text);
         int offset = TooltipDimensionManager.getModelOffset();
-        return Math.min(textWidth, this.maxTitleWidth + (StateManager.isTierifyTooltip ? 0 : offset));
+        return Math.min(textWidth + offset, this.maxTitleWidth + offset);
     }
 
     @Override
@@ -45,12 +44,12 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
         }
 
         int offset = TooltipDimensionManager.getModelOffset();
-        int overflowWidth = StateManager.isTierifyTooltip ? textWidth - this.maxTitleWidth : textWidth - this.maxTitleWidth - offset;
+        int overflowWidth = textWidth - this.maxTitleWidth;
         int identity = getStringFromOrderedText(this.text).hashCode();
         long elapsedTime = ScrollMathUtil.getTooltipElapsedTime(identity);
         int scrollOffset = ScrollMathUtil.calculateScrollOffset(overflowWidth, SCROLL_SPEED, PAUSE_MS, elapsedTime);
-        int startX = x + (StateManager.isTierifyTooltip ? 0 : offset);
-        int endX = x + this.maxTitleWidth + (StateManager.isTierifyTooltip ? 0 : offset);
+        int startX = x + offset;
+        int endX = x + this.maxTitleWidth + offset;
 
         vertexConsumers.draw();
 
@@ -63,7 +62,7 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
             context.enableScissor(startX, y, endX, y + getHeight());
         }
 
-        textRenderer.draw(this.text, (float) (x - scrollOffset), (float) y, -1, true, translatedMatrix, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
+        textRenderer.draw(this.text, (float) (startX - scrollOffset), (float) y, -1, true, translatedMatrix, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
         vertexConsumers.draw();
 
         if (context != null) {

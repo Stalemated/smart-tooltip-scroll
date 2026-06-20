@@ -40,9 +40,16 @@ public class ScrollableTooltipComponent implements TooltipComponent {
             }
         }
         int offset = TooltipDimensionManager.getModelOffset();
+        int compatRightPadding = TooltipDimensionManager.getCompatRightPadding();
 
-        this.maxWidth = MathUtils.clamp(Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth + offset), TooltipDimensionManager.MIN_TOOLTIP_WIDTH, maxWidth);
-        this.maxTextWidth = MathUtils.clamp(Math.max(maxComponentWidth, maxPinnedWidth + offset), TooltipDimensionManager.MIN_TOOLTIP_WIDTH, maxWidth - SCROLLBAR_WIDTH);
+        this.maxWidth = MathUtils.clamp(
+                Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth + offset + compatRightPadding),
+                TooltipDimensionManager.MIN_TOOLTIP_WIDTH + compatRightPadding,
+                maxWidth + compatRightPadding);
+        this.maxTextWidth = MathUtils.clamp(
+                Math.max(maxComponentWidth, maxPinnedWidth + offset),
+                TooltipDimensionManager.MIN_TOOLTIP_WIDTH,
+                maxWidth - SCROLLBAR_WIDTH);
 
         this.totalHeight = height;
         this.scrollbarHeight = this.maxHeight - 4;
