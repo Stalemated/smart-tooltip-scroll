@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.1+1.20.1
+
+### Changes
+- Changed default smoothness to 0.25 from 0.5 (250ms)
+
+### Fix
+- Fixed all title overflow modes when using Legendary Tooltips
+- Fixed crashes due to mixins in both platforms
+
 ## 1.1.0
 
 ### New Features

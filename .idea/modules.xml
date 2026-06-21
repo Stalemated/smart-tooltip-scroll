@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/neoforge/com.stalemated.sts.smart-tooltip-scroll.neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/neoforge/com.stalemated.sts.smart-tooltip-scroll.neoforge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/neoforge/com.stalemated.sts.smart-tooltip-scroll.neoforge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/neoforge/com.stalemated.sts.smart-tooltip-scroll.neoforge.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/smart-tooltip-scroll.common.test.iml" />
