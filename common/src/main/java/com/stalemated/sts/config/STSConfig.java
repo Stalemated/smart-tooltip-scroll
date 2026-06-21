@@ -20,5 +20,5 @@ public class STSConfig {
     public boolean lock_container_scrolling = true;
 
     @SerialEntry(comment = "Smoothness of the tooltip scroll animation. 0.0 is instant, 1.0 is very smooth.")
-    public float scroll_smoothness = 0.5f;
+    public float scroll_smoothness = 0.25f;
 }
