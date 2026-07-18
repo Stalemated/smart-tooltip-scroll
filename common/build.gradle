@@ -12,22 +12,22 @@ dependencies {
     // We depend on Fabric Loader here to use the Fabric @Environment annotations,
     // which get remapped to the correct annotations on each platform.
     // Do NOT use other classes from Fabric Loader.
-    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+    implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
     // S-Lib common code
-    modImplementation("com.stalemated.lib:s-lib-common:${rootProject.s_lib_version}")
+    implementation("com.stalemated.lib:s-lib-common:${rootProject.s_lib_version}")
 
     // YACL
-    modImplementation "dev.isxander:yet-another-config-lib:${rootProject.yacl_version}-fabric"
+    implementation "dev.isxander:yet-another-config-lib:${rootProject.yacl_version}-fabric"
 
     // Required to resolve injected Fabric interfaces during compilation (like FabricItemStack)
-    modCompileOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    compileOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
     // Legendary Tooltips (IDE Common compat)
-    modCompileOnly "curse.maven:legendary-tooltips-fabric-542478:${rootProject.legendary_tooltips_id}"
+    compileOnly "curse.maven:legendary-tooltips-fabric-542478:${rootProject.legendary_tooltips_id}"
     // Iceberg (IDE Common compat)
-    modCompileOnly "curse.maven:iceberg-fabric-539382:${rootProject.iceberg_id}"
+    compileOnly "curse.maven:iceberg-fabric-539382:${rootProject.iceberg_id}"
 
-    // EMI
-    modCompileOnly "dev.emi:emi-xplat-intermediary:${rootProject.emi_version}"
+    /*// EMI
+    compileOnly "dev.emi:emi-xplat-intermediary:${rootProject.emi_version}"*/
 }
