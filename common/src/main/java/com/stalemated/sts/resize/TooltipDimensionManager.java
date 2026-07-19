@@ -100,7 +100,6 @@ public class TooltipDimensionManager {
         if (components.isEmpty()) return components;
 
         int splitIndex = getSplitIndex(components);
-        boolean hasMarker = splitIndex < components.size() && isMarker(components.get(splitIndex));
 
         int scaledTooltipWidth = getScaledTooltipWidth();
         int scaledTooltipHeight = getScaledTooltipHeight();
@@ -115,7 +114,7 @@ public class TooltipDimensionManager {
         }
 
         List<TooltipComponent> pinned = new ArrayList<>(components.subList(0, splitIndex));
-        List<TooltipComponent> body = new ArrayList<>(components.subList(hasMarker ? splitIndex + 1 : splitIndex, components.size()));
+        List<TooltipComponent> body = new ArrayList<>(components.subList(splitIndex, components.size()));
         List<TooltipComponent> scrollableContentRaw = new ArrayList<>(body);
         trimTrailingEmptyComponents(scrollableContentRaw);
         List<TooltipComponent> scrollableContent = new ArrayList<>(scrollableContentRaw);
@@ -123,7 +122,7 @@ public class TooltipDimensionManager {
         bodyComponentList = scrollableContent;
 
         // EMI compat
-        if (!hasMarker && pinned.size() > 1 && ConfigManager.getConfig().title_overflow_mode != TitleOverflowMode.WRAP) {
+        if (pinned.size() > 1 && ConfigManager.getConfig().title_overflow_mode != TitleOverflowMode.WRAP) {
             pinned = TooltipWrapUtil.mergeComponents(pinned);
         }
 
@@ -169,20 +168,7 @@ public class TooltipDimensionManager {
         return combined;
     }
 
-    public static boolean isMarker(TooltipComponent component) {
-        return TooltipStyleUtils.getExtractedTextValue(component)
-                .map(orderedText -> TooltipStyleUtils.convertOrderedTextToMutable(orderedText).getString().contains("STS_TITLE_MARKER"))
-                .orElse(false);
-    }
-
     public static int getSplitIndex(List<TooltipComponent> components) {
-        for (int i = 0; i < components.size(); i++) {
-            if (isMarker(components.get(i))) {
-                return i;
-            }
-        }
-        
-        // Fallback
         int splitIndex = 1;
         if (IS_LT_LOADED) {
             splitIndex = LegendaryTooltipsCompat.getSplitIndex(components, splitIndex);

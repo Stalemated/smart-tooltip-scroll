@@ -10,14 +10,12 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.gui.tooltip.TooltipPositioner;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(DrawContext.class)
@@ -28,29 +26,6 @@ public abstract class DrawContextMixin {
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
             TooltipDimensionManager.setState((DrawContext) (Object) this, textRenderer);
         }
-    }
-
-    @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;Ljava/util/Optional;II)V", at = @At("HEAD"), argsOnly = true, index = 2)
-    private List<Text> rst$applyDimensionsWidth(List<Text> text) {
-        List<Text> modifiable = new ArrayList<>(text);
-
-        if (ConfigManager.getConfig().custom_tooltip_dimensions) {
-            TooltipContext ctx = TooltipContextManager.peek();
-            if (ctx != null && !modifiable.isEmpty()) {
-                boolean hasMarker = false;
-                for (Text t : modifiable) {
-                    if (t.getString().contains("STS_TITLE_MARKER")) {
-                        hasMarker = true;
-                        break;
-                    }
-                }
-                if (!hasMarker) {
-                    modifiable.add(1, Text.literal("STS_TITLE_MARKER"));
-                }
-            }
-        }
-        
-        return modifiable;
     }
 
     @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"), argsOnly = true, index = 2)
