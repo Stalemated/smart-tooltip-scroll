@@ -56,7 +56,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
 
     @Override
     public int getHeight() {
-        return this.maxHeight;
+        return Math.min(this.totalHeight, this.maxHeight);
     }
 
     @Override
