@@ -95,14 +95,7 @@ public class TierifyLegendaryBridge {
         int extraWidth = TooltipDimensionManager.getModelOffset();
         
         if (extraWidth > 0 && !pinned.isEmpty()) {
-            int titleHeight = 0;
-            for (TooltipComponent component : pinned) {
-                titleHeight += component.getHeight();
-            }
-            
-            int firstLineHeight = pinned.get(0).getHeight();
-            int yOffset = Math.max(0, (extraWidth - firstLineHeight) / 2);
-            int wrapperHeight = Math.max(extraWidth, yOffset * 2 + titleHeight - TITLE_BODY_VERTICAL_GAP);
+            int wrapperHeight = getWrapperHeight(pinned, extraWidth);
             int paddingHeight = TooltipDimensionManager.getPaddingOffset(0);
             if (pinned.size() > 1) paddingHeight += TITLE_BODY_VERTICAL_GAP; // Compensate for PaddingComponent
             
@@ -115,5 +108,19 @@ public class TierifyLegendaryBridge {
         }
         if (pinned.size() > 1) rawPinnedHeight += TITLE_BODY_VERTICAL_GAP; // Compensate for PaddingComponent
         return rawPinnedHeight;
+    }
+
+    public static int getWrapperHeight(List<TooltipComponent> pinned, int extraWidth) {
+        int titleHeight = 0;
+        for (TooltipComponent component : pinned) {
+            titleHeight += component.getHeight();
+        }
+
+        int firstLineHeight = pinned.get(0).getHeight();
+        if (pinned.get(0) instanceof WrappedTitleTooltipComponent) {
+            firstLineHeight = ((WrappedTitleTooltipComponent) pinned.get(0)).getFirstLineHeight();
+        }
+        int yOffset = Math.max(0, (extraWidth - firstLineHeight) / 2);
+        return Math.max(extraWidth, yOffset * 2 + titleHeight - TITLE_BODY_VERTICAL_GAP);
     }
 }

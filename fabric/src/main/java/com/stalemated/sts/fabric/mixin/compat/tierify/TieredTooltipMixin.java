@@ -5,6 +5,7 @@ import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.fabric.compat.TierifyLegendaryBridge;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
+import com.stalemated.sts.state.TooltipContextManager;
 import draylar.tiered.api.BorderTemplate;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.font.TextRenderer;
@@ -26,8 +27,8 @@ public abstract class TieredTooltipMixin {
 
     @Inject(method = "renderTieredTooltipFromComponents", at = @At("HEAD"))
     private static void rst$captureContext(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
-        TooltipDimensionManager.setState(context, textRenderer, components);
-        TooltipDimensionManager.isCurrentTooltipItemTooltip = true;
+        TooltipDimensionManager.setState(context, textRenderer);
+        StateManager.isTierifyTooltip = true;
     }
 
     @ModifyVariable(method = "renderTieredTooltipFromComponents", at = @At("HEAD"), index = 2, argsOnly = true)
@@ -40,8 +41,7 @@ public abstract class TieredTooltipMixin {
         }
 
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
-            StateManager.isTierifyTooltip = true;
-            processedList = TooltipDimensionManager.enforceHeightLimit(components);
+            processedList = TooltipDimensionManager.enforceHeightLimit(components, TooltipContextManager.peek());
         }
 
         if (hasLT) {

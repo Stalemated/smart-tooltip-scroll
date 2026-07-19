@@ -17,11 +17,6 @@ import java.util.Optional;
 public class ScrollOverflowStrategy implements TitleOverflowStrategy {
 
     @Override
-    public List<Text> processTextPhase(List<Text> textList, TextRenderer textRenderer, int maxTitleWidth) {
-        return textList;
-    }
-
-    @Override
     public List<TooltipComponent> processComponentPhase(List<TooltipComponent> components, TextRenderer textRenderer, int maxTitleWidth) {
         List<TooltipComponent> modified = new ArrayList<>();
         for (TooltipComponent component : components) {

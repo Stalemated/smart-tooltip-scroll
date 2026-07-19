@@ -32,8 +32,14 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
     @Override
     public int getWidth(TextRenderer textRenderer) {
         int textWidth = textRenderer.getWidth(this.text);
-        int offset = TooltipDimensionManager.getModelOffset();
-        return Math.min(textWidth, this.maxTitleWidth + (StateManager.isTierifyTooltip ? 0 : offset));
+        return Math.min(textWidth, this.maxTitleWidth);
+    }
+
+    private int getOffset() {
+        return TooltipDimensionManager.getModelOffset(
+            TooltipDimensionManager.getCurrentStack(),
+            TooltipDimensionManager.processedTitleComponentList
+        );
     }
 
     @Override
@@ -44,13 +50,13 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
             return;
         }
 
-        int offset = TooltipDimensionManager.getModelOffset();
-        int overflowWidth = StateManager.isTierifyTooltip ? textWidth - this.maxTitleWidth : textWidth - this.maxTitleWidth - offset;
+        int offset = getOffset();
+        int overflowWidth = textWidth - this.maxTitleWidth;
         int identity = getStringFromOrderedText(this.text).hashCode();
         long elapsedTime = ScrollMathUtil.getTooltipElapsedTime(identity);
         int scrollOffset = ScrollMathUtil.calculateScrollOffset(overflowWidth, SCROLL_SPEED, PAUSE_MS, elapsedTime);
         int startX = x + (StateManager.isTierifyTooltip ? 0 : offset);
-        int endX = x + this.maxTitleWidth + (StateManager.isTierifyTooltip ? 0 : offset);
+        int endX = x + this.maxTitleWidth;
 
         vertexConsumers.draw();
 
@@ -75,7 +81,6 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
     public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
     }
 
-    //TODO remove this method maybe
     private String getStringFromOrderedText(OrderedText text) {
         StringBuilder builder = new StringBuilder();
         text.accept((index, style, codePoint) -> {

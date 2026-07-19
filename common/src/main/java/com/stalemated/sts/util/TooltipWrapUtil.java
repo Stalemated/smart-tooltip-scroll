@@ -3,8 +3,11 @@ package com.stalemated.sts.util;
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
 import com.stalemated.lib.helper.PlatformHelper;
 import com.stalemated.lib.util.style.TooltipStyleUtils;
+import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.components.StsIndentedTextTooltipComponent;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
+import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.text.*;
@@ -57,9 +60,33 @@ public class TooltipWrapUtil {
                         continue;
                     }
                 } else {
-                    currentOffset = TooltipDimensionManager.getModelOffset();
+                    if (!StateManager.isTierifyTooltip) {
+                        currentOffset = TooltipDimensionManager.getModelOffset();
+                    }
                 }
-                titleLines.add(new IndentedTextTooltipComponent(w, currentOffset));
+
+                int padding = 0;
+                if (PlatformHelper.INSTANCE.isModLoaded("legendarytooltips")) {
+                    if (wrapped.size() > 1 && i == wrapped.size() - 1) {
+                        boolean hasModel = LegendaryTooltipsCompat.getItemModelComponentWidth(
+                                TooltipDimensionManager.getCurrentStack(),
+                                TooltipDimensionManager.processedTitleComponentList
+                        ) > 0;
+                        if (StateManager.isTierifyTooltip) {
+                            padding = hasModel ? 2 : 1;
+                        } else {
+                            if (!hasModel) {
+                                padding = 1;
+                            }
+                        }
+                    }
+                }
+
+                if (padding > 0) {
+                    titleLines.add(new StsIndentedTextTooltipComponent(w, currentOffset, padding));
+                } else {
+                    titleLines.add(new IndentedTextTooltipComponent(w, currentOffset));
+                }
             } else {
                 wrappedComponents.add(new IndentedTextTooltipComponent(w, currentOffset));
             }
@@ -69,15 +96,7 @@ public class TooltipWrapUtil {
             if (titleLines.size() == 1) {
                 wrappedComponents.add(titleLines.get(0));
             } else {
-                if (PlatformHelper.INSTANCE.isModLoaded("legendarytooltips")) {
-                    if (!TooltipDimensionManager.bodyComponentList.isEmpty()) {
-                        wrappedComponents.addAll(titleLines);
-                    } else {
-                        wrappedComponents.add(new WrappedTitleTooltipComponent(titleLines));
-                    }
-                } else {
-                    wrappedComponents.add(new WrappedTitleTooltipComponent(titleLines));
-                }
+                wrappedComponents.add(new WrappedTitleTooltipComponent(titleLines));
             }
         }
         return true;

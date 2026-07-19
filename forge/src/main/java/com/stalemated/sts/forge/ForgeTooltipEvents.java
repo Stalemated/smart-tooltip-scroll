@@ -15,16 +15,8 @@ public class ForgeTooltipEvents {
 
     @SubscribeEvent
     public static void onGatherComponents(RenderTooltipEvent.GatherComponents event) {
-        if (ConfigManager.getConfig().custom_tooltip_dimensions && TooltipDimensionManager.isCurrentTooltipItemTooltip) {
+        if (ConfigManager.getConfig().custom_tooltip_dimensions) {
             event.setMaxWidth(-1);
-
-            if (!ModList.get().isLoaded("iceberg")) {
-                if (!event.getTooltipElements().isEmpty()) {
-                    event.getTooltipElements().get(0).ifLeft(visitable ->
-                            TooltipDimensionManager.expectedTitleString = visitable.getString().replace(" ", "")
-                    );
-                }
-            }
         }
     }
 }

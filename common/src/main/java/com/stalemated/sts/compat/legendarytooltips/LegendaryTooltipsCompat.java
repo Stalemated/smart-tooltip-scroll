@@ -9,29 +9,38 @@ import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static com.stalemated.sts.resize.TooltipDimensionManager.TITLE_BODY_VERTICAL_GAP;
 
 
 public class LegendaryTooltipsCompat {
 
-    public static int getItemModelComponentWidth(ItemStack stack) {
-        if (stack == null || stack.isEmpty()) return 0;
+    private static final int LT_ITEM_MODEL_OFFSET = 24;
 
-        int offset = LegendaryTooltipsConfig.showModelForItem(stack) ? 24 : 0;
-        if (StateManager.isTierifyTooltip) return offset;
+    public static int getItemModelComponentWidth(ItemStack stack, List<TooltipComponent> currentComponents) {
+        if (StateManager.isTierifyTooltip) {
+            if (stack == null || stack.isEmpty()) return 0;
+            return LegendaryTooltipsConfig.showModelForItem(stack) ? LT_ITEM_MODEL_OFFSET : 0;
+        }
 
-        List<TooltipComponent> currentComponents = TooltipDimensionManager.currentComponents;
-        if (currentComponents != null) {
-            for (TooltipComponent component : currentComponents) {
-                if (component instanceof ItemModelComponent) {
-                    return offset;
+        List<TooltipComponent> combined = new ArrayList<>();
+        combined.addAll(TooltipDimensionManager.processedTitleComponentList);
+        combined.addAll(TooltipDimensionManager.bodyComponentList);
+        if (combined.isEmpty() && currentComponents != null) {
+            combined.addAll(currentComponents);
+        }
+
+        if (!combined.isEmpty()) {
+            for (TooltipComponent component : combined) {
+                if (component instanceof ItemModelComponent && LegendaryTooltipsConfig.showModelForItem(stack)) {
+                    return LT_ITEM_MODEL_OFFSET;
                 }
             }
+            
             return 0;
         } else {
-            return offset;
+            if (stack == null || stack.isEmpty()) return 0;
+            return LegendaryTooltipsConfig.showModelForItem(stack) ? LT_ITEM_MODEL_OFFSET : 0;
         }
     }
 
@@ -45,9 +54,5 @@ public class LegendaryTooltipsCompat {
             }
         }
         return Math.min(splitIndex, components.size());
-    }
-
-    public static int getLTOffset(int i, int componentSize) {
-        return i == 0 && componentSize > 1 ? TITLE_BODY_VERTICAL_GAP : 0;
     }
 }

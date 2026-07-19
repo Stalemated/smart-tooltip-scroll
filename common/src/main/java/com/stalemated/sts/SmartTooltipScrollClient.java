@@ -3,7 +3,7 @@ package com.stalemated.sts;
 import com.stalemated.lib.helper.PlatformHelper;
 import com.stalemated.sts.compat.emi.EmiCompat;
 import com.stalemated.sts.config.ConfigManager;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.state.TooltipContextManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
@@ -25,7 +25,6 @@ public final class SmartTooltipScrollClient {
 
     public static void onItemTooltip(ItemStack stack) {
         if (stack.isEmpty()) return;
-        TooltipDimensionManager.nextTooltipIsItem = true;
-        TooltipDimensionManager.setCurrentStack(stack);
+        TooltipContextManager.push(stack);
     }
 }

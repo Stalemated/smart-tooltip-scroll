@@ -3,6 +3,7 @@ package com.stalemated.sts.fabric.compat.component;
 import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
 import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -39,7 +40,11 @@ public class LegendaryTieredWrapper implements TooltipComponent {
 
     private int getFirstLineHeight() {
         if (titleComponents != null && !titleComponents.isEmpty()) {
-            return titleComponents.get(0).getHeight();
+            TooltipComponent firstComp = titleComponents.get(0);
+            if (firstComp instanceof WrappedTitleTooltipComponent) {
+                return ((WrappedTitleTooltipComponent) firstComp).getFirstLineHeight();
+            }
+            return firstComp.getHeight();
         }
         return 10;
     }
