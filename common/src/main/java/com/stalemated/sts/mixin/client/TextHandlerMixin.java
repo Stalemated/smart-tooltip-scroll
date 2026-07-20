@@ -1,6 +1,5 @@
 package com.stalemated.sts.mixin.client;
 
-
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.util.TooltipWrapUtil;
@@ -9,6 +8,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+
+import static com.stalemated.sts.resize.TooltipDimensionManager.IS_LT_LOADED;
 
 @Mixin(TextHandler.class)
 public abstract class TextHandlerMixin {
@@ -31,6 +32,6 @@ public abstract class TextHandlerMixin {
 
     @Unique
     private boolean rst$wrappingConditions() {
-        return TooltipContextManager.peek() != null && ConfigManager.getConfig().custom_tooltip_dimensions && !TooltipWrapUtil.isHandlingCustomWrap;
+        return TooltipContextManager.peek() != null && ConfigManager.getConfig().custom_tooltip_dimensions && !TooltipWrapUtil.isHandlingCustomWrap && IS_LT_LOADED;
     }
 }

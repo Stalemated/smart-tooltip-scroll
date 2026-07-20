@@ -36,7 +36,7 @@ public class TooltipDimensionManager {
     public static List<TooltipComponent> bodyComponentList = new ArrayList<>();
     public static Function<List<TooltipComponent>, Integer> pinnedHeightPredictor = null;
 
-    private static final boolean IS_LT_LOADED = PlatformHelper.INSTANCE.isModLoaded("legendarytooltips");
+    public static final boolean IS_LT_LOADED = PlatformHelper.INSTANCE.isModLoaded("legendarytooltips");
 
     private static final DimensionCache widthCache = new DimensionCache(TOOLTIP_PADDING_X, MIN_TOOLTIP_WIDTH);
     private static final DimensionCache heightCache = new DimensionCache(TOOLTIP_PADDING_Y, MIN_TOOLTIP_HEIGHT);
