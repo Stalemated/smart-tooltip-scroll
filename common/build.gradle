@@ -30,4 +30,7 @@ dependencies {
 
     // EMI
     modCompileOnly "dev.emi:emi-xplat-intermediary:${rootProject.emi_version}"
+
+    // Tooltip Overhaul (compat)
+    modCompileOnly "curse.maven:tooltip-overhaul-1327508:8380593"
 }

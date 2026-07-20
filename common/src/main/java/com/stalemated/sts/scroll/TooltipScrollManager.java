@@ -3,6 +3,9 @@ package com.stalemated.sts.scroll;
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.sts.config.ConfigManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TooltipScrollManager {
     private static int targetScroll = 0;
     private static int startScroll = 0;
@@ -13,6 +16,12 @@ public class TooltipScrollManager {
     private static final int maxUnhoveredRenderTimeMs = 250;
     private static final int smoothnessTimeMs = 1000;
 
+    private static final List<ExternalScrollStateResetter> externalResetters = new ArrayList<>();
+
+    public static void registerResetter(ExternalScrollStateResetter resetter) {
+        externalResetters.add(resetter);
+    }
+
     public static void updateMaxScroll(int newMaxScroll) {
         long currentTime = System.currentTimeMillis();
 
@@ -22,6 +31,10 @@ public class TooltipScrollManager {
             scrollStartTime = currentTime;
         }
         lastRenderTime = currentTime;
+
+        for (ExternalScrollStateResetter resetter : externalResetters) {
+            resetter.resetState();
+        }
 
         maxScroll = Math.max(0, newMaxScroll);
         
