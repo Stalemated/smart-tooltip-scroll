@@ -102,27 +102,4 @@ public class TooltipWrapUtil {
         return true;
     }
 
-    public static List<TooltipComponent> mergeComponents(List<TooltipComponent> components) {
-        if (components.size() <= 1) return components;
-
-        MutableText merged = Text.empty();
-        for (TooltipComponent comp : components) {
-            Optional<OrderedText> extracted = TooltipStyleUtils.getExtractedTextValue(comp);
-
-            if (extracted.isPresent()) {
-                if (!merged.getString().isEmpty()) {
-                    merged.append(Text.literal(" "));
-                }
-                merged.append(TooltipStyleUtils.convertOrderedTextToMutable(extracted.get()));
-            }
-        }
-
-        if (merged.getString().isEmpty()) {
-            return components;
-        }
-
-        List<TooltipComponent> mergedList = new ArrayList<>();
-        mergedList.add(TooltipComponent.of(merged.asOrderedText()));
-        return mergedList;
-    }
 }

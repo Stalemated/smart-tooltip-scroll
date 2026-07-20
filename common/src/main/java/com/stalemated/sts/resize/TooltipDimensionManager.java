@@ -2,7 +2,6 @@ package com.stalemated.sts.resize;
 
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.lib.helper.PlatformHelper;
-import com.stalemated.lib.util.style.TooltipStyleUtils;
 import com.stalemated.sts.compat.emi.EmiItemMarkerComponent;
 import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
@@ -76,26 +75,6 @@ public class TooltipDimensionManager {
         return totalHeight;
     }
 
-    private static void trimTrailingEmptyComponents(List<TooltipComponent> list) {
-        for (int i = list.size() - 1; i >= 0; i--) {
-            TooltipComponent comp = list.get(i);
-
-            if (comp instanceof EmiItemMarkerComponent) {
-                continue;
-            }
-
-            boolean isBlankText = TooltipStyleUtils.getExtractedTextValue(comp)
-                    .map(orderedText -> TooltipStyleUtils.convertOrderedTextToMutable(orderedText).getString().isBlank())
-                    .orElse(false);
-
-            if (isBlankText) {
-                list.remove(i);
-            } else {
-                break;
-            }
-        }
-    }
-
     public static List<TooltipComponent> enforceHeightLimit(List<TooltipComponent> components, TooltipContext ctx) {
         if (components.isEmpty()) return components;
 
@@ -116,15 +95,10 @@ public class TooltipDimensionManager {
         List<TooltipComponent> pinned = new ArrayList<>(components.subList(0, splitIndex));
         List<TooltipComponent> body = new ArrayList<>(components.subList(splitIndex, components.size()));
         List<TooltipComponent> scrollableContentRaw = new ArrayList<>(body);
-        trimTrailingEmptyComponents(scrollableContentRaw);
         List<TooltipComponent> scrollableContent = new ArrayList<>(scrollableContentRaw);
+
         processedTitleComponentList = new ArrayList<>(pinned);
         bodyComponentList = scrollableContent;
-
-        // EMI compat
-        if (pinned.size() > 1 && ConfigManager.getConfig().title_overflow_mode != TitleOverflowMode.WRAP) {
-            pinned = TooltipWrapUtil.mergeComponents(pinned);
-        }
 
         if (currentTextRenderer != null) {
             pinned = TitleOverflowStrategyFactory.getStrategy().processComponentPhase(pinned, currentTextRenderer, titleMaxWidth);
