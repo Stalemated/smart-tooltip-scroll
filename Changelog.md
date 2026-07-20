@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.0+1.20.1
+
+### Changes
+- **Internal State Overhaul:** Massive restructuring of the internal tooltip state management to resolve multiple critical layout bugs caused by third-party mod interactions (EMI, Legendary Tooltips, Tierify, Tooltip Overhaul).
+
+### Fixes
+- Fixed an issue where displaying a scrollable tooltip from Tooltip Overhaul would cancel scrolling for STS tooltips
+- Fixed an issue where text would stop being wrapped for other mods (logic is only enabled for Legendary Tooltips compatibility)
+- Fixed a bug where tooltips with less than 3 lines had an artificial empty space inserted at the bottom.
+
 ## 1.1.1+1.20.1
 
 ### Changes
