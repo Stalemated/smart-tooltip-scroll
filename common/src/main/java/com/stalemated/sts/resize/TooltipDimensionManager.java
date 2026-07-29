@@ -64,7 +64,7 @@ public class TooltipDimensionManager {
         }
     }
 
-    private static int calculateTotalHeight(List<TooltipComponent> components) {
+    private static int calculateComponentListHeight(List<TooltipComponent> components) {
         if (components.isEmpty()) return 0;
         int totalHeight = 0;
 
@@ -86,22 +86,21 @@ public class TooltipDimensionManager {
         int titleMaxWidth;
         TitleOverflowMode overflowMode = ConfigManager.getConfig().title_overflow_mode;
         if (StateManager.isTierifyTooltip || overflowMode == TitleOverflowMode.WRAP) {
-            titleMaxWidth = Math.max(scaledTooltipWidth - componentWidth, MIN_TOOLTIP_WIDTH - componentWidth);
+            titleMaxWidth = Math.max(scaledTooltipWidth, MIN_TOOLTIP_WIDTH) - componentWidth;
         } else {
             titleMaxWidth = Math.max(scaledTooltipWidth, MIN_TOOLTIP_WIDTH);
         }
 
         List<TooltipComponent> pinned = new ArrayList<>(components.subList(0, splitIndex));
-        List<TooltipComponent> body = new ArrayList<>(components.subList(splitIndex, components.size()));
-        List<TooltipComponent> scrollableContentRaw = new ArrayList<>(body);
-        List<TooltipComponent> scrollableContent = new ArrayList<>(scrollableContentRaw);
+        List<TooltipComponent> scrollableContentRaw = components.subList(splitIndex, components.size());
+        List<TooltipComponent> scrollableContent = scrollableContentRaw;
 
-        processedTitleComponentList = new ArrayList<>(pinned);
+        processedTitleComponentList = pinned;
         bodyComponentList = scrollableContent;
 
         if (currentTextRenderer != null) {
             pinned = TitleOverflowStrategyFactory.getStrategy().processComponentPhase(pinned, currentTextRenderer, titleMaxWidth);
-            processedTitleComponentList = new ArrayList<>(pinned);
+            processedTitleComponentList = pinned;
             // Two-pass approach: not discounting the scrollbar's width
             scrollableContent = TooltipWrapUtil.wrapComponents(scrollableContentRaw, scaledTooltipWidth, currentTextRenderer, false);
         }
@@ -110,7 +109,7 @@ public class TooltipDimensionManager {
         combined.addAll(pinned);
         combined.addAll(scrollableContent);
         
-        int totalHeight = calculateTotalHeight(combined);
+        int totalHeight = calculateComponentListHeight(combined);
 
         if (totalHeight > scaledTooltipHeight && currentTextRenderer != null) {
             if (scrollableContentRaw.isEmpty()) {
@@ -120,13 +119,11 @@ public class TooltipDimensionManager {
             // 2nd pass: discounts the scrollbar width
             scrollableContent = TooltipWrapUtil.wrapComponents(scrollableContentRaw, scaledTooltipWidth - ScrollableTooltipComponent.SCROLLBAR_WIDTH, currentTextRenderer, false);
 
-            int pinnedHeight = 0;
+            int pinnedHeight;
             if (pinnedHeightPredictor != null) {
                 pinnedHeight = pinnedHeightPredictor.apply(pinned);
             } else {
-                for (int i = 0; i < pinned.size(); i++) {
-                    pinnedHeight += pinned.get(i).getHeight() + getPaddingOffset(i);
-                }
+                pinnedHeight = calculateComponentListHeight(pinned);
             }
             int scrollableHeight = scaledTooltipHeight - pinnedHeight;
             int availableHeight = Math.max(scrollableHeight, MIN_TOOLTIP_HEIGHT);
