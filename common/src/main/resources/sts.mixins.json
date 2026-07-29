@@ -8,7 +8,7 @@
     "MouseMixin",
     "TextHandlerMixin",
     "compat.iceberg.IcebergTooltipsMixin",
-    "compat.emi.EmiStackMixin"
+    "compat.emi.EmiRenderHelperMixin"
   ],
   "injectors": {
     "defaultRequire": 1

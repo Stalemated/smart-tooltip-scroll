@@ -2,7 +2,6 @@ package com.stalemated.sts.resize;
 
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.lib.helper.PlatformHelper;
-import com.stalemated.sts.compat.emi.EmiItemMarkerComponent;
 import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
@@ -114,7 +113,7 @@ public class TooltipDimensionManager {
         int totalHeight = calculateTotalHeight(combined);
 
         if (totalHeight > scaledTooltipHeight && currentTextRenderer != null) {
-            if (scrollableContentRaw.isEmpty() || scrollableContentRaw.get(0) instanceof EmiItemMarkerComponent) {
+            if (scrollableContentRaw.isEmpty()) {
                 return combined;
             }
 
