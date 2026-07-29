@@ -6,7 +6,6 @@
   "client": [
     "DrawContextMixin",
     "MouseMixin",
-    "TextHandlerMixin",
     "compat.iceberg.IcebergTooltipsMixin",
     "compat.emi.EmiRenderHelperMixin"
   ],
