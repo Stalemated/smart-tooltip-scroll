@@ -9,22 +9,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.spongepowered.asm.mixin.injection.Redirect;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.OrderedText;
+import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
 import net.minecraft.client.font.TextRenderer;
-import java.util.List;
 
 @Pseudo
-@Mixin(targets = "dev.emi.emi.EmiRenderHelper", remap = false)
+@Mixin(targets = "dev.emi.emi.EmiRenderHelper")
 public class EmiRenderHelperMixin {
 
     @Redirect(method = "drawTooltip(Lnet/minecraft/client/gui/screen/Screen;Ldev/emi/emi/runtime/EmiDrawContext;Ljava/util/List;IIILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;wrapLines(Lnet/minecraft/text/StringVisitable;I)Ljava/util/List;"))
-    private static List<OrderedText> sts$disableEmiWrap(TextRenderer instance, StringVisitable text, int width) {
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/tooltip/OrderedTextTooltipComponent;getWidth(Lnet/minecraft/client/font/TextRenderer;)I"))
+    private static int sts$preventEmiWrap(OrderedTextTooltipComponent instance, TextRenderer textRenderer) {
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
-            return instance.wrapLines(text, Integer.MAX_VALUE);
+            return 0;
         }
-        return instance.wrapLines(text, width);
+        return instance.getWidth(textRenderer);
     }
 
     @Inject(method = "drawTooltip(Lnet/minecraft/client/gui/screen/Screen;Ldev/emi/emi/runtime/EmiDrawContext;Ljava/util/List;IIILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"))

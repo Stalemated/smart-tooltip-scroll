@@ -24,7 +24,7 @@ public class IcebergTooltipsMixin {
     @Redirect(method = "lambda$gatherTooltipComponents$5", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;wrapLines(Lnet/minecraft/text/StringVisitable;I)Ljava/util/List;"))
     private static List<OrderedText> sts$disableIcebergWrap(TextRenderer instance, StringVisitable text, int width) {
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
-            return instance.wrapLines(text, Integer.MAX_VALUE);
+            return instance.wrapLines(text, 99999);
         }
         return instance.wrapLines(text, width);
     }
