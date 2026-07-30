@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.1+1.20.1
+
+### Fixes
+- Refactored internal calculations to optimize memory allocation
+- Fixed the wrap logic to only target problematic mods (EMI, Iceberg) instead of overriding vanilla behavior globally. This restores compatibility with other mods that rely on native text wrapping (such as Tips, Boss Checklist, EMI Effect Addon, etc.).
+- Preventatively fixed integer overflows in wrapping behavior by setting safer maximum limits.
+
 ## 2.0.0+1.20.1
 
 ### Changes
