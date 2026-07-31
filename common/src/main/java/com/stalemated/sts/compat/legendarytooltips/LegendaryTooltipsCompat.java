@@ -9,7 +9,6 @@ import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,30 +17,36 @@ public class LegendaryTooltipsCompat {
     private static final int LT_ITEM_MODEL_OFFSET = 24;
 
     public static int getItemModelComponentWidth(ItemStack stack, List<TooltipComponent> currentComponents) {
+        if (stack == null || stack.isEmpty()) return 0;
+        if (!LegendaryTooltipsConfig.showModelForItem(stack)) return 0;
+
         if (StateManager.isTierifyTooltip) {
-            if (stack == null || stack.isEmpty()) return 0;
-            return LegendaryTooltipsConfig.showModelForItem(stack) ? LT_ITEM_MODEL_OFFSET : 0;
+            return LT_ITEM_MODEL_OFFSET;
         }
 
-        List<TooltipComponent> combined = new ArrayList<>();
-        combined.addAll(TooltipDimensionManager.processedTitleComponentList);
-        combined.addAll(TooltipDimensionManager.bodyComponentList);
-        if (combined.isEmpty() && currentComponents != null) {
-            combined.addAll(currentComponents);
-        }
+        boolean hasTitleComponents = !TooltipDimensionManager.processedTitleComponentList.isEmpty();
 
-        if (!combined.isEmpty()) {
-            for (TooltipComponent component : combined) {
-                if (component instanceof ItemModelComponent && LegendaryTooltipsConfig.showModelForItem(stack)) {
-                    return LT_ITEM_MODEL_OFFSET;
-                }
+        if (hasTitleComponents) {
+            if (containsItemModel(TooltipDimensionManager.processedTitleComponentList)) {
+                return LT_ITEM_MODEL_OFFSET;
             }
-            
             return 0;
-        } else {
-            if (stack == null || stack.isEmpty()) return 0;
-            return LegendaryTooltipsConfig.showModelForItem(stack) ? LT_ITEM_MODEL_OFFSET : 0;
         }
+
+        if (currentComponents != null && !currentComponents.isEmpty()) {
+            return containsItemModel(currentComponents) ? LT_ITEM_MODEL_OFFSET : 0;
+        }
+
+        return LT_ITEM_MODEL_OFFSET;
+    }
+
+    private static boolean containsItemModel(List<TooltipComponent> components) {
+        for (TooltipComponent component : components) {
+            if (component instanceof ItemModelComponent) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static int getSplitIndex(List<TooltipComponent> components, int splitIndex) {
