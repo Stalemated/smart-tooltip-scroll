@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.2+1.20.1
+
+### Fixes
+- Fixed a crash (`NullPointerException`) that could occur when rendering Legendary Tooltips compatibility without a valid item. (e.g. Traveler's Backpack)
+- Fixed a visual bug where small tooltips would sometimes have an artificial empty space on the right side.
+
 ## 2.0.1+1.20.1
 
 ### Fixes
