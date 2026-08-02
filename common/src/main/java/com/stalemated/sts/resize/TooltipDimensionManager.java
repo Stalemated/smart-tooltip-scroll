@@ -18,6 +18,7 @@ import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -30,8 +31,8 @@ public class TooltipDimensionManager {
     public static final int TOOLTIP_PADDING_X = 8;
     private static final int TOOLTIP_PADDING_Y = 4;
     public static final int TITLE_BODY_VERTICAL_GAP = 2;
-    public static List<TooltipComponent> processedTitleComponentList = new ArrayList<>();
-    public static List<TooltipComponent> bodyComponentList = new ArrayList<>();
+    public static List<TooltipComponent> processedTitleComponentList = Collections.emptyList();
+    public static List<TooltipComponent> bodyComponentList = Collections.emptyList();
     public static Function<List<TooltipComponent>, Integer> pinnedHeightPredictor = null;
 
     public static final boolean IS_LT_LOADED = PlatformHelper.INSTANCE.isModLoaded("legendarytooltips");
@@ -92,7 +93,7 @@ public class TooltipDimensionManager {
         }
 
         List<TooltipComponent> pinned = new ArrayList<>(components.subList(0, splitIndex));
-        List<TooltipComponent> scrollableContentRaw = components.subList(splitIndex, components.size());
+        List<TooltipComponent> scrollableContentRaw = new ArrayList<>(components.subList(splitIndex, components.size()));
         List<TooltipComponent> scrollableContent = scrollableContentRaw;
 
         processedTitleComponentList = pinned;
@@ -103,6 +104,7 @@ public class TooltipDimensionManager {
             processedTitleComponentList = pinned;
             // Two-pass approach: not discounting the scrollbar's width
             scrollableContent = TooltipWrapUtil.wrapComponents(scrollableContentRaw, scaledTooltipWidth, currentTextRenderer, false);
+            bodyComponentList = scrollableContent;
         }
 
         List<TooltipComponent> combined = new ArrayList<>();
@@ -160,8 +162,8 @@ public class TooltipDimensionManager {
         currentContext = null;
         currentTextRenderer = null;
         TooltipContextManager.clear();
-        processedTitleComponentList.clear();
-        bodyComponentList.clear();
+        processedTitleComponentList = Collections.emptyList();
+        bodyComponentList = Collections.emptyList();
     }
 
     public static int getScaledTooltipHeight() {
