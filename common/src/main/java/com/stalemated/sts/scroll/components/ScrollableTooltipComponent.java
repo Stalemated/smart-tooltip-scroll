@@ -3,6 +3,7 @@ package com.stalemated.sts.scroll.components;
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.scroll.TooltipScrollManager;
+import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -40,9 +41,10 @@ public class ScrollableTooltipComponent implements TooltipComponent {
             }
         }
         int offset = TooltipDimensionManager.getModelOffset();
+        int minBound = StateManager.isTierifyTooltip ? TooltipDimensionManager.MIN_TOOLTIP_WIDTH : 0;
 
-        this.maxWidth = MathUtils.clamp(Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth + offset), 0, maxWidth);
-        this.maxTextWidth = MathUtils.clamp(Math.max(maxComponentWidth, maxPinnedWidth + offset), 0, maxWidth - SCROLLBAR_WIDTH);
+        this.maxWidth = MathUtils.clamp(Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth + offset), minBound, maxWidth);
+        this.maxTextWidth = MathUtils.clamp(Math.max(maxComponentWidth, maxPinnedWidth + offset), minBound, maxWidth - SCROLLBAR_WIDTH);
 
         this.totalHeight = height;
         this.scrollbarHeight = this.maxHeight - 4;
