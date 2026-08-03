@@ -44,10 +44,16 @@ dependencies {
 
     // Legendary Tooltips (compat)
     modCompileOnly "curse.maven:legendary-tooltips-532127:4662781"
+    modLocalRuntime "curse.maven:legendary-tooltips-532127:4662781"
     // Prism (compat)
     modCompileOnly "curse.maven:prism-lib-638111:4650325"
+    modLocalRuntime "curse.maven:prism-lib-638111:4650325"
     // Iceberg (compat)
     modCompileOnly "curse.maven:iceberg-520110:5838149"
+    modLocalRuntime "curse.maven:iceberg-520110:5838149"
+
+    // CTA (Runtime)
+    modLocalRuntime "curse.maven:custom-tooltip-api-1508021:8484269"
 
     // quilt-parsers is a transitive runtime dependency of YACL Forge (used by GsonConfigSerializer)
     // Loom does not propagate JarJar (Jar-in-Jar) automatically so we declare it explicitly
@@ -57,6 +63,8 @@ dependencies {
     // EMI
     modCompileOnly "dev.emi:emi-forge:${rootProject.emi_version}"
     modLocalRuntime "dev.emi:emi-forge:${rootProject.emi_version}"
+    // EMI Effect
+    modLocalRuntime "curse.maven:emiffect-status-effects-emi-plugin-735528:4901311"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
