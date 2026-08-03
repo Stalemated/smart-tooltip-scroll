@@ -18,6 +18,9 @@ displayURL = "https://www.curseforge.com/minecraft/mc-mods/smart-tooltip-scroll"
 [[mixins]]
 config = "sts.mixins.json"
 
+[[mixins]]
+config = "sts-forge.mixins.json"
+
 [[dependencies.smart_tooltip_scroll]]
 modId = "forge"
 mandatory = true

@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.stalemated.sts.forge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "ForgeHooksClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

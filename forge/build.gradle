@@ -5,6 +5,7 @@ plugins {
 loom {
     forge {
         mixinConfig "sts.mixins.json"
+        mixinConfig "sts-forge.mixins.json"
     }
     mixin {
         defaultRefmapName = "sts-forge.refmap.json"
