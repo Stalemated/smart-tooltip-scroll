@@ -51,6 +51,7 @@ public abstract class DrawContextMixin {
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
             TooltipDimensionManager.clearState();
             TooltipContextManager.pop();
+            SharedTooltipState.forceCustomDimensions = false;
         }
     }
 }
