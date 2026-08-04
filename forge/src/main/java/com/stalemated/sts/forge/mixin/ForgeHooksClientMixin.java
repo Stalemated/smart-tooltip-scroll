@@ -3,7 +3,6 @@ package com.stalemated.sts.forge.mixin;
 import com.mojang.datafixers.util.Either;
 import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.ConfigManager;
-import com.stalemated.sts.resize.enforce.TooltipEnforcerRegistry;
 import com.stalemated.sts.state.TooltipContextManager;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -11,8 +10,6 @@ import net.minecraft.client.item.TooltipData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(ForgeHooksClient.class)
@@ -40,31 +36,7 @@ public class ForgeHooksClientMixin {
         boolean isItem = (stack != null && !stack.isEmpty()) || TooltipContextManager.peek() != null;
         boolean isForced = SharedTooltipState.forceCustomDimensions;
 
-        boolean isEnforced = false;
-        if (!isItem && !isForced && elements != null && !elements.isEmpty()) {
-            List<TooltipComponent> components = new ArrayList<>();
-            for (Either<StringVisitable, TooltipData> elem : elements) {
-                elem.ifLeft(text -> {
-                    if (text instanceof Text t) {
-                        components.add(TooltipComponent.of(t.asOrderedText()));
-                    } else if (text != null) {
-                        components.add(TooltipComponent.of(OrderedText.styledForwardsVisitedString(text.getString(), Style.EMPTY)));
-                    }
-                });
-                elem.ifRight(data -> {
-                    if (data instanceof TooltipComponent comp) {
-                        components.add(comp);
-                    } else if (data != null) {
-                        try {
-                            components.add(TooltipComponent.of(data));
-                        } catch (Throwable ignored) {}
-                    }
-                });
-            }
-            isEnforced = TooltipEnforcerRegistry.isEnforced(components);
-        }
-
-        sts$isCustomActive = isItem || isForced || isEnforced;
+        sts$isCustomActive = isItem || isForced;
     }
 
     @Inject(method = "gatherTooltipComponentsFromElements(Lnet/minecraft/item/ItemStack;Ljava/util/List;IIILnet/minecraft/client/font/TextRenderer;)Ljava/util/List;", at = @At("RETURN"))

@@ -3,7 +3,6 @@ package com.stalemated.sts.mixin.client;
 import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.resize.enforce.TooltipEnforcerRegistry;
 import com.stalemated.sts.state.TooltipContext;
 import com.stalemated.sts.state.TooltipContextManager;
 import net.minecraft.client.font.TextRenderer;
@@ -35,11 +34,8 @@ public abstract class DrawContextMixin {
 
             boolean isItem = ctx != null;
             boolean isForced = SharedTooltipState.forceCustomDimensions;
-            boolean isEnforced = TooltipEnforcerRegistry.isEnforced(components);
 
-            boolean isValidTooltip = isItem || isForced || isEnforced;
-
-            if (isValidTooltip) {
+            if (isItem || isForced) {
                 return TooltipDimensionManager.enforceHeightLimit(components, ctx);
             }
         }
