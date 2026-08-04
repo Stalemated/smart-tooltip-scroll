@@ -8,7 +8,8 @@
     "MouseMixin",
     "compat.iceberg.IcebergTooltipsMixin",
     "compat.emi.EmiRenderHelperMixin",
-    "compat.puffish.SkillsScreenMixin"
+    "compat.puffish.SkillsScreenMixin",
+    "compat.tierify.TieredTooltipMixin"
   ],
   "injectors": {
     "defaultRequire": 1

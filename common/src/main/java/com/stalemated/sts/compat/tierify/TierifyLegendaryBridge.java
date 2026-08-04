@@ -1,10 +1,10 @@
-package com.stalemated.sts.fabric.compat;
+package com.stalemated.sts.compat.tierify;
 
 import com.anthonyhilyard.legendarytooltips.config.LegendaryTooltipsConfig;
 import com.anthonyhilyard.legendarytooltips.tooltip.PaddingComponent;
 import com.anthonyhilyard.legendarytooltips.tooltip.TooltipDecor;
 import com.stalemated.sts.config.ConfigManager;
-import com.stalemated.sts.fabric.compat.component.LegendaryTieredWrapper;
+import com.stalemated.sts.compat.tierify.component.LegendaryTieredWrapper;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
 import net.minecraft.client.gui.DrawContext;

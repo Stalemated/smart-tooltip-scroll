@@ -1,8 +1,7 @@
-package com.stalemated.sts.fabric.mixin.compat.tierify;
+package com.stalemated.sts.mixin.client.compat.tierify;
 
-
+import com.stalemated.sts.compat.tierify.TierifyLegendaryBridge;
 import com.stalemated.sts.config.ConfigManager;
-import com.stalemated.sts.fabric.compat.TierifyLegendaryBridge;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.state.TooltipContextManager;

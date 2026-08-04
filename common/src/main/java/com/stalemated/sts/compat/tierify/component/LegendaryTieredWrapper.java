@@ -1,4 +1,4 @@
-package com.stalemated.sts.fabric.compat.component;
+package com.stalemated.sts.compat.tierify.component;
 
 import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
