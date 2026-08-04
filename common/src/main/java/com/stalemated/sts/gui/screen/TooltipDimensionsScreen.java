@@ -117,8 +117,8 @@ public class TooltipDimensionsScreen {
                 .build();
 
         var titleScrollPauseTime  = Option.<Long>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_speed"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_speed.description")))
+                .name(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_pause_time"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_pause_time.description")))
                 .binding(
                         2000L,
                         () -> config.title_scroll_pause_time_ms,

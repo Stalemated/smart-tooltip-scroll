@@ -1,22 +1,35 @@
 {
   "sts.tooltip_dimensions_screen.title": "Scroll & Custom Tooltip Dimensions",
+
+  "sts.tooltip_dimensions_screen.category.custom_dimensions": "Custom Dimensions Config",
   "sts.tooltip_dimensions_screen.max_width_percentage": "Maximum width percentage",
   "sts.tooltip_dimensions_screen.max_width_percentage.description": "Maximum percentage of the Minecraft window allowed as the §6Tooltip Width§r.",
   "sts.tooltip_dimensions_screen.max_height_percentage": "Maximum height percentage",
   "sts.tooltip_dimensions_screen.max_height_percentage.description": "Maximum percentage of the Minecraft window allowed as the §6Tooltip Height§r.",
   "sts.tooltip_dimensions_screen.enable_custom_dimensions": "Enable custom tooltip dimensions",
   "sts.tooltip_dimensions_screen.enable_custom_dimensions.description": "Enables setting §6custom maximum dimensions§r for tooltips and §6tooltip scrolling§r.",
-  "sts.tooltip_dimensions_screen.category.custom_dimensions": "Custom Dimensions Config",
+
+  "sts.tooltip_dimensions_screen.category.title_options": "",
   "sts.tooltip_dimensions_screen.title_overflow_mode": "Title Overflow Mode",
   "sts.tooltip_dimensions_screen.title_overflow_mode.description": "Selects the behavior if the hovered item's name is larger than the maximum width of a Tooltip.\n\n§6Wrap:§r Wraps the name (separates it in multiple lines)\n§6Truncate:§r Truncates the name to the maximum tooltip width and adds '...' at the end.\n§6Horizontal Scroll:§r Smoothly scrolls the text horizontally forwards and then backwards to show the entire name in a single line.",
   "sts.tooltip_dimensions_screen.title_overflow_mode.wrap": "Wrap",
   "sts.tooltip_dimensions_screen.title_overflow_mode.truncate": "Truncate",
   "sts.tooltip_dimensions_screen.title_overflow_mode.scroll": "Horizontal Scroll",
+  "sts.tooltip_dimensions_screen.enable_title_centering": "",
+  "sts.tooltip_dimensions_screen.enable_title_centering.description": "",
+  "sts.tooltip_dimensions_screen.title_scroll_speed": "",
+  "sts.tooltip_dimensions_screen.title_scroll_speed.description": "",
+  "sts.tooltip_dimensions_screen.title_scroll_pause_time": "",
+  "sts.tooltip_dimensions_screen.title_scroll_pause_time.description": "",
 
   "sts.tooltip_dimensions_screen.category.scrolling": "Scrolling Config",
   "sts.tooltip_dimensions_screen.lock_container_scrolling": "Lock container scrolling",
   "sts.tooltip_dimensions_screen.lock_container_scrolling.description": "If scrolling in different containers simultaneously is locked or disabled. This prevents scrolling a tooltip while in the creative menu for example. If disabled, both scroll at the same time.",
   "sts.tooltip_dimensions_screen.lock_container_scrolling.warning": "\n§4§lWarning:§r §cYou probably don't want to disable this.§r",
   "sts.tooltip_dimensions_screen.scroll_smoothness": "Scroll Smoothness",
-  "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Adjusts the smoothness of the tooltip scroll animation.\n\n§60.0§r: Instant scroll (no animation)\n§61.0§r: Maximum smoothness"
+  "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Adjusts the smoothness of the tooltip scroll animation.\n\n§60.0§r: Instant scroll (no animation)\n§61.0§r: Maximum smoothness",
+
+  "sts.tooltip_dimensions_screen.category.compatibility": "",
+  "sts.tooltip_dimensions_screen.puffish_compat": "",
+  "sts.tooltip_dimensions_screen.puffish_compat.description": ""
 }
