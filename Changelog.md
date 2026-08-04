@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.1.0+1.20.1
+
+This version adds **Title Centering**, **Pufferfish's Skills compat**, and fixes to different crashes.
+
+### New Features
+- Added a title centering config option. It automatically centers the item or tooltip title horizontally within the available tooltip space.
+- Added full compatibility with Pufferfish's Skills skill trees. Toggleable via the `puffish_compat` config option.
+
+### Fixes
+- Refactored quite a bit of the architecture to fix crashes when clearing lists (fixes `UnsupportedOperationException` crash) as well as crashing in Forge due to mixins
+- Fixed minor alignment discrepancies when comparing LT and Tierify tooltips. (Especially title alignment)
+
+### Updates
+- Updated S-Lib dependency to 1.0.5
+
 ## 2.0.2+1.20.1
 
 ### Fixes
