@@ -22,6 +22,12 @@ public class STSConfig {
     @SerialEntry(comment = "Smoothness of the tooltip scroll animation. 0.0 is instant, 1.0 is very smooth.")
     public float scroll_smoothness = 0.25f;
 
-    @SerialEntry(comment = "If the item's title gets automatically centered in the tooltip")
+    @SerialEntry(comment = "If the item's title gets automatically centered in the tooltip.")
     public boolean title_centering = true;
+
+    @SerialEntry(comment = "The tooltip title's scroll speed when Title Overflow mode is set to 'SCROLL', higher is faster.")
+    public double title_scroll_speed = 25;
+
+    @SerialEntry(comment = "The elapsed time in ms while the scrolling motion is paused when Title Overflow mode is set to 'SCROLL'.")
+    public long title_scroll_pause_time_ms = 2000;
 }

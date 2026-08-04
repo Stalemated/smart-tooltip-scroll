@@ -37,5 +37,14 @@ public class OrderedTextUtil {
         };
     }
 
+    public static String getStringFromOrderedText(OrderedText text) {
+        StringBuilder builder = new StringBuilder();
+        text.accept((index, style, codePoint) -> {
+            builder.appendCodePoint(codePoint);
+            return true;
+        });
+        return builder.toString();
+    }
+
     private record StyledChar(int codePoint, Style style) {}
 }

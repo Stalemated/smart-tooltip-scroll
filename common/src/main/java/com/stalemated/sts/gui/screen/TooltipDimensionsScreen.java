@@ -5,9 +5,7 @@ import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.config.STSConfig;
 import com.stalemated.sts.resize.TitleOverflowMode;
 import dev.isxander.yacl3.api.*;
-import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
-import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import dev.isxander.yacl3.api.controller.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
@@ -103,10 +101,39 @@ public class TooltipDimensionsScreen {
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
+        var titleScrollSpeed  = Option.<Double>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_speed"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_speed.description")))
+                .binding(
+                        25D,
+                        () -> config.title_scroll_speed,
+                        val -> config.title_scroll_speed = val
+                )
+                .controller(opt -> DoubleSliderControllerBuilder.create(opt)
+                        .formatValue(val -> Text.of(String.valueOf((int) Math.round(val))))
+                        .range(1D, 100D)
+                        .step(1D))
+                .build();
+
+        var titleScrollPauseTime  = Option.<Long>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_speed"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_speed.description")))
+                .binding(
+                        2000L,
+                        () -> config.title_scroll_pause_time_ms,
+                        val -> config.title_scroll_pause_time_ms = val
+                )
+                .controller(opt -> LongSliderControllerBuilder.create(opt)
+                        .range(0L, 5000L)
+                        .step(100L))
+                .build();
+
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.title_options"))
                 .option(titleOverflowMode)
                 .option(enableTitleCentering)
+                .option(titleScrollSpeed)
+                .option(titleScrollPauseTime)
                 .build();
     }
 

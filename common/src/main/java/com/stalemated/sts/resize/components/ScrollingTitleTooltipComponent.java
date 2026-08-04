@@ -1,7 +1,9 @@
 package com.stalemated.sts.resize.components;
 
+import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
+import com.stalemated.sts.util.OrderedTextUtil;
 import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -15,8 +17,6 @@ import com.stalemated.lib.util.math.ScrollMathUtil;
 public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent implements TooltipComponent, StsManagedTitle {
     private final OrderedText text;
     private final int maxTitleWidth;
-    private static final double SCROLL_SPEED = 25.0;
-    private static final long PAUSE_MS = 2000L;
 
     public ScrollingTitleTooltipComponent(OrderedText text, int maxTitleWidth) {
         super(text);
@@ -52,9 +52,9 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
 
         int offset = getOffset();
         int overflowWidth = textWidth - this.maxTitleWidth;
-        int identity = getStringFromOrderedText(this.text).hashCode();
+        int identity = OrderedTextUtil.getStringFromOrderedText(this.text).hashCode();
         long elapsedTime = ScrollMathUtil.getTooltipElapsedTime(identity);
-        int scrollOffset = ScrollMathUtil.calculateScrollOffset(overflowWidth, SCROLL_SPEED, PAUSE_MS, elapsedTime);
+        int scrollOffset = ScrollMathUtil.calculateScrollOffset(overflowWidth, ConfigManager.getConfig().title_scroll_speed, ConfigManager.getConfig().title_scroll_pause_time_ms, elapsedTime);
         int startX = x + (StateManager.isTierifyTooltip ? 0 : offset);
         int endX = x + this.maxTitleWidth;
 
@@ -79,14 +79,5 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
 
     @Override
     public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
-    }
-
-    private String getStringFromOrderedText(OrderedText text) {
-        StringBuilder builder = new StringBuilder();
-        text.accept((index, style, codePoint) -> {
-            builder.appendCodePoint(codePoint);
-            return true;
-        });
-        return builder.toString();
     }
 }
