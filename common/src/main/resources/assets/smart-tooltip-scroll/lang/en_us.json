@@ -9,18 +9,18 @@
   "sts.tooltip_dimensions_screen.enable_custom_dimensions": "Enable custom tooltip dimensions",
   "sts.tooltip_dimensions_screen.enable_custom_dimensions.description": "Enables setting §6custom maximum dimensions§r for tooltips and §6tooltip scrolling§r.",
 
-  "sts.tooltip_dimensions_screen.category.title_options": "",
+  "sts.tooltip_dimensions_screen.category.title_options": "Title Options Config",
   "sts.tooltip_dimensions_screen.title_overflow_mode": "Title Overflow Mode",
   "sts.tooltip_dimensions_screen.title_overflow_mode.description": "Selects the behavior if the hovered item's name is larger than the maximum width of a Tooltip.\n\n§6Wrap:§r Wraps the name (separates it in multiple lines)\n§6Truncate:§r Truncates the name to the maximum tooltip width and adds '...' at the end.\n§6Horizontal Scroll:§r Smoothly scrolls the text horizontally forwards and then backwards to show the entire name in a single line.",
   "sts.tooltip_dimensions_screen.title_overflow_mode.wrap": "Wrap",
   "sts.tooltip_dimensions_screen.title_overflow_mode.truncate": "Truncate",
   "sts.tooltip_dimensions_screen.title_overflow_mode.scroll": "Horizontal Scroll",
-  "sts.tooltip_dimensions_screen.enable_title_centering": "",
-  "sts.tooltip_dimensions_screen.enable_title_centering.description": "",
-  "sts.tooltip_dimensions_screen.title_scroll_speed": "",
-  "sts.tooltip_dimensions_screen.title_scroll_speed.description": "",
-  "sts.tooltip_dimensions_screen.title_scroll_pause_time": "",
-  "sts.tooltip_dimensions_screen.title_scroll_pause_time.description": "",
+  "sts.tooltip_dimensions_screen.enable_title_centering": "Center Tooltip Title",
+  "sts.tooltip_dimensions_screen.enable_title_centering.description": "If enabled, automatically centers the §6item title§r horizontally within the tooltip space.",
+  "sts.tooltip_dimensions_screen.title_scroll_speed": "Title Scroll Speed",
+  "sts.tooltip_dimensions_screen.title_scroll_speed.description": "Adjusts the speed of the horizontal scrolling text animation when §6Title Overflow Mode§r is set to §6Horizontal Scroll§r.",
+  "sts.tooltip_dimensions_screen.title_scroll_pause_time": "Title Scroll pause duration (ms)",
+  "sts.tooltip_dimensions_screen.title_scroll_pause_time.description": "The pause duration in milliseconds before and after horizontal title scrolling when §6Title Overflow Mode§r is set to §6Horizontal Scroll§r.",
 
   "sts.tooltip_dimensions_screen.category.scrolling": "Scrolling Config",
   "sts.tooltip_dimensions_screen.lock_container_scrolling": "Lock container scrolling",
@@ -29,7 +29,7 @@
   "sts.tooltip_dimensions_screen.scroll_smoothness": "Scroll Smoothness",
   "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Adjusts the smoothness of the tooltip scroll animation.\n\n§60.0§r: Instant scroll (no animation)\n§61.0§r: Maximum smoothness",
 
-  "sts.tooltip_dimensions_screen.category.compatibility": "",
-  "sts.tooltip_dimensions_screen.puffish_compat": "",
-  "sts.tooltip_dimensions_screen.puffish_compat.description": ""
+  "sts.tooltip_dimensions_screen.category.compatibility": "Compatibility Config",
+  "sts.tooltip_dimensions_screen.puffish_compat": "Pufferfish's Skills Compatibility",
+  "sts.tooltip_dimensions_screen.puffish_compat.description": "Enables dynamic width wrapping, height limiting, and scrolling compatibility for skill trees from §6Pufferfish's Skills§r."
 }
