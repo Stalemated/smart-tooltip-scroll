@@ -6,6 +6,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -31,20 +32,27 @@ public class IcebergTooltipsMixin {
 
     @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;I)Ljava/util/List;", at = @At("HEAD"), cancellable = true, remap = false)
     private static void onCenterTitle(List<TooltipComponent> components, TextRenderer font, int width, CallbackInfoReturnable<List<TooltipComponent>> cir) {
-        for (TooltipComponent comp : components) {
-            if (comp instanceof StsManagedTitle) {
-                cir.setReturnValue(new ArrayList<>(components));
-                return;
-            }
-        }
+        sts$handleCenterTitle(components, cir);
     }
 
     @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;II)Ljava/util/List;", at = @At("HEAD"), cancellable = true, remap = false)
     private static void onCenterTitleWithLines(List<TooltipComponent> components, TextRenderer font, int width, int titleLines, CallbackInfoReturnable<List<TooltipComponent>> cir) {
-        for (TooltipComponent comp : components) {
-            if (comp instanceof StsManagedTitle) {
+        sts$handleCenterTitle(components, cir);
+    }
+
+    @Unique
+    private static void sts$handleCenterTitle(List<TooltipComponent> components, CallbackInfoReturnable<List<TooltipComponent>> cir) {
+        if (ConfigManager.getConfig().custom_tooltip_dimensions) {
+            if (ConfigManager.getConfig().title_centering) {
                 cir.setReturnValue(new ArrayList<>(components));
                 return;
+            }
+
+            for (TooltipComponent comp : components) {
+                if (comp instanceof StsManagedTitle) {
+                    cir.setReturnValue(new ArrayList<>(components));
+                    return;
+                }
             }
         }
     }

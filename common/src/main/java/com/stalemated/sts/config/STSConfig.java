@@ -21,4 +21,7 @@ public class STSConfig {
 
     @SerialEntry(comment = "Smoothness of the tooltip scroll animation. 0.0 is instant, 1.0 is very smooth.")
     public float scroll_smoothness = 0.25f;
+
+    @SerialEntry(comment = "If the item's title gets automatically centered in the tooltip")
+    public boolean title_centering = true;
 }

@@ -2,6 +2,7 @@ package com.stalemated.sts.scroll.components;
 
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.font.TextRenderer;
@@ -33,18 +34,12 @@ public class ScrollableTooltipComponent implements TooltipComponent {
             height += component.getHeight();
         }
         
-        int maxPinnedWidth = 0;
-        if (pinned != null) {
-            for (TooltipComponent pin : pinned) {
-                int pinWidth = pin.getWidth(textRenderer);
-                if (pinWidth > maxPinnedWidth) maxPinnedWidth = pinWidth;
-            }
-        }
-        int offset = TooltipDimensionManager.getModelOffset();
+        int maxPinnedWidth = TitleCenteringProcessor.getCleanPinnedWidth(pinned, textRenderer, TooltipDimensionManager.getModelOffset());
         int minBound = StateManager.isTierifyTooltip ? TooltipDimensionManager.MIN_TOOLTIP_WIDTH : 0;
 
-        this.maxWidth = MathUtils.clamp(Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth + offset), minBound, maxWidth);
-        this.maxTextWidth = MathUtils.clamp(Math.max(maxComponentWidth, maxPinnedWidth + offset), minBound, maxWidth - SCROLLBAR_WIDTH);
+        int contentWidth = Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth);
+        this.maxWidth = MathUtils.clamp(contentWidth, minBound, maxWidth);
+        this.maxTextWidth = Math.max(0, this.maxWidth - SCROLLBAR_WIDTH);
 
         this.totalHeight = height;
         this.scrollbarHeight = this.maxHeight - 4;

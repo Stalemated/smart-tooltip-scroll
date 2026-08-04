@@ -20,6 +20,10 @@ public class WrappedTitleTooltipComponent extends OrderedTextTooltipComponent im
         this.wrappedLines = wrappedLines;
     }
 
+    public List<TooltipComponent> getWrappedLines() {
+        return this.wrappedLines;
+    }
+
     @Override
     public int getWidth(TextRenderer textRenderer) {
         int maxWidth = 0;

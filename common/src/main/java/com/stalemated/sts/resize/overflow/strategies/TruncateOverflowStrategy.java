@@ -1,6 +1,7 @@
 package com.stalemated.sts.resize.overflow.strategies;
 
 import com.stalemated.lib.util.style.TooltipStyleUtils;
+import com.stalemated.sts.resize.components.TruncatedTitleTooltipComponent;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategy;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -32,7 +33,7 @@ public class TruncateOverflowStrategy implements TitleOverflowStrategy {
                     MutableText mutable = TooltipStyleUtils.convertOrderedTextToMutable(value);
                     List<TooltipComponent> mutableComponents = new ArrayList<>(components);
 
-                    mutableComponents.set(i, TooltipComponent.of(truncateTitle(mutable, textRenderer, maxTitleWidth).asOrderedText()));
+                    mutableComponents.set(i, new TruncatedTitleTooltipComponent(truncateTitle(mutable, textRenderer, maxTitleWidth).asOrderedText()));
                     return mutableComponents;
                 }
                 break;

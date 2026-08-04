@@ -25,6 +25,7 @@ public class TooltipDimensionsScreen {
                 .category(ConfigCategory.createBuilder()
                         .name(Text.translatable("sts.tooltip_dimensions_screen.title"))
                         .group(createCustomDimensionsGroup(config))
+                        .group(createTitleOptionsGroup(config))
                         .group(createScrollingGroup(config))
                         .build())
                 .save(ConfigManager::save)
@@ -70,6 +71,15 @@ public class TooltipDimensionsScreen {
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
+        return OptionGroup.createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.category.custom_dimensions"))
+                .option(enableCustomDimensions)
+                .option(maxHeight)
+                .option(maxWidth)
+                .build();
+    }
+
+    private static OptionGroup createTitleOptionsGroup(STSConfig config) {
         var titleOverflowMode = Option.<TitleOverflowMode>createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode"))
                 .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode.description")))
@@ -82,12 +92,21 @@ public class TooltipDimensionsScreen {
                         .formatValue(mode -> Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode." + mode.name().toLowerCase())))
                 .build();
 
+        var enableTitleCentering = Option.<Boolean>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.enable_title_centering"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.enable_title_centering.description")))
+                .binding(
+                        true,
+                        () -> config.title_centering,
+                        val -> config.title_centering = val
+                )
+                .controller(TickBoxControllerBuilder::create)
+                .build();
+
         return OptionGroup.createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.category.custom_dimensions"))
-                .option(enableCustomDimensions)
-                .option(maxHeight)
-                .option(maxWidth)
+                .name(Text.translatable("sts.tooltip_dimensions_screen.category.title_options"))
                 .option(titleOverflowMode)
+                .option(enableTitleCentering)
                 .build();
     }
 

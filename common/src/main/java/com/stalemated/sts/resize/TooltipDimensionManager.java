@@ -4,6 +4,7 @@ import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.lib.helper.PlatformHelper;
 import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
+import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.scroll.components.ScrollableTooltipComponent;
@@ -75,6 +76,19 @@ public class TooltipDimensionManager {
         return totalHeight;
     }
 
+    private static int calculateTooltipWidth(List<TooltipComponent> components, TextRenderer textRenderer) {
+        if (components.isEmpty() || textRenderer == null) return 0;
+        int maxWidth = 0;
+
+        for (TooltipComponent comp : components) {
+            maxWidth = Math.max(maxWidth, comp.getWidth(textRenderer));
+        }
+        if (StateManager.isTierifyTooltip) {
+            maxWidth = Math.max(maxWidth, MIN_TOOLTIP_WIDTH);
+        }
+        return maxWidth;
+    }
+
     public static List<TooltipComponent> enforceHeightLimit(List<TooltipComponent> components, TooltipContext ctx) {
         if (components.isEmpty()) return components;
 
@@ -115,6 +129,9 @@ public class TooltipDimensionManager {
 
         if (totalHeight > scaledTooltipHeight && currentTextRenderer != null) {
             if (scrollableContentRaw.isEmpty()) {
+                if (ConfigManager.getConfig().title_centering) {
+                    combined = processAndCenter(pinned, scrollableContent, componentWidth);
+                }
                 return combined;
             }
 
@@ -130,12 +147,41 @@ public class TooltipDimensionManager {
             int scrollableHeight = scaledTooltipHeight - pinnedHeight;
             int availableHeight = Math.max(scrollableHeight, MIN_TOOLTIP_HEIGHT);
 
+            ScrollableTooltipComponent scrollableComponent = new ScrollableTooltipComponent(scrollableContent, pinned, availableHeight, scaledTooltipWidth, currentTextRenderer);
+
+            if (ConfigManager.getConfig().title_centering) {
+                int totalTooltipWidth = scrollableComponent.getWidth(currentTextRenderer);
+                pinned = TitleCenteringProcessor.applyCentering(pinned, currentTextRenderer, totalTooltipWidth, componentWidth);
+                processedTitleComponentList = pinned;
+            }
+
             List<TooltipComponent> finalList = new ArrayList<>(pinned);
-            finalList.add(new ScrollableTooltipComponent(scrollableContent, pinned, availableHeight, scaledTooltipWidth, currentTextRenderer));
+            finalList.add(scrollableComponent);
 
             return finalList;
         }
         TooltipScrollManager.updateMaxScroll(0);
+
+        if (ConfigManager.getConfig().title_centering && currentTextRenderer != null) {
+            combined = processAndCenter(pinned, scrollableContent, componentWidth);
+        }
+
+        return combined;
+    }
+
+    private static List<TooltipComponent> processAndCenter(List<TooltipComponent> pinned, List<TooltipComponent> scrollableContent, int componentWidth) {
+        int pinnedWidth = TitleCenteringProcessor.getCleanPinnedWidth(pinned, currentTextRenderer, componentWidth);
+        int bodyWidth = calculateTooltipWidth(scrollableContent, currentTextRenderer);
+        int totalTooltipWidth = Math.max(pinnedWidth, bodyWidth);
+
+        if (StateManager.isTierifyTooltip) {
+            totalTooltipWidth = Math.max(totalTooltipWidth, MIN_TOOLTIP_WIDTH);
+        }
+        pinned = TitleCenteringProcessor.applyCentering(pinned, currentTextRenderer, totalTooltipWidth, componentWidth);
+
+        processedTitleComponentList = pinned;
+        List<TooltipComponent> combined = new ArrayList<>(pinned);
+        combined.addAll(scrollableContent);
 
         return combined;
     }

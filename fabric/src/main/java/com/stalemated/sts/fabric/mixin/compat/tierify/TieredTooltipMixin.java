@@ -12,11 +12,14 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.gui.tooltip.TooltipPositioner;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import elocindev.tierify.config.ClientConfig;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -50,6 +53,14 @@ public abstract class TieredTooltipMixin {
         }
 
         return processedList;
+    }
+
+    @Redirect(method = "renderTieredTooltipFromComponents", at = @At(value = "FIELD", target = "Lelocindev/tierify/config/ClientConfig;centerName:Z", opcode = Opcodes.GETFIELD))
+    private static boolean rst$redirectCenterName(ClientConfig config) {
+        if (ConfigManager.getConfig().custom_tooltip_dimensions && ConfigManager.getConfig().title_centering) {
+            return false;
+        }
+        return config.centerName;
     }
 
     @Inject(method = "renderTooltipBackground", at = @At("HEAD"), order = 900)
