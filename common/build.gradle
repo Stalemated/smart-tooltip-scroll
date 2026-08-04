@@ -33,4 +33,7 @@ dependencies {
 
     // Tooltip Overhaul (compat)
     modCompileOnly "curse.maven:tooltip-overhaul-1327508:8380593"
+
+    // Puffish Skills (compat)
+    modCompileOnly "curse.maven:puffish-skills-835091:8547669"
 }

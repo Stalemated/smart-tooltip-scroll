@@ -30,7 +30,7 @@ public class ForgeHooksClientMixin {
     @Unique
     private static boolean sts$isCustomActive = false;
 
-    @Inject(method = "gatherTooltipComponentsFromElements(Lnet/minecraft/item/ItemStack;Ljava/util/List;IIILnet/minecraft/client/font/TextRenderer;)Ljava/util/List;", at = @At("HEAD"), remap = false)
+    @Inject(method = "gatherTooltipComponentsFromElements(Lnet/minecraft/item/ItemStack;Ljava/util/List;IIILnet/minecraft/client/font/TextRenderer;)Ljava/util/List;", at = @At("HEAD"))
     private static void sts$onGatherStart(ItemStack stack, List<Either<StringVisitable, TooltipData>> elements, int mouseX, int screenWidth, int screenHeight, TextRenderer fallbackFont, CallbackInfoReturnable<List<TooltipComponent>> cir) {
         if (!ConfigManager.getConfig().custom_tooltip_dimensions) {
             sts$isCustomActive = false;
@@ -67,12 +67,12 @@ public class ForgeHooksClientMixin {
         sts$isCustomActive = isItem || isForced || isEnforced;
     }
 
-    @Inject(method = "gatherTooltipComponentsFromElements(Lnet/minecraft/item/ItemStack;Ljava/util/List;IIILnet/minecraft/client/font/TextRenderer;)Ljava/util/List;", at = @At("RETURN"), remap = false)
+    @Inject(method = "gatherTooltipComponentsFromElements(Lnet/minecraft/item/ItemStack;Ljava/util/List;IIILnet/minecraft/client/font/TextRenderer;)Ljava/util/List;", at = @At("RETURN"))
     private static void sts$onGatherEnd(ItemStack stack, List<Either<StringVisitable, TooltipData>> elements, int mouseX, int screenWidth, int screenHeight, TextRenderer fallbackFont, CallbackInfoReturnable<List<TooltipComponent>> cir) {
         sts$isCustomActive = false;
     }
 
-    @Redirect(method = "splitLine(Lnet/minecraft/text/StringVisitable;Lnet/minecraft/client/font/TextRenderer;I)Ljava/util/stream/Stream;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;wrapLines(Lnet/minecraft/text/StringVisitable;I)Ljava/util/List;"), remap = false)
+    @Redirect(method = "splitLine(Lnet/minecraft/text/StringVisitable;Lnet/minecraft/client/font/TextRenderer;I)Ljava/util/stream/Stream;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;wrapLines(Lnet/minecraft/text/StringVisitable;I)Ljava/util/List;"))
     private static List<OrderedText> sts$disableForgeWrap(TextRenderer font, StringVisitable text, int width) {
         if (sts$isCustomActive) {
             return font.wrapLines(text, Integer.MAX_VALUE);

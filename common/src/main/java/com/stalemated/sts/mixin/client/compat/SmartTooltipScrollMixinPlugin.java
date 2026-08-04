@@ -26,6 +26,9 @@ public class SmartTooltipScrollMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.contains("compat.emi")) {
             return PlatformHelper.INSTANCE.isModLoadedAtLaunch("emi");
         }
+        if (mixinClassName.contains("compat.puffish")) {
+            return PlatformHelper.INSTANCE.isModLoadedAtLaunch("puffish_skills");
+        }
         return true;
     }
 

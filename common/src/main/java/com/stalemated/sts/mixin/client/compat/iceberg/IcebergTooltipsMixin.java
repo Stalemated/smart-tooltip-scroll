@@ -30,12 +30,12 @@ public class IcebergTooltipsMixin {
         return instance.wrapLines(text, width);
     }
 
-    @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;I)Ljava/util/List;", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;I)Ljava/util/List;", at = @At("HEAD"), cancellable = true)
     private static void onCenterTitle(List<TooltipComponent> components, TextRenderer font, int width, CallbackInfoReturnable<List<TooltipComponent>> cir) {
         sts$handleCenterTitle(components, cir);
     }
 
-    @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;II)Ljava/util/List;", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "centerTitle(Ljava/util/List;Lnet/minecraft/client/font/TextRenderer;II)Ljava/util/List;", at = @At("HEAD"), cancellable = true)
     private static void onCenterTitleWithLines(List<TooltipComponent> components, TextRenderer font, int width, int titleLines, CallbackInfoReturnable<List<TooltipComponent>> cir) {
         sts$handleCenterTitle(components, cir);
     }
