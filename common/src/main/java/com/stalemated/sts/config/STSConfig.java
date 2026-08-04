@@ -30,4 +30,7 @@ public class STSConfig {
 
     @SerialEntry(comment = "The elapsed time in ms while the scrolling motion is paused when Title Overflow mode is set to 'SCROLL'.")
     public long title_scroll_pause_time_ms = 2000;
+
+    @SerialEntry(comment = "If compatibility with Pufferfish's Skills skill trees is enabled.")
+    public boolean puffish_compat = true;
 }

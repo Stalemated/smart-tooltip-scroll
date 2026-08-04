@@ -25,6 +25,7 @@ public class TooltipDimensionsScreen {
                         .group(createCustomDimensionsGroup(config))
                         .group(createTitleOptionsGroup(config))
                         .group(createScrollingGroup(config))
+                        .group(createCompatibilityGroup(config))
                         .build())
                 .save(ConfigManager::save)
                 .build()
@@ -173,6 +174,24 @@ public class TooltipDimensionsScreen {
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.scrolling"))
                 .option(scrollSmoothness)
                 .option(lockContainerScrolling)
+                .build();
+    }
+
+    private static OptionGroup createCompatibilityGroup(STSConfig config) {
+        var puffishCompat = Option.<Boolean>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.puffish_compat"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.puffish_compat.description")))
+                .binding(
+                        true,
+                        () -> config.puffish_compat,
+                        val -> config.puffish_compat = val
+                )
+                .controller(TickBoxControllerBuilder::create)
+                .build();
+
+        return OptionGroup.createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.category.compatibility"))
+                .option(puffishCompat)
                 .build();
     }
 }
