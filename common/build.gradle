@@ -37,7 +37,9 @@ dependencies {
     modCompileOnly "curse.maven:tooltip-overhaul-1327508:8380593"
 
     // Puffish Skills (compat)
-    modCompileOnly "curse.maven:puffish-skills-835091:8547669"
+    modCompileOnly "curse.maven:puffish-skills-835091:8547669" // 0.18.3
+    //modCompileOnly "curse.maven:puffish-skills-835091:7672793" // 0.17.3
+    //modCompileOnly "curse.maven:puffish-skills-835091:6540739" // 0.16.0
 
     // Tierify (tierify)
     modCompileOnly "curse.maven:tierify-974356:5803071"
