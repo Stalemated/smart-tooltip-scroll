@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.1+1.20.1
+
+### Fixes
+- Fixed crash when using Pufferfish's Skills versions under 0.17.0
+
+
 ## 2.1.0+1.20.1
 
 This version adds **Title Centering**, **Pufferfish's Skills compat**, and fixes to different crashes.
