@@ -41,8 +41,12 @@ dependencies {
     //modCompileOnly "curse.maven:puffish-skills-835091:7672793" // 0.17.3
     //modCompileOnly "curse.maven:puffish-skills-835091:6540739" // 0.16.0
 
-    // Tierify (tierify)
+    // Tierify (compat)
     modCompileOnly "curse.maven:tierify-974356:5803071"
-    // Necronomicon API (tierify)
+    // Necronomicon API (compat)
     modCompileOnly "maven.modrinth:necronomicon:1.6.0+1.20.1-fabric"
+
+    // Obscure Tooltips (compat)
+    modCompileOnly "curse.maven:obscure-tooltips-715660:7568505"
+    modCompileOnly "dev.obscuria:fragmentum-api:1.20.1-1.5.2"
 }

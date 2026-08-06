@@ -29,6 +29,10 @@ subprojects {
         maven { url 'https://thedarkcolour.github.io/KotlinForForge/' }
         maven { url 'https://maven.quiltmc.org/repository/release' }
         maven { url "https://api.modrinth.com/maven" }
+        maven {
+            name = "Obscuria"
+            url = "https://raw.githubusercontent.com/ObscuriaLithium/modding/main/maven/"
+        }
         exclusiveContent {
             forRepository {
                 maven {
