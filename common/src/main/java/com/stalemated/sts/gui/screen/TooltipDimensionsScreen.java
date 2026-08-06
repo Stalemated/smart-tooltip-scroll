@@ -189,9 +189,21 @@ public class TooltipDimensionsScreen {
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
+        var obscureCompat = Option.<Boolean>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.obscure_compat"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.obscure_compat.description")))
+                .binding(
+                        true,
+                        () -> config.obscure_compat,
+                        val -> config.obscure_compat = val
+                )
+                .controller(TickBoxControllerBuilder::create)
+                .build();
+
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.compatibility"))
                 .option(puffishCompat)
+                .option(obscureCompat)
                 .build();
     }
 }

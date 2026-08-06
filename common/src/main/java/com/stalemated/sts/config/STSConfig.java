@@ -33,4 +33,7 @@ public class STSConfig {
 
     @SerialEntry(comment = "If compatibility with Pufferfish's Skills skill trees is enabled.")
     public boolean puffish_compat = true;
+
+    @SerialEntry(comment = "If compatibility with Obscure Tooltips is enabled.")
+    public boolean obscure_compat = true;
 }
