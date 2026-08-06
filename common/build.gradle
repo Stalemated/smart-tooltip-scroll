@@ -48,5 +48,5 @@ dependencies {
 
     // Obscure Tooltips (compat)
     modCompileOnly "curse.maven:obscure-tooltips-715660:7568505"
-    modCompileOnly "dev.obscuria:fragmentum-api:1.20.1-1.5.2"
+    modCompileOnly "dev.obscuria:fragmentum-api:1.20.1-1.1.0"
 }
