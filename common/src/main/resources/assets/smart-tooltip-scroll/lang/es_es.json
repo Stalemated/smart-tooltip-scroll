@@ -31,5 +31,7 @@
 
   "sts.tooltip_dimensions_screen.category.compatibility": "Configuración de compatibilidad",
   "sts.tooltip_dimensions_screen.puffish_compat": "Compatibilidad con Pufferfish's Skills",
-  "sts.tooltip_dimensions_screen.puffish_compat.description": "Habilita el ajuste de ancho dinámico, límite de altura y scroll en los árboles de habilidades de §6Pufferfish's Skills§r."
+  "sts.tooltip_dimensions_screen.puffish_compat.description": "Habilita el ajuste de ancho dinámico, límite de altura y scroll en los árboles de habilidades de §6Pufferfish's Skills§r.",
+  "sts.tooltip_dimensions_screen.obscure_compat": "Compatibilidad con Obscure Tooltips",
+  "sts.tooltip_dimensions_screen.obscure_compat.description": "Habilita dimensiones dinámicas, encabezados fijados, soporte para previsualizaciones 3D y scroll fluido compatible con §6Obscure Tooltips§r."
 }

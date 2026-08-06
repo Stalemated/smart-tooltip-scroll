@@ -31,5 +31,7 @@
 
   "sts.tooltip_dimensions_screen.category.compatibility": "Compatibility Config",
   "sts.tooltip_dimensions_screen.puffish_compat": "Pufferfish's Skills Compatibility",
-  "sts.tooltip_dimensions_screen.puffish_compat.description": "Enables dynamic width wrapping, height limiting, and scrolling compatibility for skill trees from §6Pufferfish's Skills§r."
+  "sts.tooltip_dimensions_screen.puffish_compat.description": "Enables dynamic width wrapping, height limiting, and scrolling compatibility for skill trees from §6Pufferfish's Skills§r.",
+  "sts.tooltip_dimensions_screen.obscure_compat": "Obscure Tooltips Compatibility",
+  "sts.tooltip_dimensions_screen.obscure_compat.description": "Enables dynamic dimensions, pinned headers, 3D preview support, and smooth scrolling compatibility with §6Obscure Tooltips§r."
 }

@@ -31,5 +31,7 @@
 
   "sts.tooltip_dimensions_screen.category.compatibility": "Kompatibilitäts-Konfiguration",
   "sts.tooltip_dimensions_screen.puffish_compat": "Pufferfish's Skills Kompatibilität",
-  "sts.tooltip_dimensions_screen.puffish_compat.description": "Aktiviert dynamische Breitenanpassung, Höhenbegrenzung und Scroll-Kompatibilität für Skill-Bäume von §6Pufferfish's Skills§r."
+  "sts.tooltip_dimensions_screen.puffish_compat.description": "Aktiviert dynamische Breitenanpassung, Höhenbegrenzung und Scroll-Kompatibilität für Skill-Bäume von §6Pufferfish's Skills§r.",
+  "sts.tooltip_dimensions_screen.obscure_compat": "Obscure Tooltips Kompatibilität",
+  "sts.tooltip_dimensions_screen.obscure_compat.description": "Aktiviert dynamische Abmessungen, angeheftete Kopfzeilen, 3D-Vorschau-Unterstützung und flüssiges Scrollen kompatibel mit §6Obscure Tooltips§r."
 }
