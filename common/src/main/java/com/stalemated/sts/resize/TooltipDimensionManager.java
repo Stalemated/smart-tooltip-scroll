@@ -1,7 +1,6 @@
 package com.stalemated.sts.resize;
 
 import com.stalemated.lib.util.math.MathUtils;
-import com.stalemated.lib.helper.PlatformHelper;
 import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
@@ -23,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
+
 public class TooltipDimensionManager {
 
     public static DrawContext currentContext = null;
@@ -35,8 +36,6 @@ public class TooltipDimensionManager {
     public static List<TooltipComponent> processedTitleComponentList = Collections.emptyList();
     public static List<TooltipComponent> bodyComponentList = Collections.emptyList();
     public static Function<List<TooltipComponent>, Integer> pinnedHeightPredictor = null;
-
-    public static final boolean IS_LT_LOADED = PlatformHelper.INSTANCE.isModLoaded("legendarytooltips");
 
     private static final DimensionCache widthCache = new DimensionCache(TOOLTIP_PADDING_X, MIN_TOOLTIP_WIDTH);
     private static final DimensionCache heightCache = new DimensionCache(TOOLTIP_PADDING_Y, MIN_TOOLTIP_HEIGHT);
@@ -66,7 +65,7 @@ public class TooltipDimensionManager {
         }
     }
 
-    private static int calculateComponentListHeight(List<TooltipComponent> components) {
+    public static int calculateComponentListHeight(List<TooltipComponent> components) {
         if (components.isEmpty()) return 0;
         int totalHeight = 0;
 
@@ -76,7 +75,7 @@ public class TooltipDimensionManager {
         return totalHeight;
     }
 
-    private static int calculateTooltipWidth(List<TooltipComponent> components, TextRenderer textRenderer) {
+    public static int calculateTooltipWidth(List<TooltipComponent> components, TextRenderer textRenderer) {
         if (components.isEmpty() || textRenderer == null) return 0;
         int maxWidth = 0;
 
