@@ -1,9 +1,7 @@
 package com.stalemated.sts;
 
-import com.stalemated.lib.helper.PlatformHelper;
-import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulCompatImpl;
 import com.stalemated.sts.config.ConfigManager;
-import com.stalemated.sts.scroll.TooltipScrollManager;
+import com.stalemated.sts.scroll.ScrollResetterManager;
 import com.stalemated.sts.state.TooltipContextManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,10 +16,7 @@ public final class SmartTooltipScrollClient {
 
     public static void init() {
         ConfigManager.register();
-
-        if (PlatformHelper.INSTANCE.isModLoaded("tooltipoverhaul")) {
-            TooltipScrollManager.registerResetter(new TooltipOverhaulCompatImpl());
-        }
+        ScrollResetterManager.register();
     }
 
     public static void onItemTooltip(ItemStack stack) {

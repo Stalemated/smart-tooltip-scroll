@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
+
 public class TitleCenteringProcessor {
 
     public static List<TooltipComponent> applyCentering(List<TooltipComponent> pinned, TextRenderer font, int totalTooltipWidth, int modelOffset) {
@@ -68,7 +70,7 @@ public class TitleCenteringProcessor {
             return comp.getWidth(font);
         }
         OrderedText text = textOpt.get();
-        if (TooltipDimensionManager.IS_LT_LOADED) {
+        if (IS_LT_LOADED) {
             boolean hasItemModel = LegendaryTooltipsCompat.getItemModelComponentWidth(
                     TooltipDimensionManager.getCurrentStack(),
                     TooltipDimensionManager.processedTitleComponentList
@@ -89,7 +91,7 @@ public class TitleCenteringProcessor {
 
         OrderedText text = textOpt.get();
 
-        if (TooltipDimensionManager.IS_LT_LOADED) {
+        if (IS_LT_LOADED) {
             boolean hasItemModel = LegendaryTooltipsCompat.getItemModelComponentWidth(
                     TooltipDimensionManager.getCurrentStack(),
                     TooltipDimensionManager.processedTitleComponentList

@@ -1,7 +1,6 @@
 package com.stalemated.sts.util;
 
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
-import com.stalemated.lib.helper.PlatformHelper;
 import com.stalemated.lib.util.style.TooltipStyleUtils;
 import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
@@ -15,6 +14,8 @@ import net.minecraft.text.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
 
 public class TooltipWrapUtil {
     public static boolean isHandlingCustomWrap = false;
@@ -66,7 +67,7 @@ public class TooltipWrapUtil {
                 }
 
                 int padding = 0;
-                if (PlatformHelper.INSTANCE.isModLoaded("legendarytooltips")) {
+                if (IS_LT_LOADED) {
                     if (wrapped.size() > 1 && i == wrapped.size() - 1) {
                         boolean hasModel = LegendaryTooltipsCompat.getItemModelComponentWidth(
                                 TooltipDimensionManager.getCurrentStack(),
