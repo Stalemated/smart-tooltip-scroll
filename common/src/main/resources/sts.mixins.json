@@ -9,7 +9,8 @@
     "compat.iceberg.IcebergTooltipsMixin",
     "compat.emi.EmiRenderHelperMixin",
     "compat.puffish.SkillsScreenMixin",
-    "compat.tierify.TieredTooltipMixin"
+    "compat.tierify.TieredTooltipMixin",
+    "compat.obscure.ObscureTooltipRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

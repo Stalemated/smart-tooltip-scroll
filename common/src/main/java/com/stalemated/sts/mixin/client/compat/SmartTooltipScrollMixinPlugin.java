@@ -32,6 +32,9 @@ public class SmartTooltipScrollMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.contains("compat.tierify")) {
             return PlatformHelper.INSTANCE.isModLoadedAtLaunch("tiered");
         }
+        if (mixinClassName.contains("compat.obscure")) {
+            return PlatformHelper.INSTANCE.isModLoadedAtLaunch("obscure_tooltips");
+        }
         return true;
     }
 

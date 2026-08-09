@@ -1,6 +1,7 @@
 package com.stalemated.sts.mixin.client;
 
 import com.stalemated.lib.util.state.SharedTooltipState;
+import com.stalemated.sts.compat.obscure.ObscureTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.TooltipContext;
@@ -30,6 +31,10 @@ public abstract class DrawContextMixin {
     @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"), argsOnly = true, index = 2)
     private List<TooltipComponent> rst$applyDimensionsHeight(List<TooltipComponent> components) {
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
+            if (ObscureTooltipsCompat.isObscureHandling(components)) {
+                return components;
+            }
+
             TooltipContext ctx = TooltipContextManager.peek();
 
             boolean isItem = ctx != null;
