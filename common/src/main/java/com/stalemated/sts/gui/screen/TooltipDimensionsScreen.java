@@ -178,17 +178,6 @@ public class TooltipDimensionsScreen {
     }
 
     private static OptionGroup createCompatibilityGroup(STSConfig config) {
-        var puffishCompat = Option.<Boolean>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.puffish_compat"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.puffish_compat.description")))
-                .binding(
-                        true,
-                        () -> config.puffish_compat,
-                        val -> config.puffish_compat = val
-                )
-                .controller(TickBoxControllerBuilder::create)
-                .build();
-
         var obscureCompat = Option.<Boolean>createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.obscure_compat"))
                 .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.obscure_compat.description")))
@@ -202,7 +191,6 @@ public class TooltipDimensionsScreen {
 
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.compatibility"))
-                .option(puffishCompat)
                 .option(obscureCompat)
                 .build();
     }
