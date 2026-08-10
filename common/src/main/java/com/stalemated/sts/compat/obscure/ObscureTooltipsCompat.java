@@ -36,6 +36,8 @@ public class ObscureTooltipsCompat {
 
     public static boolean isObscureHandling(List<TooltipComponent> components) {
         if (!ClientConfig.ENABLED.get()) return false;
+        boolean isIgnored = TooltipDimensionManager.getCurrentStack() != null && ClientConfig.isIgnored(TooltipDimensionManager.getCurrentStack().getItem());
+        if (isIgnored) return false;
 
         return containsStackBuffer(components);
     }
