@@ -6,7 +6,6 @@ import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.state.TooltipContextManager;
 import draylar.tiered.api.BorderTemplate;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -23,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
+
 @Pseudo
 @Mixin(targets = "elocindev.tierify.util.TieredTooltip")
 public abstract class TieredTooltipMixin {
@@ -36,9 +37,8 @@ public abstract class TieredTooltipMixin {
     @ModifyVariable(method = "renderTieredTooltipFromComponents", at = @At("HEAD"), index = 2, argsOnly = true)
     private static List<TooltipComponent> rst$applyDimensions(List<TooltipComponent> components) {
         List<TooltipComponent> processedList = components;
-        boolean hasLT = FabricLoader.getInstance().isModLoaded("legendarytooltips");
 
-        if (hasLT) {
+        if (IS_LT_LOADED) {
             TooltipDimensionManager.pinnedHeightPredictor = TierifyLegendaryBridge::getPredictedPinnedHeight;
         }
 
@@ -46,7 +46,7 @@ public abstract class TieredTooltipMixin {
             processedList = TooltipDimensionManager.enforceHeightLimit(components, TooltipContextManager.peek());
         }
 
-        if (hasLT) {
+        if (IS_LT_LOADED) {
             TooltipDimensionManager.pinnedHeightPredictor = null;
             processedList = TierifyLegendaryBridge.wrapComponents(processedList);
         }
@@ -56,26 +56,19 @@ public abstract class TieredTooltipMixin {
 
     @Redirect(method = "renderTieredTooltipFromComponents", at = @At(value = "FIELD", target = "Lelocindev/tierify/config/ClientConfig;centerName:Z", opcode = Opcodes.GETFIELD))
     private static boolean rst$redirectCenterName(ClientConfig config) {
-        if (ConfigManager.getConfig().custom_tooltip_dimensions && ConfigManager.getConfig().title_centering) {
-            return false;
-        }
+        if (ConfigManager.getConfig().custom_tooltip_dimensions && ConfigManager.getConfig().title_centering) return false;
         return config.centerName;
     }
 
     @Inject(method = "renderTooltipBackground", at = @At("HEAD"), order = 900)
     private static void rst$getTooltipPosition(DrawContext context, int x, int y, int width, int height, int z, int backgroundColor, int colorStart, int colorEnd, CallbackInfo ci) {
-        if (FabricLoader.getInstance().isModLoaded("legendarytooltips")) {
-            TierifyLegendaryBridge.setTooltipPosition(x, y, width);
-        }
+        if (IS_LT_LOADED) TierifyLegendaryBridge.setTooltipPosition(x, y, width);
     }
 
     @Inject(method = "renderTieredTooltipFromComponents", at = @At("TAIL"), order = 900)
     private static void rst$clearContext(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
-        if (FabricLoader.getInstance().isModLoaded("legendarytooltips")) {
-            TierifyLegendaryBridge.drawSeparator(context, components);
-        }
+        if (IS_LT_LOADED) TierifyLegendaryBridge.drawSeparator(context, components);
         StateManager.isTierifyTooltip = false;
-
         TooltipDimensionManager.clearState();
     }
 }

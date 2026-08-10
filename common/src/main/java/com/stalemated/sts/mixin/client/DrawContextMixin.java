@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+import static com.stalemated.sts.state.StateManager.IS_OT_LOADED;
+
 @Mixin(DrawContext.class)
 public abstract class DrawContextMixin {
 
@@ -31,8 +33,10 @@ public abstract class DrawContextMixin {
     @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"), argsOnly = true, index = 2)
     private List<TooltipComponent> rst$applyDimensionsHeight(List<TooltipComponent> components) {
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
-            if (ObscureTooltipsCompat.isObscureHandling(components)) {
-                return components;
+            if (IS_OT_LOADED) {
+                if (ObscureTooltipsCompat.isObscureHandling(components)) {
+                    return components;
+                }
             }
 
             TooltipContext ctx = TooltipContextManager.peek();

@@ -7,7 +7,6 @@ import com.stalemated.sts.resize.components.ScrollingTitleTooltipComponent;
 import com.stalemated.sts.resize.components.StsIndentedTextTooltipComponent;
 import com.stalemated.sts.resize.components.TruncatedTitleTooltipComponent;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.util.OrderedTextUtil;
 import net.minecraft.client.font.TextRenderer;
@@ -66,41 +65,17 @@ public class TitleCenteringProcessor {
 
     private static int getSingleLineWidth(TooltipComponent comp, TextRenderer font, int modelOffset) {
         Optional<OrderedText> textOpt = TooltipStyleUtils.getExtractedTextValue(comp);
-        if (textOpt.isEmpty()) {
-            return comp.getWidth(font);
-        }
-        OrderedText text = textOpt.get();
-        if (IS_LT_LOADED) {
-            boolean hasItemModel = LegendaryTooltipsCompat.getItemModelComponentWidth(
-                    TooltipDimensionManager.getCurrentStack(),
-                    TooltipDimensionManager.processedTitleComponentList
-            ) > 0;
+        if (textOpt.isEmpty()) return comp.getWidth(font);
 
-            if (hasItemModel) {
-                text = OrderedTextUtil.stripSpaces(text);
-            }
-        }
+        OrderedText text = stripCenteredTextSpaces(textOpt.get());
         return font.getWidth(text) + modelOffset;
     }
 
     private static TooltipComponent centerSingleLine(TooltipComponent comp, TextRenderer font, int availableWidth, int itemModelOffset) {
         Optional<OrderedText> textOpt = TooltipStyleUtils.getExtractedTextValue(comp);
-        if (textOpt.isEmpty()) {
-            return comp;
-        }
+        if (textOpt.isEmpty()) return comp;
 
-        OrderedText text = textOpt.get();
-
-        if (IS_LT_LOADED) {
-            boolean hasItemModel = LegendaryTooltipsCompat.getItemModelComponentWidth(
-                    TooltipDimensionManager.getCurrentStack(),
-                    TooltipDimensionManager.processedTitleComponentList
-            ) > 0;
-
-            if (hasItemModel) {
-                text = OrderedTextUtil.stripSpaces(text);
-            }
-        }
+        OrderedText text = stripCenteredTextSpaces(textOpt.get());
 
         int textWidth = font.getWidth(text);
         int centerOffset = Math.max(0, (availableWidth - textWidth) / 2);
@@ -113,5 +88,13 @@ public class TitleCenteringProcessor {
         if (StateManager.isTierifyTooltip) itemModelOffset = 0;
 
         return new CenteredTextTooltipComponent(text, itemModelOffset, centerOffset, bottomPadding);
+    }
+
+    private static OrderedText stripCenteredTextSpaces(OrderedText text) {
+        if (IS_LT_LOADED) {
+            boolean hasItemModel = LegendaryTooltipsCompat.getItemModelComponentWidth() > 0;
+            if (hasItemModel) text = OrderedTextUtil.stripSpaces(text);
+        }
+        return text;
     }
 }

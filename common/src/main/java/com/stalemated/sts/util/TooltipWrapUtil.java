@@ -57,50 +57,32 @@ public class TooltipWrapUtil {
             int currentOffset = 0;
             if (isTitle) {
                 if (i == 0) {
-                    if (TooltipStyleUtils.convertOrderedTextToMutable(w).getString().isBlank()) {
-                        continue;
-                    }
+                    if (TooltipStyleUtils.convertOrderedTextToMutable(w).getString().isBlank()) continue;
                 } else {
-                    if (!StateManager.isTierifyTooltip) {
-                        currentOffset = TooltipDimensionManager.getModelOffset();
-                    }
+                    if (!StateManager.isTierifyTooltip) currentOffset = TooltipDimensionManager.getModelOffset();
                 }
 
-                int padding = 0;
-                if (IS_LT_LOADED) {
-                    if (wrapped.size() > 1 && i == wrapped.size() - 1) {
-                        boolean hasModel = LegendaryTooltipsCompat.getItemModelComponentWidth(
-                                TooltipDimensionManager.getCurrentStack(),
-                                TooltipDimensionManager.processedTitleComponentList
-                        ) > 0;
-                        if (StateManager.isTierifyTooltip) {
-                            padding = hasModel ? 2 : 1;
-                        } else {
-                            if (!hasModel) {
-                                padding = 1;
-                            }
-                        }
-                    }
-                }
+                int padding = getPadding(wrapped, i);
 
-                if (padding > 0) {
-                    titleLines.add(new StsIndentedTextTooltipComponent(w, currentOffset, padding));
-                } else {
-                    titleLines.add(new IndentedTextTooltipComponent(w, currentOffset));
-                }
+                if (padding > 0) titleLines.add(new StsIndentedTextTooltipComponent(w, currentOffset, padding));
+                else titleLines.add(new IndentedTextTooltipComponent(w, currentOffset));
             } else {
                 wrappedComponents.add(new IndentedTextTooltipComponent(w, currentOffset));
             }
         }
 
         if (isTitle && !titleLines.isEmpty()) {
-            if (titleLines.size() == 1) {
-                wrappedComponents.add(titleLines.get(0));
-            } else {
-                wrappedComponents.add(new WrappedTitleTooltipComponent(titleLines));
-            }
+            if (titleLines.size() == 1) wrappedComponents.add(titleLines.get(0));
+            else wrappedComponents.add(new WrappedTitleTooltipComponent(titleLines));
         }
         return true;
     }
 
+    public static int getPadding(List<OrderedText> wrapped, int i) {
+        int padding = 0;
+        if (IS_LT_LOADED) {
+            padding = LegendaryTooltipsCompat.getPadding(wrapped, i, padding);
+        }
+        return padding;
+    }
 }

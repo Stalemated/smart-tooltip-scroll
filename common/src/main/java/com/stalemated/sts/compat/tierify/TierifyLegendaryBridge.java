@@ -25,9 +25,7 @@ public class TierifyLegendaryBridge {
         ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
         if (currentStack == null || currentStack.isEmpty()) return components;
 
-        int titleSize = !TooltipDimensionManager.processedTitleComponentList.isEmpty()
-                ? TooltipDimensionManager.processedTitleComponentList.size()
-                : 1;
+        int titleSize = !TooltipDimensionManager.processedTitleComponentList.isEmpty() ? TooltipDimensionManager.processedTitleComponentList.size() : 1;
 
         List<TooltipComponent> newList = new ArrayList<>(components);
 
@@ -38,7 +36,6 @@ public class TierifyLegendaryBridge {
         }
 
         if (LegendaryTooltipsConfig.showModelForItem(currentStack)) {
-
             LegendaryTieredWrapper wrapper = getLegendaryTieredWrapper(components);
 
             newList.add(0, wrapper);

@@ -8,13 +8,17 @@ import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.OrderedText;
 
 import java.util.List;
-
 
 public class LegendaryTooltipsCompat {
 
     private static final int LT_ITEM_MODEL_OFFSET = 24;
+
+    public static int getItemModelComponentWidth() {
+        return getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack(), TooltipDimensionManager.processedTitleComponentList);
+    }
 
     public static int getItemModelComponentWidth(ItemStack stack, List<TooltipComponent> currentComponents) {
         if (stack == null || stack.isEmpty()) return 0;
@@ -59,5 +63,18 @@ public class LegendaryTooltipsCompat {
             }
         }
         return Math.min(splitIndex, components.size());
+    }
+
+    public static int getPadding(List<OrderedText> wrapped, int i, int padding) {
+        if (wrapped.size() > 1 && i == wrapped.size() - 1) {
+            boolean hasModel = LegendaryTooltipsCompat.getItemModelComponentWidth() > 0;
+
+            if (StateManager.isTierifyTooltip) {
+                padding = hasModel ? 2 : 1;
+            } else {
+                if (!hasModel) padding = 1;
+            }
+        }
+        return padding;
     }
 }
