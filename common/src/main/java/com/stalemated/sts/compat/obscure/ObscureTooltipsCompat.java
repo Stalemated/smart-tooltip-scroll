@@ -5,8 +5,6 @@ import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
 import com.stalemated.sts.scroll.TooltipScrollManager;
-import com.stalemated.sts.scroll.components.ScrollableTooltipComponent;
-import com.stalemated.sts.util.TooltipWrapUtil;
 import dev.obscuria.tooltips.client.component.HeaderComponent;
 import dev.obscuria.tooltips.client.component.SplitComponent;
 import dev.obscuria.tooltips.client.component.StackBuffer;
@@ -20,8 +18,6 @@ import java.util.List;
 
 import static com.stalemated.sts.resize.TooltipDimensionManager.MIN_TOOLTIP_HEIGHT;
 import static com.stalemated.sts.resize.TooltipDimensionManager.MIN_TOOLTIP_WIDTH;
-import static com.stalemated.sts.scroll.components.ScrollableTooltipComponent.SCROLLBAR_WIDTH;
-import static com.stalemated.sts.state.StateManager.IS_OT_LOADED;
 
 public class ObscureTooltipsCompat {
     public static final int OT_ICON_SIZE = 20;
@@ -31,7 +27,7 @@ public class ObscureTooltipsCompat {
     public static final int SPLIT_GAP = 3;
 
     private static int getContentMargin() {
-        return IS_OT_LOADED ? ClientConfig.CONTENT_MARGIN.get() : 2;
+        return ClientConfig.CONTENT_MARGIN.get();
     }
 
     public static boolean isCompatActive() {
@@ -39,7 +35,6 @@ public class ObscureTooltipsCompat {
     }
 
     public static boolean isObscureHandling(List<TooltipComponent> components) {
-        if (!IS_OT_LOADED) return false;
         if (!ClientConfig.ENABLED.get()) return false;
 
         return containsStackBuffer(components);
@@ -104,53 +99,14 @@ public class ObscureTooltipsCompat {
 
         List<TooltipComponent> bodyRaw = new ArrayList<>(components.subList(1, components.size()));
 
-        // 1st pass: wrap body without discounting scrollbar width
-        List<TooltipComponent> wrappedBody = TooltipWrapUtil.wrapComponents(bodyRaw, maxAllowedWidth, textRenderer, false);
+        List<TooltipComponent> result = TooltipDimensionManager.buildScrollableLayout(Collections.singletonList(processedHeader), bodyRaw, maxAllowedWidth, maxAllowedHeight, processedHeader.getHeight(), textRenderer);
 
-        int headerHeight = processedHeader.getHeight();
-        int bodyHeight = TooltipDimensionManager.calculateComponentListHeight(wrappedBody);
-        int totalHeight = headerHeight + bodyHeight;
-
-        if (totalHeight > maxAllowedHeight) {
-            // 2nd pass: wrap body discounting scrollbar width
-            ScrollableTooltipComponent scrollable = createScrollableTooltipComponent(textRenderer, maxAllowedWidth, maxAllowedHeight, processedHeader, bodyRaw, headerHeight);
-
-            int totalTooltipWidth = Math.max(processedHeader.getWidth(textRenderer), scrollable.getWidth(textRenderer));
-            if (processedHeader instanceof StsObscureHeaderComponent stsHeader) {
-                stsHeader.setTotalWidth(totalTooltipWidth);
-            }
-
-            List<TooltipComponent> result = new ArrayList<>(2);
-            result.add(processedHeader);
-            result.add(scrollable);
-            return result;
-        }
-
-        TooltipScrollManager.updateMaxScroll(0);
-        int bodyWidth = TooltipDimensionManager.calculateTooltipWidth(wrappedBody, textRenderer);
-        int totalTooltipWidth = Math.max(processedHeader.getWidth(textRenderer), bodyWidth);
+        int totalTooltipWidth = TooltipDimensionManager.calculateTooltipWidth(result, textRenderer);
         if (processedHeader instanceof StsObscureHeaderComponent stsHeader) {
             stsHeader.setTotalWidth(totalTooltipWidth);
         }
 
-        List<TooltipComponent> result = new ArrayList<>(1 + wrappedBody.size());
-        result.add(processedHeader);
-        result.addAll(wrappedBody);
         return result;
-    }
-
-    public static ScrollableTooltipComponent createScrollableTooltipComponent(TextRenderer textRenderer, int maxAllowedWidth, int maxAllowedHeight, TooltipComponent processedHeader, List<TooltipComponent> bodyRaw, int headerHeight) {
-        int scrollbarDiscountWidth = maxAllowedWidth - SCROLLBAR_WIDTH;
-        int availableBodyHeight = Math.max(maxAllowedHeight - headerHeight, MIN_TOOLTIP_HEIGHT);
-
-        List<TooltipComponent> wrappedBody = TooltipWrapUtil.wrapComponents(bodyRaw, scrollbarDiscountWidth, textRenderer, false);
-        return new ScrollableTooltipComponent(
-                wrappedBody,
-                Collections.singletonList(processedHeader),
-                availableBodyHeight,
-                maxAllowedWidth,
-                textRenderer
-        );
     }
 
     private static List<TooltipComponent> processSplitComponent(SplitComponent splitComponent, TextRenderer textRenderer) {
@@ -173,47 +129,18 @@ public class ObscureTooltipsCompat {
         int availableTextWidth = Math.max(1, rightAllowedWidth - OT_ITEM_MODEL_OFFSET);
 
         TooltipComponent processedHeader = processHeader(right.get(0), availableTextWidth, textRenderer);
-        List<TooltipComponent> bodyRaw = right.size() > 1
-                ? new ArrayList<>(right.subList(1, right.size()))
-                : Collections.emptyList();
-
+        List<TooltipComponent> bodyRaw = right.size() > 1 ? new ArrayList<>(right.subList(1, right.size())) : Collections.emptyList();
         List<TooltipComponent> newRight;
 
         if (bodyRaw.isEmpty()) {
             TooltipScrollManager.updateMaxScroll(0);
             newRight = Collections.singletonList(processedHeader);
         } else {
-            // 1st pass wrapping
-            List<TooltipComponent> wrappedBody = TooltipWrapUtil.wrapComponents(bodyRaw, rightAllowedWidth, textRenderer, false);
+            newRight = TooltipDimensionManager.buildScrollableLayout(Collections.singletonList(processedHeader), bodyRaw, rightAllowedWidth, maxAllowedHeight, processedHeader.getHeight(), textRenderer);
+            int totalRightWidth = TooltipDimensionManager.calculateTooltipWidth(newRight, textRenderer);
 
-            int headerHeight = processedHeader.getHeight();
-            int bodyHeight = TooltipDimensionManager.calculateComponentListHeight(wrappedBody);
-            int totalRightHeight = headerHeight + bodyHeight;
-            int totalHeight = Math.max(left.getHeight(), totalRightHeight);
-
-            if (totalHeight > maxAllowedHeight) {
-                // 2nd pass: wrap body discounting scrollbar width
-                ScrollableTooltipComponent scrollable = createScrollableTooltipComponent(textRenderer, rightAllowedWidth, maxAllowedHeight, processedHeader, bodyRaw, headerHeight);
-
-                int totalRightWidth = Math.max(processedHeader.getWidth(textRenderer), scrollable.getWidth(textRenderer));
-                if (processedHeader instanceof StsObscureHeaderComponent stsHeader) {
-                    stsHeader.setTotalWidth(totalRightWidth);
-                }
-
-                newRight = new ArrayList<>(2);
-                newRight.add(processedHeader);
-                newRight.add(scrollable);
-            } else {
-                TooltipScrollManager.updateMaxScroll(0);
-                int bodyWidth = TooltipDimensionManager.calculateTooltipWidth(wrappedBody, textRenderer);
-                int totalRightWidth = Math.max(processedHeader.getWidth(textRenderer), bodyWidth);
-                if (processedHeader instanceof StsObscureHeaderComponent stsHeader) {
-                    stsHeader.setTotalWidth(totalRightWidth);
-                }
-
-                newRight = new ArrayList<>(1 + wrappedBody.size());
-                newRight.add(processedHeader);
-                newRight.addAll(wrappedBody);
+            if (processedHeader instanceof StsObscureHeaderComponent stsHeader) {
+                stsHeader.setTotalWidth(totalRightWidth);
             }
         }
 
