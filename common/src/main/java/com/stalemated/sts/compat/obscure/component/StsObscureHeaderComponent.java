@@ -14,13 +14,11 @@ import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.render.VertexConsumerProvider;
 import org.joml.Matrix4f;
 
-import static com.stalemated.sts.compat.obscure.ObscureTooltipsCompat.OT_ITEM_MODEL_OFFSET;
-import static com.stalemated.sts.compat.obscure.ObscureTooltipsCompat.SEPARATOR_HEIGHT;
+import static com.stalemated.sts.compat.obscure.ObscureTooltipsCompat.*;
 
 public class StsObscureHeaderComponent implements TooltipComponent {
 
     public static final int VERTICAL_PADDING = 1;
-    public static final int OT_ICON_SIZE = 20;
     public static final int OT_EFFECT_OFFSET_X = 10;
     public static final int OT_EFFECT_OFFSET_Y = 11;
 
