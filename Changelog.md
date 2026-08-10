@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.2.0+1.20.1
+
+**This update adds compatibility with Obscure Tooltips!**
+
+### Changes
+- Added complete compatibility with **Obscure Tooltips**. This includes STS tooltip scrolling, resizing, title overflow settings as well as title centering
+- Removed the Puffish Skills compat toggle, making it permanent
+
+### Fixes
+- Cleaned up magic numbers and hardcoded margins, now dynamically reading them from compatible mods' configs
+- Fixed an issue where sometimes LT incorrectly applied a 24px model offset to wrapped title lines in EMI
+- Fixed an issue where the title centering algorithm would miscalculate the available width when LT was loaded due to invisible spaces injected by LT
+- Fixed potential crashes in Forge due to using Fabric logic
+
 ## 2.1.1+1.20.1
 
 ### Fixes
