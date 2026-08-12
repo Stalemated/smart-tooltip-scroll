@@ -3,6 +3,7 @@ package com.stalemated.sts.scroll.components;
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
+import com.stalemated.sts.scroll.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.font.TextRenderer;
@@ -20,6 +21,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
     private final int maxWidth;
     private final int maxTextWidth;
     public static final int SCROLLBAR_WIDTH = 6;
+    private static final int SCROLLBAR_PADDING_Y = 4;
     private final int scrollbarHeight;
 
     public ScrollableTooltipComponent(List<TooltipComponent> components, List<TooltipComponent> pinned, int maxHeight, int maxWidth, TextRenderer textRenderer) {
@@ -40,10 +42,11 @@ public class ScrollableTooltipComponent implements TooltipComponent {
         int contentWidth = Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth);
         this.maxWidth = MathUtils.clamp(contentWidth, minBound, maxWidth);
         this.maxTextWidth = Math.max(0, this.maxWidth - SCROLLBAR_WIDTH);
-
         this.totalHeight = height;
-        this.scrollbarHeight = this.maxHeight - 4;
-        TooltipScrollManager.updateMaxScroll(this.totalHeight - this.scrollbarHeight);
+        this.scrollbarHeight = this.maxHeight - SCROLLBAR_PADDING_Y;
+
+        TooltipIdentityContext context = new TooltipIdentityContext(TooltipDimensionManager.getCurrentStack(), this.components, textRenderer);
+        TooltipScrollManager.INSTANCE.onTooltipRendered(this.totalHeight - this.scrollbarHeight, context);
     }
 
     @Override
@@ -61,7 +64,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
         DrawContext context = TooltipDimensionManager.currentContext;
         if (context == null) return;
 
-        int scroll = TooltipScrollManager.getScrollOffset();
+        int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();
         vertexConsumers.draw();
         context.enableScissor(x, y, x + this.maxTextWidth, y + this.maxHeight);
         int currentY = y - scroll;
@@ -77,7 +80,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
 
     @Override
     public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
-        int scroll = TooltipScrollManager.getScrollOffset();
+        int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();
 
         context.enableScissor(x, y, x + this.maxTextWidth, y + this.maxHeight);
         int currentY = y - scroll;
@@ -96,7 +99,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
         int maxScroll = this.totalHeight - this.scrollbarHeight;
         if (maxScroll <= 0) return;
 
-        int scroll = TooltipScrollManager.getScrollOffset();
+        int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();
         int scrollbarX = x + this.maxWidth - SCROLLBAR_WIDTH / 2;
 
         int minThumbHeight = 2;

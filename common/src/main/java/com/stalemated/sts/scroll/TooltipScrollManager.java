@@ -1,85 +1,45 @@
 package com.stalemated.sts.scroll;
 
-import com.stalemated.lib.util.math.MathUtils;
-import com.stalemated.sts.config.ConfigManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class TooltipScrollManager {
-    private static int targetScroll = 0;
-    private static int startScroll = 0;
-    private static long scrollStartTime = 0;
+    public static final TooltipScrollManager INSTANCE = new TooltipScrollManager();
 
-    private static int maxScroll = 0;
-    private static long lastRenderTime = 0;
-    private static final int maxUnhoveredRenderTimeMs = 250;
-    private static final int smoothnessTimeMs = 1000;
+    private final ScrollState scrollState = new ScrollState();
+    private final TooltipIdentityTracker identityTracker = new TooltipIdentityTracker();
+    private final List<ExternalScrollStateResetter> externalResetters = new ArrayList<>();
 
-    private static final List<ExternalScrollStateResetter> externalResetters = new ArrayList<>();
+    private TooltipScrollManager() {}
 
     public static void registerResetter(ExternalScrollStateResetter resetter) {
-        externalResetters.add(resetter);
+        INSTANCE.externalResetters.add(resetter);
     }
 
-    public static void updateMaxScroll(int newMaxScroll) {
+    public void onTooltipRendered(int newMaxScroll, TooltipIdentityContext context) {
         long currentTime = System.currentTimeMillis();
+        
+        boolean isDifferentTooltip = identityTracker.hasTooltipChanged(context);
 
-        if (currentTime - lastRenderTime > maxUnhoveredRenderTimeMs) {
-            targetScroll = 0;
-            startScroll = 0;
-            scrollStartTime = currentTime;
+        if (isDifferentTooltip || scrollState.isUnhovered(currentTime)) {
+            scrollState.reset(currentTime);
         }
-        lastRenderTime = currentTime;
+        
+        identityTracker.updateIdentity(context);
+        scrollState.markRendered(currentTime);
 
         for (ExternalScrollStateResetter resetter : externalResetters) {
             resetter.resetState();
         }
 
-        maxScroll = Math.max(0, newMaxScroll);
-        
-        int oldTarget = targetScroll;
-        targetScroll = MathUtils.clamp(targetScroll, 0, maxScroll);
-        if (targetScroll != oldTarget) {
-            startScroll = getScrollOffset();
-            scrollStartTime = currentTime;
-        }
+        scrollState.updateMaxScroll(newMaxScroll, currentTime);
     }
 
-    public static boolean scroll(double amount) {
-        if (maxScroll <= 0) return false;
-
-        int pixelsPerScroll = 15;
-        if (System.currentTimeMillis() - lastRenderTime < maxUnhoveredRenderTimeMs) {
-            startScroll = getScrollOffset();
-            scrollStartTime = System.currentTimeMillis();
-            
-            targetScroll -= (int) (amount * pixelsPerScroll);
-            targetScroll = MathUtils.clamp(targetScroll, 0, maxScroll);
-            return true;
-        }
-        return false;
+    public boolean scroll(double amount) {
+        return scrollState.scroll(amount, System.currentTimeMillis());
     }
 
-    public static int getScrollOffset() {
-        if (targetScroll == startScroll) return targetScroll;
-        
-        float smoothness = ConfigManager.getConfig().scroll_smoothness;
-        if (smoothness <= 0.0f) return targetScroll;
-
-        int durationMs = (int) (smoothness * smoothnessTimeMs);
-        if (durationMs <= 0) return targetScroll;
-        
-        long elapsed = System.currentTimeMillis() - scrollStartTime;
-        if (elapsed >= durationMs) {
-            startScroll = targetScroll;
-            return targetScroll;
-        }
-        
-        // Ease-out cubic
-        double t = (double) elapsed / durationMs;
-        double easeOutCubic = 1.0 - Math.pow(1.0 - t, 3.0);
-        
-        return (int) (startScroll + (targetScroll - startScroll) * easeOutCubic);
+    public int getScrollOffset() {
+        return scrollState.getScrollOffset(System.currentTimeMillis());
     }
 }

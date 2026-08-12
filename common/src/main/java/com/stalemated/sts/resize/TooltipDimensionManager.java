@@ -5,6 +5,7 @@ import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
+import com.stalemated.sts.scroll.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.scroll.components.ScrollableTooltipComponent;
 import com.stalemated.sts.state.StateManager;
@@ -145,7 +146,8 @@ public class TooltipDimensionManager {
 
     public static List<TooltipComponent> buildScrollableLayout(List<TooltipComponent> pinnedComponents, List<TooltipComponent> scrollableContentRaw, int bodyMaxAllowedWidth, int maxAllowedHeight, int pinnedHeight, TextRenderer textRenderer) {
         if (scrollableContentRaw.isEmpty()) {
-            TooltipScrollManager.updateMaxScroll(0);
+            TooltipIdentityContext context = new TooltipIdentityContext(getCurrentStack(), scrollableContentRaw, textRenderer);
+            TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
             return new ArrayList<>(pinnedComponents);
         }
 
@@ -167,7 +169,8 @@ public class TooltipDimensionManager {
             return result;
         }
 
-        TooltipScrollManager.updateMaxScroll(0);
+        TooltipIdentityContext context = new TooltipIdentityContext(getCurrentStack(), scrollableContent, textRenderer);
+        TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
         List<TooltipComponent> result = new ArrayList<>(pinnedComponents);
         result.addAll(scrollableContent);
         return result;
