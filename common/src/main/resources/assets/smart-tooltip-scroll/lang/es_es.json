@@ -1,4 +1,7 @@
 {
+  "category.smart_tooltip_scroll.keys": "Smart Tooltip Scroll",
+  "key.smart_tooltip_scroll.bypass_scroll": "Ignorar desplazamiento de tooltip",
+
   "sts.tooltip_dimensions_screen.title": "Scroll y Dimensiones de Tooltip Personalizadas",
 
   "sts.tooltip_dimensions_screen.category.custom_dimensions": "Configuración de dimensiones personalizadas",

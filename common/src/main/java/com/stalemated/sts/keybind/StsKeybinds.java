@@ -10,7 +10,7 @@ public class StsKeybinds {
             "key.smart_tooltip_scroll.bypass_scroll",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_LEFT_CONTROL,
-            "category.smart_tooltip_scroll.main"
+            "category.smart_tooltip_scroll.keys"
     );
 
     public static void register() {

@@ -1,4 +1,7 @@
 {
+  "category.smart_tooltip_scroll.keys": "Smart Tooltip Scroll",
+  "key.smart_tooltip_scroll.bypass_scroll": "Bypass Tooltip Scrolling",
+
   "sts.tooltip_dimensions_screen.title": "Scroll & Custom Tooltip Dimensions",
 
   "sts.tooltip_dimensions_screen.category.custom_dimensions": "Custom Dimensions Config",
