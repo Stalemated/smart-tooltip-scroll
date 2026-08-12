@@ -35,6 +35,9 @@ public class SmartTooltipScrollMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.contains("compat.obscure")) {
             return PlatformHelper.INSTANCE.isModLoadedAtLaunch("obscure_tooltips");
         }
+        if (mixinClassName.contains("compat.spellengine")) {
+            return PlatformHelper.INSTANCE.isModLoadedAtLaunch("spell_engine");
+        }
         return true;
     }
 

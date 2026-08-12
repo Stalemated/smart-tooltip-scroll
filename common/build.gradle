@@ -49,4 +49,7 @@ dependencies {
     // Obscure Tooltips (compat)
     modCompileOnly "curse.maven:obscure-tooltips-715660:7568505"
     modCompileOnly "dev.obscuria:fragmentum-api:1.20.1-1.1.0"
+
+    // Spell Engine (compat)
+    modCompileOnly "maven.modrinth:spell-engine:0.15.12+1.20.1"
 }

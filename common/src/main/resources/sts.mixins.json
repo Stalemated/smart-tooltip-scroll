@@ -10,7 +10,8 @@
     "compat.emi.EmiRenderHelperMixin",
     "compat.puffish.SkillsScreenMixin",
     "compat.tierify.TieredTooltipMixin",
-    "compat.obscure.ObscureTooltipRendererMixin"
+    "compat.obscure.ObscureTooltipRendererMixin",
+    "compat.spellengine.SpellBindingScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
