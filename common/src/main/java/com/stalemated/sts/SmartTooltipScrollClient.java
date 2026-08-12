@@ -1,6 +1,7 @@
 package com.stalemated.sts;
 
 import com.stalemated.sts.config.ConfigManager;
+import com.stalemated.sts.keybind.StsKeybinds;
 import com.stalemated.sts.scroll.ScrollResetterManager;
 import com.stalemated.sts.state.TooltipContextManager;
 import net.fabricmc.api.EnvType;
@@ -17,6 +18,7 @@ public final class SmartTooltipScrollClient {
     public static void init() {
         ConfigManager.register();
         ScrollResetterManager.register();
+        StsKeybinds.register();
     }
 
     public static void onItemTooltip(ItemStack stack) {
