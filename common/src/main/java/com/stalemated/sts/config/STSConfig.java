@@ -1,6 +1,7 @@
 package com.stalemated.sts.config;
 
 import com.stalemated.sts.resize.TitleOverflowMode;
+import com.stalemated.sts.scroll.easing.ScrollEasingStyle;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 
 public class STSConfig {
@@ -18,6 +19,9 @@ public class STSConfig {
 
     @SerialEntry(comment = "If scrolling in different containers is disabled while scrolling on a tooltip. You probably don't want to disable this.")
     public boolean lock_container_scrolling = true;
+
+    @SerialEntry(comment = "The style of the scroll animation. Accepts: CLASSIC, SMOOTH, SNAPPY")
+    public ScrollEasingStyle scroll_easing_style = ScrollEasingStyle.SMOOTH;
 
     @SerialEntry(comment = "Smoothness of the tooltip scroll animation. 0.0 is instant, 1.0 is very smooth.")
     public float scroll_smoothness = 0.25f;

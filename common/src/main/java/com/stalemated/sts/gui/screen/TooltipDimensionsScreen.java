@@ -3,6 +3,7 @@ package com.stalemated.sts.gui.screen;
 import com.stalemated.lib.compat.yacl.controller.builder.SimpleEnumDropdownControllerBuilder;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.config.STSConfig;
+import com.stalemated.sts.scroll.easing.ScrollEasingStyle;
 import com.stalemated.sts.resize.TitleOverflowMode;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
@@ -170,9 +171,22 @@ public class TooltipDimensionsScreen {
                                 .toString())))
                 .build();
 
+        var scrollEasingStyle = Option.<ScrollEasingStyle>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.scroll_easing_style"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.scroll_easing_style.description")))
+                .binding(
+                        ScrollEasingStyle.SMOOTH,
+                        () -> config.scroll_easing_style,
+                        val -> config.scroll_easing_style = val
+                )
+                .controller(opt -> SimpleEnumDropdownControllerBuilder.create(opt)
+                        .formatValue(type -> Text.translatable("sts.tooltip_dimensions_screen.scroll_easing_style." + type.name().toLowerCase())))
+                .build();
+
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.scrolling"))
                 .option(scrollSmoothness)
+                .option(scrollEasingStyle)
                 .option(lockContainerScrolling)
                 .build();
     }

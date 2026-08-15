@@ -61,11 +61,16 @@ public class ScrollState {
             return this.targetScroll;
         }
         
-        // Ease-out cubic
         double t = (double) elapsed / durationMs;
-        double easeOutCubic = 1.0 - Math.pow(1.0 - t, 3.0);
+        double progress;
         
-        return (int) (this.startScroll + (this.targetScroll - this.startScroll) * easeOutCubic);
+        switch (ConfigManager.getConfig().scroll_easing_style) {
+            case CLASSIC -> progress = MathUtils.lerp(0.0, 1.0, t);
+            case SNAPPY -> progress = MathUtils.easeOutExpo(t);
+            default -> progress = MathUtils.easeOutCubic(t);
+        }
+        
+        return (int) (this.startScroll + (this.targetScroll - this.startScroll) * progress);
     }
     
     public void markRendered(long currentTime) {
