@@ -12,7 +12,7 @@ public class ScrollState {
 
     private static final int MAX_UNHOVERED_RENDER_TIME_MS = 250;
     private static final int SMOOTHNESS_TIME_MS = 1000;
-    private static final int PIXELS_PER_SCROLL = 15;
+    private static final int PIXELS_PER_LINE = 10;
 
     public void updateMaxScroll(int newMaxScroll, long currentTime) {
         this.maxScroll = Math.max(0, newMaxScroll);
@@ -33,7 +33,7 @@ public class ScrollState {
             this.startScroll = getScrollOffset(currentTime);
             this.scrollStartTime = currentTime;
             
-            this.targetScroll -= (int) (amount * PIXELS_PER_SCROLL);
+            this.targetScroll -= (int) (amount * PIXELS_PER_LINE * ConfigManager.getConfig().lines_per_scroll);
             this.targetScroll = MathUtils.clamp(this.targetScroll, 0, this.maxScroll);
             return true;
         }

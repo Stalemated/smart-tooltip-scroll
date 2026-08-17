@@ -183,9 +183,27 @@ public class TooltipDimensionsScreen {
                         .formatValue(type -> Text.translatable("sts.tooltip_dimensions_screen.scroll_easing_style." + type.name().toLowerCase())))
                 .build();
 
+        var linesPerScroll = Option.<Float>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.lines_per_scroll"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.lines_per_scroll.description")))
+                .binding(
+                        1.5f,
+                        () -> config.lines_per_scroll,
+                        val -> config.lines_per_scroll = val
+                )
+                .controller(opt -> FloatSliderControllerBuilder.create(opt)
+                        .range(0.5f, 5.0f)
+                        .step(0.5f)
+                        .formatValue(val -> Text.of(
+                                new BigDecimal(Float.toString(val))
+                                        .setScale(1, RoundingMode.HALF_UP)
+                                        .toString())))
+                .build();
+
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.scrolling"))
                 .option(scrollSmoothness)
+                .option(linesPerScroll)
                 .option(scrollEasingStyle)
                 .option(lockContainerScrolling)
                 .build();
