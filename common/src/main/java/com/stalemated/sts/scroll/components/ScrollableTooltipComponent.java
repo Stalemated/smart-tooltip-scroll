@@ -3,7 +3,7 @@ package com.stalemated.sts.scroll.components;
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
-import com.stalemated.sts.scroll.TooltipIdentityContext;
+import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.font.TextRenderer;

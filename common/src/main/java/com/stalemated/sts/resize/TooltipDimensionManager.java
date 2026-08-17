@@ -5,7 +5,7 @@ import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
-import com.stalemated.sts.scroll.TooltipIdentityContext;
+import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.scroll.components.ScrollableTooltipComponent;
 import com.stalemated.sts.state.StateManager;

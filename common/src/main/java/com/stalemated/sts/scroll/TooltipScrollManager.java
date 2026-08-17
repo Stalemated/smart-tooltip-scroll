@@ -1,5 +1,9 @@
 package com.stalemated.sts.scroll;
 
+import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
+import com.stalemated.sts.scroll.identity.TooltipIdentityTracker;
+import com.stalemated.sts.scroll.resetter.ExternalScrollStateResetter;
+
 import java.util.ArrayList;
 import java.util.List;
 

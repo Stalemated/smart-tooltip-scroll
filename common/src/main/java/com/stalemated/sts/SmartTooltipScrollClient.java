@@ -2,7 +2,7 @@ package com.stalemated.sts;
 
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.keybind.StsKeybinds;
-import com.stalemated.sts.scroll.ScrollResetterManager;
+import com.stalemated.sts.scroll.resetter.ScrollResetterManager;
 import com.stalemated.sts.state.TooltipContextManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

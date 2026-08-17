@@ -4,7 +4,7 @@ import com.stalemated.sts.compat.obscure.component.StsObscureHeaderComponent;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
-import com.stalemated.sts.scroll.TooltipIdentityContext;
+import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import dev.obscuria.tooltips.client.component.HeaderComponent;
 import dev.obscuria.tooltips.client.component.SplitComponent;

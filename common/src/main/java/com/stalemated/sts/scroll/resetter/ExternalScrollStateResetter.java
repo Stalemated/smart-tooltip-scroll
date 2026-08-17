@@ -1,4 +1,4 @@
-package com.stalemated.sts.scroll;
+package com.stalemated.sts.scroll.resetter;
 
 /**
  * Interface for resetting external mods' tooltip scroll states.
