@@ -17,12 +17,12 @@ import java.util.List;
 @Mixin(targets = "net.puffish.skillsmod.client.gui.SkillsScreen")
 public abstract class SkillsScreenMixin {
 
-    @Inject(method = "drawContentWithCategory", at = @At("HEAD"), remap = false)
+    @Inject(method = "drawContentWithCategory", at = @At("HEAD"))
     private void sts$onDrawContentStart(CallbackInfo ci) {
         PuffishSkillsCompat.isSkillTooltipContext = true;
     }
 
-    @Inject(method = "drawContentWithCategory", at = @At("RETURN"), remap = false)
+    @Inject(method = "drawContentWithCategory", at = @At("RETURN"))
     private void sts$onDrawContentEnd(CallbackInfo ci) {
         PuffishSkillsCompat.isSkillTooltipContext = false;
     }
