@@ -38,6 +38,9 @@ public class SmartTooltipScrollMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.contains("compat.spellengine")) {
             return PlatformHelper.INSTANCE.isModLoadedAtLaunch("spell_engine");
         }
+        if (mixinClassName.contains("compat.tooltipoverhaul")) {
+            return PlatformHelper.INSTANCE.isModLoadedAtLaunch("tooltipoverhaul");
+        }
         return true;
     }
 

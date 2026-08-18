@@ -221,9 +221,21 @@ public class TooltipDimensionsScreen {
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
+        var tooltipOverhaulCompat = Option.<Boolean>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen.tooltip_overhaul_compat"))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.tooltip_overhaul_compat.description")))
+                .binding(
+                        true,
+                        () -> config.tooltip_overhaul_compat,
+                        val -> config.tooltip_overhaul_compat = val
+                )
+                .controller(TickBoxControllerBuilder::create)
+                .build();
+
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.compatibility"))
                 .option(obscureCompat)
+                .option(tooltipOverhaulCompat)
                 .build();
     }
 }

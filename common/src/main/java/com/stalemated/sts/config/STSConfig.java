@@ -40,4 +40,7 @@ public class STSConfig {
 
     @SerialEntry(comment = "If compatibility with Obscure Tooltips is enabled.")
     public boolean obscure_compat = true;
+
+    @SerialEntry(comment = "If compatibility with Tooltip Overhaul is enabled.")
+    public boolean tooltip_overhaul_compat = true;
 }
