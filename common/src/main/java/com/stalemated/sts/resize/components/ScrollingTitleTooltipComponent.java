@@ -2,7 +2,6 @@ package com.stalemated.sts.resize.components;
 
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.util.OrderedTextUtil;
 import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.font.TextRenderer;
@@ -55,7 +54,8 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
         int identity = OrderedTextUtil.getStringFromOrderedText(this.text).hashCode();
         long elapsedTime = ScrollMathUtil.getTooltipElapsedTime(identity);
         int scrollOffset = ScrollMathUtil.calculateScrollOffset(overflowWidth, ConfigManager.getConfig().title_scroll_speed, ConfigManager.getConfig().title_scroll_pause_time_ms, elapsedTime);
-        int startX = x + (StateManager.isTierifyTooltip ? 0 : offset);
+        int startX = x;
+        if (!TooltipDimensionManager.handlesModelOffsetNatively()) startX += offset;
         int endX = x + this.maxTitleWidth;
 
         vertexConsumers.draw();
