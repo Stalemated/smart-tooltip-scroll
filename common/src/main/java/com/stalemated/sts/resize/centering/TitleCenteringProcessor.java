@@ -2,12 +2,12 @@ package com.stalemated.sts.resize.centering;
 
 import com.stalemated.lib.util.style.TooltipStyleUtils;
 import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
+import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.components.CenteredTextTooltipComponent;
 import com.stalemated.sts.resize.components.ScrollingTitleTooltipComponent;
 import com.stalemated.sts.resize.components.StsIndentedTextTooltipComponent;
 import com.stalemated.sts.resize.components.TruncatedTitleTooltipComponent;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.util.OrderedTextUtil;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.stalemated.sts.scroll.ScrollState.PIXELS_PER_LINE;
 import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
 
 public class TitleCenteringProcessor {
@@ -60,6 +61,9 @@ public class TitleCenteringProcessor {
                 maxWidth = Math.max(maxWidth, getSingleLineWidth(comp, font, modelOffset));
             }
         }
+        
+        maxWidth = Math.max(maxWidth, TooltipDimensionManager.getExtraWidth(font) + modelOffset);
+        
         return maxWidth;
     }
 
@@ -83,9 +87,12 @@ public class TitleCenteringProcessor {
         int bottomPadding = 0;
 
         if (comp instanceof StsIndentedTextTooltipComponent stsInd) {
-            bottomPadding = Math.max(0, stsInd.getHeight() - 10);
+            bottomPadding = Math.max(0, stsInd.getHeight() - PIXELS_PER_LINE);
         }
-        if (StateManager.isTierifyTooltip) itemModelOffset = 0;
+        
+        if (TooltipDimensionManager.handlesModelOffsetNatively()) {
+            itemModelOffset = 0;
+        }
 
         return new CenteredTextTooltipComponent(text, itemModelOffset, centerOffset, bottomPadding);
     }

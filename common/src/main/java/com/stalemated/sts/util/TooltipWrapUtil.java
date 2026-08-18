@@ -6,7 +6,6 @@ import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.components.StsIndentedTextTooltipComponent;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.state.StateManager;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.text.*;
@@ -59,7 +58,7 @@ public class TooltipWrapUtil {
                 if (i == 0) {
                     if (TooltipStyleUtils.convertOrderedTextToMutable(w).getString().isBlank()) continue;
                 } else {
-                    if (!StateManager.isTierifyTooltip) currentOffset = TooltipDimensionManager.getModelOffset();
+                    if (!TooltipDimensionManager.handlesModelOffsetNatively()) currentOffset = TooltipDimensionManager.getModelOffset();
                 }
 
                 int padding = getPadding(wrapped, i);

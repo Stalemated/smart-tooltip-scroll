@@ -2,6 +2,8 @@ package com.stalemated.sts.resize;
 
 import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
+import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulLayoutFixer;
+import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulStateManager;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
+import static com.stalemated.sts.state.StateManager.IS_TO_LOADED;
 
 public class TooltipDimensionManager {
 
@@ -97,14 +100,7 @@ public class TooltipDimensionManager {
         int scaledTooltipWidth = getScaledTooltipWidth();
         int scaledTooltipHeight = getScaledTooltipHeight();
         int componentWidth = getModelOffset(ctx != null ? ctx.itemStack() : null, components);
-        
-        int titleMaxWidth;
-        TitleOverflowMode overflowMode = ConfigManager.getConfig().title_overflow_mode;
-        if (StateManager.isTierifyTooltip || overflowMode == TitleOverflowMode.WRAP) {
-            titleMaxWidth = Math.max(scaledTooltipWidth, MIN_TOOLTIP_WIDTH) - componentWidth;
-        } else {
-            titleMaxWidth = Math.max(scaledTooltipWidth, MIN_TOOLTIP_WIDTH);
-        }
+        int titleMaxWidth = getTitleMaxWidth(scaledTooltipWidth, componentWidth);
 
         List<TooltipComponent> pinned = new ArrayList<>(components.subList(0, splitIndex));
         List<TooltipComponent> scrollableContentRaw = new ArrayList<>(components.subList(splitIndex, components.size()));
@@ -142,6 +138,19 @@ public class TooltipDimensionManager {
         processedTitleComponentList = pinned;
         bodyComponentList = scrollableContentRaw;
         return components;
+    }
+
+    public static int getTitleMaxWidth(int scaledTooltipWidth, int componentWidth) {
+        int titleMaxWidth;
+        TitleOverflowMode overflowMode = ConfigManager.getConfig().title_overflow_mode;
+        boolean isTOActive = IS_TO_LOADED && TooltipOverhaulStateManager.isStsActive();
+
+        if (StateManager.isTierifyTooltip || !isTOActive || overflowMode == TitleOverflowMode.WRAP) {
+            titleMaxWidth = Math.max(scaledTooltipWidth, MIN_TOOLTIP_WIDTH) - componentWidth;
+        } else {
+            titleMaxWidth = Math.max(scaledTooltipWidth, MIN_TOOLTIP_WIDTH);
+        }
+        return titleMaxWidth;
     }
 
     public static List<TooltipComponent> buildScrollableLayout(List<TooltipComponent> pinnedComponents, List<TooltipComponent> scrollableContentRaw, int bodyMaxAllowedWidth, int maxAllowedHeight, int pinnedHeight, TextRenderer textRenderer) {
@@ -218,10 +227,25 @@ public class TooltipDimensionManager {
         if (IS_LT_LOADED) {
             return LegendaryTooltipsCompat.getItemModelComponentWidth(currentStack, currentComponents);
         }
+        if (IS_TO_LOADED) {
+            return TooltipOverhaulLayoutFixer.getIconOffset();
+        }
         return 0;
     }
 
     public static int getPaddingOffset(int i) {
         return (i == 0) ? TITLE_BODY_VERTICAL_GAP : 0;
+    }
+
+    public static int getExtraWidth(TextRenderer textRenderer) {
+        if (IS_TO_LOADED) {
+            return TooltipOverhaulLayoutFixer.getExtraWidth(textRenderer);
+        }
+        return 0;
+    }
+
+    public static boolean handlesModelOffsetNatively() {
+        if (StateManager.isTierifyTooltip) return true;
+        return IS_TO_LOADED && TooltipOverhaulStateManager.isHandlingTOTooltip();
     }
 }
