@@ -11,7 +11,13 @@
     "compat.puffish.SkillsScreenMixin",
     "compat.tierify.TieredTooltipMixin",
     "compat.obscure.ObscureTooltipRendererMixin",
-    "compat.spellengine.SpellBindingScreenMixin"
+    "compat.spellengine.SpellBindingScreenMixin",
+    "compat.tooltipoverhaul.TooltipContextAccessor",
+    "compat.tooltipoverhaul.TooltipRendererMixin",
+    "compat.tooltipoverhaul.TooltipScrollStateMixin",
+    "compat.tooltipoverhaul.DefaultTextMixin",
+    "compat.tooltipoverhaul.DividerLineMixin",
+    "compat.tooltipoverhaul.PositionUtilsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
