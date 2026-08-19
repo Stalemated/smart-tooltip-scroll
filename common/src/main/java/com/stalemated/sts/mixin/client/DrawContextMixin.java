@@ -24,14 +24,14 @@ import static com.stalemated.sts.state.StateManager.IS_OT_LOADED;
 public abstract class DrawContextMixin {
 
     @Inject(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"))
-    private void rst$captureDrawContext(TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, CallbackInfo ci) {
+    private void sts$captureDrawContext(TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, CallbackInfo ci) {
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
             TooltipDimensionManager.setState((DrawContext) (Object) this, textRenderer);
         }
     }
 
     @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"), argsOnly = true, index = 2)
-    private List<TooltipComponent> rst$applyDimensionsHeight(List<TooltipComponent> components) {
+    private List<TooltipComponent> sts$applyDimensionsHeight(List<TooltipComponent> components) {
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
             if (IS_OT_LOADED) {
                 if (ObscureTooltipsCompat.isObscureHandling(components)) {
@@ -52,7 +52,7 @@ public abstract class DrawContextMixin {
     }
 
     @Inject(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("TAIL"))
-    private void rst$clearStateAfterRender(CallbackInfo ci) {
+    private void sts$clearStateAfterRender(CallbackInfo ci) {
         if (ConfigManager.getConfig().custom_tooltip_dimensions) {
             TooltipDimensionManager.clearState();
             TooltipContextManager.pop();
