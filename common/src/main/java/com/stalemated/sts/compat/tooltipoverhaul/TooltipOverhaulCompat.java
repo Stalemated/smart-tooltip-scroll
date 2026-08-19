@@ -3,6 +3,7 @@ package com.stalemated.sts.compat.tooltipoverhaul;
 import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
 import com.stalemated.sts.scroll.resetter.ExternalScrollStateResetter;
 import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.mixin.client.compat.tooltipoverhaul.TooltipContextAccessor;
@@ -46,7 +47,19 @@ public class TooltipOverhaulCompat implements ExternalScrollStateResetter {
                 stsCtx = new TooltipContext(stack);
             }
 
+            TooltipDimensionManager.pinnedHeightPredictor = pinned -> {
+                if (pinned.isEmpty()) return 0;
+
+                if (pinned.get(0) instanceof WrappedTitleTooltipComponent wrapped) {
+                    TooltipOverhaulLayoutMetrics metrics = TooltipOverhaulLayoutMetrics.calculate(context, wrapped);
+                    return metrics.getTargetDividerY();
+                }
+                return TooltipDimensionManager.calculateComponentListHeight(pinned);
+            };
+
             List<TooltipComponent> processed = TooltipDimensionManager.enforceHeightLimit(componentsListRaw, stsCtx);
+            TooltipDimensionManager.pinnedHeightPredictor = null;
+            
             ((TooltipContextAccessor) context).sts$setComponents(processed);
 
             TooltipOverhaulStateManager.setStsActive(true);
