@@ -44,7 +44,7 @@ public class TooltipRendererMixin {
         TooltipOverhaulStateManager.ensureContext(this.context);
     }
 
-    @Inject(method = "renderOut", at = @At("HEAD"))
+    @Inject(method = "renderOut", at = @At("HEAD"), require = 0)
     private void sts$ensureContextRenderOut(float progress, CallbackInfo ci) {
         TooltipOverhaulStateManager.ensureContext(this.context);
     }
@@ -54,7 +54,7 @@ public class TooltipRendererMixin {
         TooltipOverhaulStateManager.clearContext();
     }
 
-    @Inject(method = "renderOut", at = @At("TAIL"))
+    @Inject(method = "renderOut", at = @At("TAIL"), require = 0)
     private void sts$clearContextRenderOut(float progress, CallbackInfo ci) {
         TooltipOverhaulStateManager.clearContext();
     }
