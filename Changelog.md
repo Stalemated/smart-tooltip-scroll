@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.3.0+1.20.1
+
+**This update adds compat with Tooltip Overhaul, Tierify x Tooltip Overhaul compat, new scroll animation styles, scroll speed controls, and a bypass keybind.**
+
+### New Features
+- Added complete compatibility with **Tooltip Overhaul**. This includes STS tooltip scrolling, resizing, title overflow settings as well as title centering
+- Added compatibility between **Tierify** and **Tooltip Overhaul**, allowing TO's components to get drawn inside a Tierify tooltip
+- Added a new config option to change the scroll easing/animation formula:
+  - Classic: Constant scrolling speed
+  - Smooth: Natural scrolling with soft deceleration (default and how it behaved before)
+  - Snappy: Quick and responsive scrolling
+- Added a `lines_per_scroll` config slider to control how many lines are scrolled per mouse wheel tick (default: `1.5`)
+- Added a configurable keybind to bypass tooltip scrolling and scroll the parent container instead
+- Added compatibility with **Spell Engine** for spell tooltips inside the Spell Binding Table
+
+### Fixes
+- Fixed tooltip scrolling not being reset when viewing a different item
+- Fixed crashes by fixing mixin bytecode targets
+- Improved stability (and code readability)
+
 ## 2.2.0+1.20.1
 
 **This update adds compatibility with Obscure Tooltips!**
