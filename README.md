@@ -1,36 +1,34 @@
 # Smart Tooltip Scroll
 
-**Smart Tooltip Scroll (STS)** is a client-side Minecraft mod that gives you full control over the size and behavior of your item tooltips. No more tooltips going off-screen: limit their size, scroll through long descriptions, and handle massive item names perfectly.
+**Smart Tooltip Scroll (STS)** allows for scrollable and resizable tooltips, aiming for full compatibility with other mods.
 
 ---
 
-## ✨ Key Features
+## Features
 
-### 📜 Scrollable Tooltips
-- Tooltips that are too tall to fit on your screen can now be scrolled using your mouse wheel.
-- **Smooth Scrolling:** Fluid scroll transition with adjustable smoothness (via a 0.0 to 1.0 slider), powered by dynamic time-based interpolation.
-- **Smart Container Toggles:** Prevent conflicts by disabling scroll behavior in specific containers, like the Creative Inventory.
-
-### 📐 Resizable Tooltips
-- Cap the maximum height and width of your tooltips to a specific percentage of your screen. Keep your UI clean and unobtrusive.
-
-### 🔠 Title Overflow Strategies
-When an item's name is too long for the tooltip, choose exactly how to handle it:
-- **Wrap:** Wraps the title onto multiple lines perfectly, preserving custom colors, gradients, and italics.
-- **Truncate:** Cleanly cuts off the text with an ellipsis (`...`).
-- **Horizontal Scroll:** Animates the title to scroll side-to-side dynamically.
-
-### 🤝 Compatibility
-- Built-in compatibility with **EMI** item tooltips, featuring scrolling, resizing, and title overflow modes.
-- Full support for **Legendary Tooltips** and **Tierify** (including custom borders and components).
-- Built-in compatibility with **Mouse Tweaks**.
-
-### 🖥️ In-Game GUI
-Full **YACL + ModMenu** integration. Configure your scrolling smoothness and dimension limits instantly from the mod's config.
+*   **Scrollable Tooltips:** Easily scroll through tooltips that are too big to fit on your screen.
+*   **Resizable Tooltips:** Customize the maximum width and height of tooltips.
+*   **Pinned Headers:** The item name and header remain pinned at the very top of the tooltip while you scroll through the description.
 
 ---
 
-## 🏗️ Building from Source
+## Compatibility
+
+Current compatible mods:
+
+* **Legendary Tooltips**
+* **Obscure Tooltips**
+* **EMI**
+* **Tierify**
+* **Spell Engine**
+* **Pufferfish's Skills**
+* **Tooltip Overhaul (WIP)**
+
+If there's any mod that breaks functionality, request it and it will be added
+
+---
+
+## Building from Source
 
 STS depends on **S-Lib**, which must be published to your local Maven repository before compiling.
 
@@ -57,7 +55,7 @@ Output jars will be located in `[loader]/build/libs/` or `build/libs/` depending
 
 ---
 
-## 🌍 Platform Support
+# Platform Support
 
 | Platform | Versions             |
 |----------|----------------------|
@@ -67,16 +65,10 @@ Output jars will be located in `[loader]/build/libs/` or `build/libs/` depending
 
 ---
 
-## 📦 Dependencies
+## Dependencies
 
 - [S-Lib](https://github.com/Stalemated/s-lib)
 - [YACL](https://www.curseforge.com/minecraft/mc-mods/yacl)
 #### Fabric only
 - [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 - [ModMenu](https://www.curseforge.com/minecraft/mc-mods/modmenu)
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License**.
