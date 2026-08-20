@@ -30,11 +30,18 @@
   "sts.tooltip_dimensions_screen.lock_container_scrolling.description": "Wenn das gleichzeitige Scrollen in verschiedenen Containern gesperrt oder deaktiviert ist. Dies verhindert beispielsweise, dass ein Tooltip gescrollt wird, während man sich im Kreativmenü befindet. Ist diese Option deaktiviert, scrollen beide gleichzeitig.",
   "sts.tooltip_dimensions_screen.lock_container_scrolling.warning": "\n§4§lWarnung:§r §cDas solltest du wahrscheinlich nicht deaktivieren.§r",
   "sts.tooltip_dimensions_screen.scroll_smoothness": "Scroll-Sanftheit",
-  "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Passt die Sanftheit der Tooltip-Scroll-Animation an.\n\n§60.0§r: Sofortiges Scrollen (keine Animation)\n§61.0§r: Maximale Sanftheit",
+  "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Passt die Sanftheit der Tooltip-Scroll-Animation an.\n\n§60.00§r: Sofortiges Scrollen (keine Animation)\n§61.00§r: Maximale Sanftheit",
+  "sts.tooltip_dimensions_screen.scroll_easing_style": "Scroll-Animationsstil",
+  "sts.tooltip_dimensions_screen.scroll_easing_style.description": "Wählt den Animationsstil aus, der beim Scrollen durch Tooltips verwendet wird.\n\n§6Klassisch:§r Konstante Scrollgeschwindigkeit.\n§6Sanft:§r Natürliches Scrollen mit weicher Verlangsamung.\n§6Flott:§r Schnelles und reaktionsschnelles Scrollen.",
+  "sts.tooltip_dimensions_screen.scroll_easing_style.classic": "Klassisch",
+  "sts.tooltip_dimensions_screen.scroll_easing_style.smooth": "Flüssig",
+  "sts.tooltip_dimensions_screen.scroll_easing_style.snappy": "Flott",
+  "sts.tooltip_dimensions_screen.lines_per_scroll": "Zeilen pro Scrollen",
+  "sts.tooltip_dimensions_screen.lines_per_scroll.description": "Die Anzahl der vertikal gescrollten Zeilen pro Drehung des Mausrads.",
 
   "sts.tooltip_dimensions_screen.category.compatibility": "Kompatibilitäts-Konfiguration",
-  "sts.tooltip_dimensions_screen.puffish_compat": "Pufferfish's Skills Kompatibilität",
-  "sts.tooltip_dimensions_screen.puffish_compat.description": "Aktiviert dynamische Breitenanpassung, Höhenbegrenzung und Scroll-Kompatibilität für Skill-Bäume von §6Pufferfish's Skills§r.",
   "sts.tooltip_dimensions_screen.obscure_compat": "Obscure Tooltips Kompatibilität",
-  "sts.tooltip_dimensions_screen.obscure_compat.description": "Aktiviert dynamische Abmessungen, angeheftete Kopfzeilen, 3D-Vorschau-Unterstützung und flüssiges Scrollen kompatibel mit §6Obscure Tooltips§r."
+  "sts.tooltip_dimensions_screen.obscure_compat.description": "Aktiviert dynamische Abmessungen, angeheftete Kopfzeilen, Unterstützung für Item-Modelle und flüssiges Scrollen kompatibel mit §6Obscure Tooltips§r.",
+  "sts.tooltip_dimensions_screen.tooltip_overhaul_compat": "Tooltip Overhaul Kompatibilität",
+  "sts.tooltip_dimensions_screen.tooltip_overhaul_compat.description": "Aktiviert dynamische Dimensionen, angeheftete Kopfzeilen, Unterstützung für Item-Modelle und flüssiges Scrollen kompatibel mit §6Tooltip Overhaul§r."
 }

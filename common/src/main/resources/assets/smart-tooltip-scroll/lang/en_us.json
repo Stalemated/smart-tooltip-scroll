@@ -30,11 +30,18 @@
   "sts.tooltip_dimensions_screen.lock_container_scrolling.description": "If scrolling in different containers simultaneously is locked or disabled. This prevents scrolling a tooltip while in the creative menu for example. If disabled, both scroll at the same time.",
   "sts.tooltip_dimensions_screen.lock_container_scrolling.warning": "\n§4§lWarning:§r §cYou probably don't want to disable this.§r",
   "sts.tooltip_dimensions_screen.scroll_smoothness": "Scroll Smoothness",
-  "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Adjusts the smoothness of the tooltip scroll animation.\n\n§60.0§r: Instant scroll (no animation)\n§61.0§r: Maximum smoothness",
+  "sts.tooltip_dimensions_screen.scroll_smoothness.description": "Adjusts the smoothness of the tooltip scroll animation.\n\n§60.00§r: Instant scroll (no animation)\n§61.00§r: Maximum smoothness",
+  "sts.tooltip_dimensions_screen.scroll_easing_style": "Scroll Animation Style",
+  "sts.tooltip_dimensions_screen.scroll_easing_style.description": "Selects the animation style used when scrolling through tooltips.\n\n§6Classic:§r Constant scrolling speed.\n§6Smooth:§r Natural scrolling with soft deceleration.\n§6Snappy:§r Quick and responsive scrolling.",
+  "sts.tooltip_dimensions_screen.scroll_easing_style.classic": "Classic",
+  "sts.tooltip_dimensions_screen.scroll_easing_style.smooth": "Smooth",
+  "sts.tooltip_dimensions_screen.scroll_easing_style.snappy": "Snappy",
+  "sts.tooltip_dimensions_screen.lines_per_scroll": "Lines per Scroll",
+  "sts.tooltip_dimensions_screen.lines_per_scroll.description": "The number of lines scrolled vertically with each turn of the mouse wheel.",
 
   "sts.tooltip_dimensions_screen.category.compatibility": "Compatibility Config",
-  "sts.tooltip_dimensions_screen.puffish_compat": "Pufferfish's Skills Compatibility",
-  "sts.tooltip_dimensions_screen.puffish_compat.description": "Enables dynamic width wrapping, height limiting, and scrolling compatibility for skill trees from §6Pufferfish's Skills§r.",
   "sts.tooltip_dimensions_screen.obscure_compat": "Obscure Tooltips Compatibility",
-  "sts.tooltip_dimensions_screen.obscure_compat.description": "Enables dynamic dimensions, pinned headers, 3D preview support, and smooth scrolling compatibility with §6Obscure Tooltips§r."
+  "sts.tooltip_dimensions_screen.obscure_compat.description": "Enables dynamic dimensions, pinned headers, item model support, and smooth scrolling compatibility with §6Obscure Tooltips§r.",
+  "sts.tooltip_dimensions_screen.tooltip_overhaul_compat": "Tooltip Overhaul Compatibility",
+  "sts.tooltip_dimensions_screen.tooltip_overhaul_compat.description": "Enables dynamic dimensions, pinned headers, item model support, and smooth scrolling compatibility with §6Tooltip Overhaul§r."
 }
