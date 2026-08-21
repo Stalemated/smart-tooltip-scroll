@@ -6,6 +6,7 @@
   "client": [
     "DrawContextMixin",
     "MouseMixin",
+    "ScreenMixin",
     "compat.iceberg.IcebergTooltipsMixin",
     "compat.emi.EmiRenderHelperMixin",
     "compat.puffish.SkillsScreenMixin",
