@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.1+1.20.1
+
+### Fixes
+- Internal tooltip context now gets cleared at the start of each rendering cycle. This fixes some tooltips flickering in some screens (such as AE2's terminals)
+- Updated S-Lib dependency to 2.0.0 to implement a more unified way to register config files
+
 ## 2.3.0+1.20.1
 
 **This update adds compat with Tooltip Overhaul, Tierify x Tooltip Overhaul compat, new scroll animation styles, scroll speed controls, and a bypass keybind.**
