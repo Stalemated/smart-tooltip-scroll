@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.3.2+1.20.1
+
+### Fix
+- STS is now fully compatible with 2.0.0+ versions of Tooltip Overhaul! (Fixed crash when opening your inventory with the 2.0.0+ version of Tooltip Overhaul installed)
+
 ## 2.3.1+1.20.1
 
 ### Fixes
