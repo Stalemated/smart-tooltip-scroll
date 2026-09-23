@@ -30,7 +30,7 @@ public abstract class DefaultTextMixin {
         return instance.drawText(textRenderer, text, x, y, color, shadow);
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Ldev/xylonity/tooltipoverhaul/client/util/Constants;getIconTitleSeparation(Ldev/xylonity/tooltipoverhaul/client/render/TooltipContext;)I", ordinal = 1))
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Ldev/xylonity/tooltipoverhaul/client/util/Constants;getIconTitleSeparation(Ldev/xylonity/tooltipoverhaul/client/render/TooltipContext;)I"))
     private int sts$fixYPaddingForWrappedTitle(TooltipContext context) {
         return TooltipOverhaulLayoutFixer.fixIconTitleSeparation(context);
     }
