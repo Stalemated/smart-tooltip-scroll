@@ -12,230 +12,177 @@ import net.minecraft.text.Text;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.function.Function;
 
 public class TooltipDimensionsScreen {
 
-
     public static Screen create(Screen parent) {
-        STSConfig config = ConfigManager.getConfig();
-
         return YetAnotherConfigLib.createBuilder()
                 .title(Text.translatable("sts.tooltip_dimensions_screen.title"))
                 .category(ConfigCategory.createBuilder()
                         .name(Text.translatable("sts.tooltip_dimensions_screen.title"))
-                        .group(createCustomDimensionsGroup(config))
-                        .group(createTitleOptionsGroup(config))
-                        .group(createScrollingGroup(config))
-                        .group(createCompatibilityGroup(config))
+                        .group(createCustomDimensionsGroup())
+                        .group(createTitleOptionsGroup())
+                        .group(createScrollingGroup())
+                        .group(createCompatibilityGroup())
                         .build())
-                .save(ConfigManager::save)
                 .build()
                 .generateScreen(parent);
     }
 
-    private static OptionGroup createCustomDimensionsGroup(STSConfig config) {
-        var maxWidth = Option.<Integer>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.max_width_percentage"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.max_width_percentage.description")))
-                .binding(
-                        50,
-                        () -> config.max_width_percentage,
-                        val -> config.max_width_percentage = val
-                )
-                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                        .range(1, 100)
-                        .step(1))
-                .build();
-
-        var maxHeight = Option.<Integer>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.max_height_percentage"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.max_height_percentage.description")))
-                .binding(
-                        50,
-                        () -> config.max_height_percentage,
-                        val -> config.max_height_percentage = val
-                )
-                .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                        .range(1, 100)
-                        .step(1))
-                .build();
-
-        var enableCustomDimensions = Option.<Boolean>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.enable_custom_dimensions"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.enable_custom_dimensions.description")))
-                .binding(
-                        false,
-                        () -> config.custom_tooltip_dimensions,
-                        val -> config.custom_tooltip_dimensions = val
-                )
-                .controller(TickBoxControllerBuilder::create)
-                .build();
-
+    private static OptionGroup createCustomDimensionsGroup() {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.custom_dimensions"))
-                .option(enableCustomDimensions)
-                .option(maxHeight)
-                .option(maxWidth)
+                .option(createBooleanOption("custom_tooltip_dimensions", "enable_custom_dimensions", cfg -> cfg.custom_tooltip_dimensions, true))
+                .option(createIntOption("max_height_percentage", "max_height_percentage", 1, 100, 1, cfg -> cfg.max_height_percentage, 50))
+                .option(createIntOption("max_width_percentage", "max_width_percentage", 1, 100, 1, cfg -> cfg.max_width_percentage, 50))
                 .build();
     }
 
-    private static OptionGroup createTitleOptionsGroup(STSConfig config) {
-        var titleOverflowMode = Option.<TitleOverflowMode>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode.description")))
-                .binding(
-                        TitleOverflowMode.SCROLL,
-                        () -> config.title_overflow_mode,
-                        val -> config.title_overflow_mode = val
-                )
-                .controller(opt -> SimpleEnumDropdownControllerBuilder.create(opt)
-                        .formatValue(mode -> Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode." + mode.name().toLowerCase())))
-                .build();
-
-        var enableTitleCentering = Option.<Boolean>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.enable_title_centering"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.enable_title_centering.description")))
-                .binding(
-                        true,
-                        () -> config.title_centering,
-                        val -> config.title_centering = val
-                )
-                .controller(TickBoxControllerBuilder::create)
-                .build();
-
-        var titleScrollSpeed  = Option.<Double>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_speed"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_speed.description")))
-                .binding(
-                        25D,
-                        () -> config.title_scroll_speed,
-                        val -> config.title_scroll_speed = val
-                )
-                .controller(opt -> DoubleSliderControllerBuilder.create(opt)
-                        .formatValue(val -> Text.of(String.valueOf((int) Math.round(val))))
-                        .range(1D, 100D)
-                        .step(1D))
-                .build();
-
-        var titleScrollPauseTime  = Option.<Long>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_pause_time"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.title_scroll_pause_time.description")))
-                .binding(
-                        2000L,
-                        () -> config.title_scroll_pause_time_ms,
-                        val -> config.title_scroll_pause_time_ms = val
-                )
-                .controller(opt -> LongSliderControllerBuilder.create(opt)
-                        .range(0L, 5000L)
-                        .step(100L))
-                .build();
-
+    private static OptionGroup createTitleOptionsGroup() {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.title_options"))
-                .option(titleOverflowMode)
-                .option(enableTitleCentering)
-                .option(titleScrollSpeed)
-                .option(titleScrollPauseTime)
+                .option(createEnumOption(
+                        "title_overflow_mode",
+                        "title_overflow_mode",
+                        mode -> Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode." + mode.name().toLowerCase()),
+                        cfg -> cfg.title_overflow_mode,
+                        TitleOverflowMode.SCROLL
+                ))
+                .option(createBooleanOption("title_centering", "enable_title_centering", cfg -> cfg.title_centering, true))
+                .option(createDoubleOption(
+                        "title_scroll_speed",
+                        "title_scroll_speed",
+                        1.0, 100.0, 1.0,
+                        val -> Text.of(String.valueOf((int) Math.round(val))),
+                        cfg -> cfg.title_scroll_speed,
+                        25.0
+                ))
+                .option(createIntOption("title_scroll_pause_time_ms", "title_scroll_pause_time", 0, 5000, 100, cfg -> cfg.title_scroll_pause_time_ms, 2000))
                 .build();
     }
 
-    private static OptionGroup createScrollingGroup(STSConfig config) {
-        var lockContainerScrolling = Option.<Boolean>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.lock_container_scrolling"))
-                .description(OptionDescription.of(
-                        Text.translatable("sts.tooltip_dimensions_screen.lock_container_scrolling.description"),
-                        Text.translatable("sts.tooltip_dimensions_screen.lock_container_scrolling.warning")
-                ))
-                .binding(
-                        true,
-                        () -> config.lock_container_scrolling,
-                        val -> config.lock_container_scrolling = val
-                )
-                .controller(TickBoxControllerBuilder::create)
-                .build();
-
-        var scrollSmoothness = Option.<Float>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.scroll_smoothness"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.scroll_smoothness.description")))
-                .binding(
-                        0.25f,
-                        () -> config.scroll_smoothness,
-                        val -> config.scroll_smoothness = val
-                )
-                .controller(opt -> FloatSliderControllerBuilder.create(opt)
-                        .range(0.0f, 1.0f)
-                        .step(0.01f)
-                        .formatValue(val -> Text.of(
-                                new BigDecimal(Float.toString(val))
-                                .setScale(2, RoundingMode.HALF_UP)
-                                .toString())))
-                .build();
-
-        var scrollEasingStyle = Option.<ScrollEasingStyle>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.scroll_easing_style"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.scroll_easing_style.description")))
-                .binding(
-                        ScrollEasingStyle.SMOOTH,
-                        () -> config.scroll_easing_style,
-                        val -> config.scroll_easing_style = val
-                )
-                .controller(opt -> SimpleEnumDropdownControllerBuilder.create(opt)
-                        .formatValue(type -> Text.translatable("sts.tooltip_dimensions_screen.scroll_easing_style." + type.name().toLowerCase())))
-                .build();
-
-        var linesPerScroll = Option.<Float>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.lines_per_scroll"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.lines_per_scroll.description")))
-                .binding(
-                        1.5f,
-                        () -> config.lines_per_scroll,
-                        val -> config.lines_per_scroll = val
-                )
-                .controller(opt -> FloatSliderControllerBuilder.create(opt)
-                        .range(0.5f, 5.0f)
-                        .step(0.5f)
-                        .formatValue(val -> Text.of(
-                                new BigDecimal(Float.toString(val))
-                                        .setScale(1, RoundingMode.HALF_UP)
-                                        .toString())))
-                .build();
-
+    private static OptionGroup createScrollingGroup() {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.scrolling"))
-                .option(scrollSmoothness)
-                .option(linesPerScroll)
-                .option(scrollEasingStyle)
-                .option(lockContainerScrolling)
+                .option(createFloatOption(
+                        "scroll_smoothness",
+                        "scroll_smoothness",
+                        0.0f, 1.0f, 0.01f,
+                        val -> Text.of(new BigDecimal(Float.toString(val)).setScale(2, RoundingMode.HALF_UP).toString()),
+                        cfg -> cfg.scroll_smoothness,
+                        0.25f
+                ))
+                .option(createFloatOption(
+                        "lines_per_scroll",
+                        "lines_per_scroll",
+                        0.5f, 5.0f, 0.5f,
+                        val -> Text.of(new BigDecimal(Float.toString(val)).setScale(1, RoundingMode.HALF_UP).toString()),
+                        cfg -> cfg.lines_per_scroll,
+                        1.5f
+                ))
+                .option(createEnumOption(
+                        "scroll_easing_style",
+                        "scroll_easing_style",
+                        style -> Text.translatable("sts.tooltip_dimensions_screen.scroll_easing_style." + style.name().toLowerCase()),
+                        cfg -> cfg.scroll_easing_style,
+                        ScrollEasingStyle.SMOOTH
+                ))
+                .option(createBooleanOption(
+                        "lock_container_scrolling",
+                        "lock_container_scrolling",
+                        cfg -> cfg.lock_container_scrolling,
+                        true,
+                        Text.translatable("sts.tooltip_dimensions_screen.lock_container_scrolling.warning")
+                ))
                 .build();
     }
 
-    private static OptionGroup createCompatibilityGroup(STSConfig config) {
-        var obscureCompat = Option.<Boolean>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.obscure_compat"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.obscure_compat.description")))
-                .binding(
-                        true,
-                        () -> config.obscure_compat,
-                        val -> config.obscure_compat = val
-                )
-                .controller(TickBoxControllerBuilder::create)
-                .build();
-
-        var tooltipOverhaulCompat = Option.<Boolean>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.tooltip_overhaul_compat"))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen.tooltip_overhaul_compat.description")))
-                .binding(
-                        true,
-                        () -> config.tooltip_overhaul_compat,
-                        val -> config.tooltip_overhaul_compat = val
-                )
-                .controller(TickBoxControllerBuilder::create)
-                .build();
-
+    private static OptionGroup createCompatibilityGroup() {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("sts.tooltip_dimensions_screen.category.compatibility"))
-                .option(obscureCompat)
-                .option(tooltipOverhaulCompat)
+                .option(createBooleanOption("obscure_compat", "obscure_compat", cfg -> cfg.obscure_compat, true))
+                .option(createBooleanOption("tooltip_overhaul_compat", "tooltip_overhaul_compat", cfg -> cfg.tooltip_overhaul_compat, true))
+                .build();
+    }
+
+    private static Option<Boolean> createBooleanOption(String configKey, String langKey, Function<STSConfig, Boolean> getter, boolean defaultValue) {
+        return createBooleanOption(configKey, langKey, getter, defaultValue, null);
+    }
+
+    private static Option<Boolean> createBooleanOption(String configKey, String langKey, Function<STSConfig, Boolean> getter, boolean defaultValue, Text warning) {
+        OptionDescription desc = warning != null
+                ? OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description"), warning)
+                : OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description"));
+        return Option.<Boolean>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .description(desc)
+                .binding(
+                        defaultValue,
+                        () -> getter.apply(ConfigManager.getConfig()),
+                        val -> ConfigManager.MANAGER.updateOption(configKey, val)
+                )
+                .controller(TickBoxControllerBuilder::create)
+                .build();
+    }
+
+    private static Option<Integer> createIntOption(String configKey, String langKey, int min, int max, int step, Function<STSConfig, Integer> getter, int defaultValue) {
+        return Option.<Integer>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
+                .binding(
+                        defaultValue,
+                        () -> getter.apply(ConfigManager.getConfig()),
+                        val -> ConfigManager.MANAGER.updateOption(configKey, val)
+                )
+                .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(min, max).step(step))
+                .build();
+    }
+
+    private static Option<Float> createFloatOption(String configKey, String langKey, float min, float max, float step, ValueFormatter<Float> formatter, Function<STSConfig, Float> getter, float defaultValue) {
+        return Option.<Float>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
+                .binding(
+                        defaultValue,
+                        () -> getter.apply(ConfigManager.getConfig()),
+                        val -> ConfigManager.MANAGER.updateOption(configKey, val)
+                )
+                .controller(opt -> {
+                    FloatSliderControllerBuilder builder = FloatSliderControllerBuilder.create(opt).range(min, max).step(step);
+                    if (formatter != null) builder.formatValue(formatter);
+                    return builder;
+                })
+                .build();
+    }
+
+    private static Option<Double> createDoubleOption(String configKey, String langKey, double min, double max, double step, ValueFormatter<Double> formatter, Function<STSConfig, Double> getter, double defaultValue) {
+        return Option.<Double>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
+                .binding(
+                        defaultValue,
+                        () -> getter.apply(ConfigManager.getConfig()),
+                        val -> ConfigManager.MANAGER.updateOption(configKey, val)
+                )
+                .controller(opt -> {
+                    DoubleSliderControllerBuilder builder = DoubleSliderControllerBuilder.create(opt).range(min, max).step(step);
+                    if (formatter != null) builder.formatValue(formatter);
+                    return builder;
+                })
+                .build();
+    }
+
+    private static <E extends Enum<E>> Option<E> createEnumOption(String configKey, String langKey, ValueFormatter<E> formatter, Function<STSConfig, E> getter, E defaultValue) {
+        return Option.<E>createBuilder()
+                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
+                .binding(
+                        defaultValue,
+                        () -> getter.apply(ConfigManager.getConfig()),
+                        val -> ConfigManager.MANAGER.updateOption(configKey, val)
+                )
+                .controller(opt -> SimpleEnumDropdownControllerBuilder.create(opt).formatValue(formatter))
                 .build();
     }
 }
