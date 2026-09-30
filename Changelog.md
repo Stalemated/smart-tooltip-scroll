@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.4.0+1.20.1
+
+### General Changes
+- Updated the mod to work with S-Lib 3.0.1
+
 ## 2.3.2+1.20.1
 
 ### Fix

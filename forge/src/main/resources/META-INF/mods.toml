@@ -44,7 +44,7 @@ side = "CLIENT"
 
 [[dependencies.smart_tooltip_scroll]]
 modId = "yet_another_config_lib_v3"
-mandatory = true
+mandatory = false
 versionRange = "[3.6.2,)"
 ordering = "AFTER"
 side = "CLIENT"
