@@ -6,16 +6,16 @@ import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.state.StateManager;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.render.VertexConsumerProvider;
 import org.joml.Matrix4f;
 
 import java.util.List;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
 
-public class ScrollableTooltipComponent implements TooltipComponent {
-    private final List<TooltipComponent> components;
+public class ScrollableTooltipComponent implements ClientTooltipComponent {
+    private final List<ClientTooltipComponent> components;
     private final int maxHeight;
     private final int totalHeight;
     private final int maxWidth;
@@ -24,13 +24,13 @@ public class ScrollableTooltipComponent implements TooltipComponent {
     private static final int SCROLLBAR_PADDING_Y = 4;
     private final int scrollbarHeight;
 
-    public ScrollableTooltipComponent(List<TooltipComponent> components, List<TooltipComponent> pinned, int maxHeight, int maxWidth, TextRenderer textRenderer) {
+    public ScrollableTooltipComponent(List<ClientTooltipComponent> components, List<ClientTooltipComponent> pinned, int maxHeight, int maxWidth, Font textRenderer) {
         this.components = components;
         this.maxHeight = maxHeight;
 
         int height = 0;
         int maxComponentWidth = 0;
-        for (TooltipComponent component : components) {
+        for (ClientTooltipComponent component : components) {
             int width = component.getWidth(textRenderer);
             if (width > maxComponentWidth) maxComponentWidth = width;
             height += component.getHeight();
@@ -50,7 +50,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
     }
 
     @Override
-    public int getWidth(TextRenderer textRenderer) {
+    public int getWidth(Font textRenderer) {
         return this.maxWidth;
     }
 
@@ -60,33 +60,33 @@ public class ScrollableTooltipComponent implements TooltipComponent {
     }
 
     @Override
-    public void drawText(TextRenderer textRenderer, int x, int y, Matrix4f matrix, VertexConsumerProvider.Immediate vertexConsumers) {
-        DrawContext context = TooltipDimensionManager.currentContext;
+    public void renderText(Font textRenderer, int x, int y, Matrix4f matrix, MultiBufferSource.BufferSource vertexConsumers) {
+        GuiGraphics context = TooltipDimensionManager.currentContext;
         if (context == null) return;
 
         int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();
-        vertexConsumers.draw();
+        vertexConsumers.endBatch();
         context.enableScissor(x, y, x + this.maxTextWidth, y + this.maxHeight);
         int currentY = y - scroll;
 
-        for (TooltipComponent component : components) {
-            component.drawText(textRenderer, x, currentY, matrix, vertexConsumers);
+        for (ClientTooltipComponent component : components) {
+            component.renderText(textRenderer, x, currentY, matrix, vertexConsumers);
             currentY += component.getHeight();
         }
 
-        vertexConsumers.draw();
+        vertexConsumers.endBatch();
         context.disableScissor();
     }
 
     @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
+    public void renderImage(Font textRenderer, int x, int y, GuiGraphics context) {
         int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();
 
         context.enableScissor(x, y, x + this.maxTextWidth, y + this.maxHeight);
         int currentY = y - scroll;
 
-        for (TooltipComponent component : components) {
-            component.drawItems(textRenderer, x, currentY, context);
+        for (ClientTooltipComponent component : components) {
+            component.renderImage(textRenderer, x, currentY, context);
             currentY += component.getHeight();
         }
 
@@ -95,7 +95,7 @@ public class ScrollableTooltipComponent implements TooltipComponent {
         drawScrollbar(context, x, y);
     }
 
-    private void drawScrollbar(DrawContext context, int x, int y) {
+    private void drawScrollbar(GuiGraphics context, int x, int y) {
         int maxScroll = this.totalHeight - this.scrollbarHeight;
         if (maxScroll <= 0) return;
 

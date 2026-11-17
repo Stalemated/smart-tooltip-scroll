@@ -4,24 +4,24 @@ import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.item.ItemStack;
 import org.joml.Matrix4f;
 
 import java.util.List;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.item.ItemStack;
 
 import static com.stalemated.sts.resize.TooltipDimensionManager.TITLE_BODY_VERTICAL_GAP;
 
-public class LegendaryTieredWrapper implements TooltipComponent {
+public class LegendaryTieredWrapper implements ClientTooltipComponent {
 
     private final ItemModelComponent modelComponent;
-    private final List<TooltipComponent> titleComponents;
+    private final List<ClientTooltipComponent> titleComponents;
     private final int extraWidth;
 
-    public LegendaryTieredWrapper(List<TooltipComponent> titleComponents) {
+    public LegendaryTieredWrapper(List<ClientTooltipComponent> titleComponents) {
         this.titleComponents = titleComponents;
         ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
         this.modelComponent = new ItemModelComponent(currentStack);
@@ -31,7 +31,7 @@ public class LegendaryTieredWrapper implements TooltipComponent {
     private int getTitleHeight() {
         int totalTitleHeight = 0;
         if (titleComponents != null) {
-            for (TooltipComponent component : titleComponents) {
+            for (ClientTooltipComponent component : titleComponents) {
                 totalTitleHeight += component.getHeight();
             }
         }
@@ -40,7 +40,7 @@ public class LegendaryTieredWrapper implements TooltipComponent {
 
     private int getFirstLineHeight() {
         if (titleComponents != null && !titleComponents.isEmpty()) {
-            TooltipComponent firstComp = titleComponents.get(0);
+            ClientTooltipComponent firstComp = titleComponents.get(0);
             if (firstComp instanceof WrappedTitleTooltipComponent) {
                 return ((WrappedTitleTooltipComponent) firstComp).getFirstLineHeight();
             }
@@ -55,7 +55,7 @@ public class LegendaryTieredWrapper implements TooltipComponent {
         return Math.max(this.extraWidth, yOffset * 2 + getTitleHeight() - TITLE_BODY_VERTICAL_GAP);
     }
 
-    private int getCalculatedX(TooltipComponent component, int x, int i) {
+    private int getCalculatedX(ClientTooltipComponent component, int x, int i) {
         int drawX = x;
 
         if (i == 0 || !(component instanceof IndentedTextTooltipComponent)) {
@@ -65,11 +65,11 @@ public class LegendaryTieredWrapper implements TooltipComponent {
     }
 
     @Override
-    public int getWidth(TextRenderer textRenderer) {
+    public int getWidth(Font textRenderer) {
         int maxTitleWidth = 0;
         if (titleComponents != null) {
             for (int i = 0; i < titleComponents.size(); i++) {
-                TooltipComponent component = titleComponents.get(i);
+                ClientTooltipComponent component = titleComponents.get(i);
                 int compWidth = component.getWidth(textRenderer);
                 
                 if (i == 0 || !(component instanceof IndentedTextTooltipComponent)) {
@@ -82,25 +82,25 @@ public class LegendaryTieredWrapper implements TooltipComponent {
     }
 
     @Override
-    public void drawText(TextRenderer textRenderer, int x, int y, Matrix4f matrix, VertexConsumerProvider.Immediate vertexConsumers) {
+    public void renderText(Font textRenderer, int x, int y, Matrix4f matrix, MultiBufferSource.BufferSource vertexConsumers) {
         int yOffset = Math.max(0, (this.extraWidth - getFirstLineHeight()) / 2);
         int currentY = y + yOffset - 1;
 
         if (titleComponents != null) {
             for (int i = 0; i < titleComponents.size(); i++) {
-                TooltipComponent component = titleComponents.get(i);
+                ClientTooltipComponent component = titleComponents.get(i);
                 int drawX = getCalculatedX(component, x, i);
 
-                component.drawText(textRenderer, drawX, currentY, matrix, vertexConsumers);
+                component.renderText(textRenderer, drawX, currentY, matrix, vertexConsumers);
                 currentY += component.getHeight();
             }
         }
     }
 
     @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
+    public void renderImage(Font textRenderer, int x, int y, GuiGraphics context) {
         if (this.extraWidth > 0) {
-            modelComponent.drawItems(textRenderer, x, y, context);
+            modelComponent.renderImage(textRenderer, x, y, context);
         }
 
         int yOffset = Math.max(0, (this.extraWidth - getFirstLineHeight()) / 2);
@@ -108,10 +108,10 @@ public class LegendaryTieredWrapper implements TooltipComponent {
 
         if (titleComponents != null) {
             for (int i = 0; i < titleComponents.size(); i++) {
-                TooltipComponent component = titleComponents.get(i);
+                ClientTooltipComponent component = titleComponents.get(i);
                 int drawX = getCalculatedX(component, x, i);
 
-                component.drawItems(textRenderer, drawX, currentY, context);
+                component.renderImage(textRenderer, drawX, currentY, context);
                 currentY += component.getHeight();
             }
         }

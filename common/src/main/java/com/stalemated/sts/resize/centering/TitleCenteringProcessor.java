@@ -9,35 +9,34 @@ import com.stalemated.sts.resize.components.StsIndentedTextTooltipComponent;
 import com.stalemated.sts.resize.components.TruncatedTitleTooltipComponent;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
 import com.stalemated.sts.util.OrderedTextUtil;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.text.OrderedText;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.util.FormattedCharSequence;
 
 import static com.stalemated.sts.scroll.ScrollState.PIXELS_PER_LINE;
 import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
 
 public class TitleCenteringProcessor {
 
-    public static List<TooltipComponent> applyCentering(List<TooltipComponent> pinned, TextRenderer font, int totalTooltipWidth, int modelOffset) {
+    public static List<ClientTooltipComponent> applyCentering(List<ClientTooltipComponent> pinned, Font font, int totalTooltipWidth, int modelOffset) {
         if (pinned == null || pinned.isEmpty() || font == null) {
             return pinned;
         }
 
         int availableWidth = Math.max(0, totalTooltipWidth - modelOffset);
-        List<TooltipComponent> centeredList = new ArrayList<>(pinned.size());
+        List<ClientTooltipComponent> centeredList = new ArrayList<>(pinned.size());
 
-        for (TooltipComponent comp : pinned) {
+        for (ClientTooltipComponent comp : pinned) {
             if (comp instanceof ScrollingTitleTooltipComponent || comp instanceof TruncatedTitleTooltipComponent) {
                 centeredList.add(comp);
             } else if (comp instanceof WrappedTitleTooltipComponent wrapped) {
-                List<TooltipComponent> lines = wrapped.getWrappedLines();
-                List<TooltipComponent> centeredLines = new ArrayList<>(lines.size());
+                List<ClientTooltipComponent> lines = wrapped.getWrappedLines();
+                List<ClientTooltipComponent> centeredLines = new ArrayList<>(lines.size());
 
-                for (TooltipComponent line : lines) {
+                for (ClientTooltipComponent line : lines) {
                     centeredLines.add(centerSingleLine(line, font, availableWidth, modelOffset));
                 }
                 centeredList.add(new WrappedTitleTooltipComponent(centeredLines));
@@ -49,12 +48,12 @@ public class TitleCenteringProcessor {
         return centeredList;
     }
 
-    public static int getCleanPinnedWidth(List<TooltipComponent> pinned, TextRenderer font, int modelOffset) {
+    public static int getCleanPinnedWidth(List<ClientTooltipComponent> pinned, Font font, int modelOffset) {
         if (pinned == null || pinned.isEmpty() || font == null) return 0;
         int maxWidth = 0;
-        for (TooltipComponent comp : pinned) {
+        for (ClientTooltipComponent comp : pinned) {
             if (comp instanceof WrappedTitleTooltipComponent wrapped) {
-                for (TooltipComponent line : wrapped.getWrappedLines()) {
+                for (ClientTooltipComponent line : wrapped.getWrappedLines()) {
                     maxWidth = Math.max(maxWidth, getSingleLineWidth(line, font, modelOffset));
                 }
             } else {
@@ -67,21 +66,21 @@ public class TitleCenteringProcessor {
         return maxWidth;
     }
 
-    private static int getSingleLineWidth(TooltipComponent comp, TextRenderer font, int modelOffset) {
-        Optional<OrderedText> textOpt = TooltipStyleUtils.getExtractedTextValue(comp);
+    private static int getSingleLineWidth(ClientTooltipComponent comp, Font font, int modelOffset) {
+        Optional<FormattedCharSequence> textOpt = TooltipStyleUtils.getExtractedTextValue(comp);
         if (textOpt.isEmpty()) return comp.getWidth(font);
 
-        OrderedText text = stripCenteredTextSpaces(textOpt.get());
-        return font.getWidth(text) + modelOffset;
+        FormattedCharSequence text = stripCenteredTextSpaces(textOpt.get());
+        return font.width(text) + modelOffset;
     }
 
-    private static TooltipComponent centerSingleLine(TooltipComponent comp, TextRenderer font, int availableWidth, int itemModelOffset) {
-        Optional<OrderedText> textOpt = TooltipStyleUtils.getExtractedTextValue(comp);
+    private static ClientTooltipComponent centerSingleLine(ClientTooltipComponent comp, Font font, int availableWidth, int itemModelOffset) {
+        Optional<FormattedCharSequence> textOpt = TooltipStyleUtils.getExtractedTextValue(comp);
         if (textOpt.isEmpty()) return comp;
 
-        OrderedText text = stripCenteredTextSpaces(textOpt.get());
+        FormattedCharSequence text = stripCenteredTextSpaces(textOpt.get());
 
-        int textWidth = font.getWidth(text);
+        int textWidth = font.width(text);
         int centerOffset = Math.max(0, (availableWidth - textWidth) / 2);
 
         int bottomPadding = 0;
@@ -97,7 +96,7 @@ public class TitleCenteringProcessor {
         return new CenteredTextTooltipComponent(text, itemModelOffset, centerOffset, bottomPadding);
     }
 
-    private static OrderedText stripCenteredTextSpaces(OrderedText text) {
+    private static FormattedCharSequence stripCenteredTextSpaces(FormattedCharSequence text) {
         if (IS_LT_LOADED) {
             boolean hasItemModel = LegendaryTooltipsCompat.getItemModelComponentWidth() > 0;
             if (hasItemModel) text = OrderedTextUtil.stripSpaces(text);

@@ -6,9 +6,11 @@ import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.components.StsIndentedTextTooltipComponent;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.text.*;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,20 +21,20 @@ import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
 public class TooltipWrapUtil {
     public static boolean isHandlingCustomWrap = false;
 
-    public static List<TooltipComponent> wrapComponents(List<TooltipComponent> components, int targetWidth, TextRenderer textRenderer, boolean isTitle) {
-        List<TooltipComponent> wrappedComponents = new ArrayList<>();
+    public static List<ClientTooltipComponent> wrapComponents(List<ClientTooltipComponent> components, int targetWidth, Font textRenderer, boolean isTitle) {
+        List<ClientTooltipComponent> wrappedComponents = new ArrayList<>();
 
-        for (TooltipComponent comp : components) {
+        for (ClientTooltipComponent comp : components) {
             boolean wrappedFallback = false;
 
             if (textRenderer != null) {
-                Optional<OrderedText> extracted = TooltipStyleUtils.getExtractedTextValue(comp);
+                Optional<FormattedCharSequence> extracted = TooltipStyleUtils.getExtractedTextValue(comp);
 
                 if (extracted.isPresent()) {
-                    OrderedText value = extracted.get();
+                    FormattedCharSequence value = extracted.get();
 
-                    if (textRenderer.getWidth(value) > targetWidth) {
-                        MutableText mutable = TooltipStyleUtils.convertOrderedTextToMutable(value);
+                    if (textRenderer.width(value) > targetWidth) {
+                        MutableComponent mutable = TooltipStyleUtils.convertOrderedTextToMutable(value);
                         wrappedFallback = handleCustomWrap(targetWidth, textRenderer, wrappedComponents, mutable, isTitle);
                     }
                 }
@@ -43,15 +45,15 @@ public class TooltipWrapUtil {
         return wrappedComponents;
     }
 
-    public static boolean handleCustomWrap(int targetWidth, TextRenderer textRenderer, List<TooltipComponent> wrappedComponents, StringVisitable visitable, boolean isTitle) {
+    public static boolean handleCustomWrap(int targetWidth, Font textRenderer, List<ClientTooltipComponent> wrappedComponents, FormattedText visitable, boolean isTitle) {
         isHandlingCustomWrap = true;
-        List<OrderedText> wrapped = new ArrayList<>(textRenderer.wrapLines(visitable, targetWidth));
+        List<FormattedCharSequence> wrapped = new ArrayList<>(textRenderer.split(visitable, targetWidth));
         isHandlingCustomWrap = false;
 
-        List<TooltipComponent> titleLines = new ArrayList<>();
+        List<ClientTooltipComponent> titleLines = new ArrayList<>();
 
         for (int i = 0; i < wrapped.size(); i++) {
-            OrderedText w = wrapped.get(i);
+            FormattedCharSequence w = wrapped.get(i);
 
             int currentOffset = 0;
             if (isTitle) {
@@ -77,7 +79,7 @@ public class TooltipWrapUtil {
         return true;
     }
 
-    public static int getPadding(List<OrderedText> wrapped, int i) {
+    public static int getPadding(List<FormattedCharSequence> wrapped, int i) {
         int padding = 0;
         if (IS_LT_LOADED) {
             padding = LegendaryTooltipsCompat.getPadding(wrapped, i, padding);

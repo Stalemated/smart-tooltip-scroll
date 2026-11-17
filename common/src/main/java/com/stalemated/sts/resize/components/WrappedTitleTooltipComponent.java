@@ -1,33 +1,33 @@
 package com.stalemated.sts.resize.components;
 
 import com.stalemated.sts.util.StsManagedTitle;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.text.Text;
 import org.joml.Matrix4f;
 
 import java.util.List;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Component;
 
-public class WrappedTitleTooltipComponent extends OrderedTextTooltipComponent implements TooltipComponent, StsManagedTitle {
+public class WrappedTitleTooltipComponent extends ClientTextTooltip implements ClientTooltipComponent, StsManagedTitle {
 
-    private final List<TooltipComponent> wrappedLines;
+    private final List<ClientTooltipComponent> wrappedLines;
 
-    public WrappedTitleTooltipComponent(List<TooltipComponent> wrappedLines) {
-        super(Text.empty().asOrderedText());
+    public WrappedTitleTooltipComponent(List<ClientTooltipComponent> wrappedLines) {
+        super(Component.empty().getVisualOrderText());
         this.wrappedLines = wrappedLines;
     }
 
-    public List<TooltipComponent> getWrappedLines() {
+    public List<ClientTooltipComponent> getWrappedLines() {
         return this.wrappedLines;
     }
 
     @Override
-    public int getWidth(TextRenderer textRenderer) {
+    public int getWidth(Font textRenderer) {
         int maxWidth = 0;
-        for (TooltipComponent line : this.wrappedLines) {
+        for (ClientTooltipComponent line : this.wrappedLines) {
             maxWidth = Math.max(maxWidth, line.getWidth(textRenderer));
         }
         return maxWidth;
@@ -43,26 +43,26 @@ public class WrappedTitleTooltipComponent extends OrderedTextTooltipComponent im
     @Override
     public int getHeight() {
         int totalHeight = 0;
-        for (TooltipComponent wrappedLine : this.wrappedLines) {
+        for (ClientTooltipComponent wrappedLine : this.wrappedLines) {
             totalHeight += wrappedLine.getHeight();
         }
         return totalHeight;
     }
 
     @Override
-    public void drawText(TextRenderer textRenderer, int x, int y, Matrix4f matrix, VertexConsumerProvider.Immediate vertexConsumers) {
+    public void renderText(Font textRenderer, int x, int y, Matrix4f matrix, MultiBufferSource.BufferSource vertexConsumers) {
         int currentY = y;
-        for (TooltipComponent line : this.wrappedLines) {
-            line.drawText(textRenderer, x, currentY, matrix, vertexConsumers);
+        for (ClientTooltipComponent line : this.wrappedLines) {
+            line.renderText(textRenderer, x, currentY, matrix, vertexConsumers);
             currentY += line.getHeight();
         }
     }
 
     @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
+    public void renderImage(Font textRenderer, int x, int y, GuiGraphics context) {
         int currentY = y;
-        for (TooltipComponent line : this.wrappedLines) {
-            line.drawItems(textRenderer, x, currentY, context);
+        for (ClientTooltipComponent line : this.wrappedLines) {
+            line.renderImage(textRenderer, x, currentY, context);
             currentY += line.getHeight();
         }
     }

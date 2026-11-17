@@ -14,32 +14,31 @@ import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.state.TooltipContext;
 import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.util.TooltipWrapUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.item.ItemStack;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.ItemStack;
 
 import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
 import static com.stalemated.sts.state.StateManager.IS_TO_LOADED;
 
 public class TooltipDimensionManager {
 
-    public static DrawContext currentContext = null;
-    public static TextRenderer currentTextRenderer = null;
+    public static GuiGraphics currentContext = null;
+    public static Font currentTextRenderer = null;
     public static final int MIN_TOOLTIP_HEIGHT = 32;
     public static final int MIN_TOOLTIP_WIDTH = 64;
     public static final int TOOLTIP_PADDING_X = 8;
     private static final int TOOLTIP_PADDING_Y = 4;
     public static final int TITLE_BODY_VERTICAL_GAP = 2;
-    public static List<TooltipComponent> processedTitleComponentList = Collections.emptyList();
-    public static List<TooltipComponent> bodyComponentList = Collections.emptyList();
-    public static Function<List<TooltipComponent>, Integer> pinnedHeightPredictor = null;
+    public static List<ClientTooltipComponent> processedTitleComponentList = Collections.emptyList();
+    public static List<ClientTooltipComponent> bodyComponentList = Collections.emptyList();
+    public static Function<List<ClientTooltipComponent>, Integer> pinnedHeightPredictor = null;
 
     private static final DimensionCache widthCache = new DimensionCache(TOOLTIP_PADDING_X, MIN_TOOLTIP_WIDTH);
     private static final DimensionCache heightCache = new DimensionCache(TOOLTIP_PADDING_Y, MIN_TOOLTIP_HEIGHT);
@@ -69,7 +68,7 @@ public class TooltipDimensionManager {
         }
     }
 
-    public static int calculateComponentListHeight(List<TooltipComponent> components) {
+    public static int calculateComponentListHeight(List<ClientTooltipComponent> components) {
         if (components.isEmpty()) return 0;
         int totalHeight = 0;
 
@@ -79,11 +78,11 @@ public class TooltipDimensionManager {
         return totalHeight;
     }
 
-    public static int calculateTooltipWidth(List<TooltipComponent> components, TextRenderer textRenderer) {
+    public static int calculateTooltipWidth(List<ClientTooltipComponent> components, Font textRenderer) {
         if (components.isEmpty() || textRenderer == null) return 0;
         int maxWidth = 0;
 
-        for (TooltipComponent comp : components) {
+        for (ClientTooltipComponent comp : components) {
             maxWidth = Math.max(maxWidth, comp.getWidth(textRenderer));
         }
         if (StateManager.isTierifyTooltip) {
@@ -92,7 +91,7 @@ public class TooltipDimensionManager {
         return maxWidth;
     }
 
-    public static List<TooltipComponent> enforceHeightLimit(List<TooltipComponent> components, TooltipContext ctx) {
+    public static List<ClientTooltipComponent> enforceHeightLimit(List<ClientTooltipComponent> components, TooltipContext ctx) {
         if (components.isEmpty()) return components;
 
         int splitIndex = getSplitIndex(components);
@@ -102,8 +101,8 @@ public class TooltipDimensionManager {
         int componentWidth = getModelOffset(ctx != null ? ctx.itemStack() : null, components);
         int titleMaxWidth = getTitleMaxWidth(scaledTooltipWidth, componentWidth);
 
-        List<TooltipComponent> pinned = new ArrayList<>(components.subList(0, splitIndex));
-        List<TooltipComponent> scrollableContentRaw = new ArrayList<>(components.subList(splitIndex, components.size()));
+        List<ClientTooltipComponent> pinned = new ArrayList<>(components.subList(0, splitIndex));
+        List<ClientTooltipComponent> scrollableContentRaw = new ArrayList<>(components.subList(splitIndex, components.size()));
 
         if (currentTextRenderer != null) {
             processedTitleComponentList = pinned;
@@ -112,7 +111,7 @@ public class TooltipDimensionManager {
             
             int pinnedHeight = (pinnedHeightPredictor != null) ? pinnedHeightPredictor.apply(pinned) : calculateComponentListHeight(pinned);
             
-            List<TooltipComponent> result = buildScrollableLayout(pinned, scrollableContentRaw, scaledTooltipWidth, scaledTooltipHeight, pinnedHeight, currentTextRenderer);
+            List<ClientTooltipComponent> result = buildScrollableLayout(pinned, scrollableContentRaw, scaledTooltipWidth, scaledTooltipHeight, pinnedHeight, currentTextRenderer);
 
             bodyComponentList = new ArrayList<>(result.subList(pinned.size(), result.size()));
 
@@ -153,14 +152,14 @@ public class TooltipDimensionManager {
         return titleMaxWidth;
     }
 
-    public static List<TooltipComponent> buildScrollableLayout(List<TooltipComponent> pinnedComponents, List<TooltipComponent> scrollableContentRaw, int bodyMaxAllowedWidth, int maxAllowedHeight, int pinnedHeight, TextRenderer textRenderer) {
+    public static List<ClientTooltipComponent> buildScrollableLayout(List<ClientTooltipComponent> pinnedComponents, List<ClientTooltipComponent> scrollableContentRaw, int bodyMaxAllowedWidth, int maxAllowedHeight, int pinnedHeight, Font textRenderer) {
         if (scrollableContentRaw.isEmpty()) {
             TooltipIdentityContext context = new TooltipIdentityContext(getCurrentStack(), scrollableContentRaw, textRenderer);
             TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
             return new ArrayList<>(pinnedComponents);
         }
 
-        List<TooltipComponent> scrollableContent = TooltipWrapUtil.wrapComponents(scrollableContentRaw, bodyMaxAllowedWidth, textRenderer, false);
+        List<ClientTooltipComponent> scrollableContent = TooltipWrapUtil.wrapComponents(scrollableContentRaw, bodyMaxAllowedWidth, textRenderer, false);
         
         int bodyHeight = calculateComponentListHeight(scrollableContent);
         int totalHeight = pinnedHeight + bodyHeight;
@@ -173,19 +172,19 @@ public class TooltipDimensionManager {
 
             ScrollableTooltipComponent scrollableComponent = new ScrollableTooltipComponent(scrollableContent, pinnedComponents, availableHeight, bodyMaxAllowedWidth, textRenderer);
 
-            List<TooltipComponent> result = new ArrayList<>(pinnedComponents);
+            List<ClientTooltipComponent> result = new ArrayList<>(pinnedComponents);
             result.add(scrollableComponent);
             return result;
         }
 
         TooltipIdentityContext context = new TooltipIdentityContext(getCurrentStack(), scrollableContent, textRenderer);
         TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
-        List<TooltipComponent> result = new ArrayList<>(pinnedComponents);
+        List<ClientTooltipComponent> result = new ArrayList<>(pinnedComponents);
         result.addAll(scrollableContent);
         return result;
     }
 
-    public static int getSplitIndex(List<TooltipComponent> components) {
+    public static int getSplitIndex(List<ClientTooltipComponent> components) {
         int splitIndex = 1;
         if (IS_LT_LOADED) {
             splitIndex = LegendaryTooltipsCompat.getSplitIndex(components, splitIndex);
@@ -198,7 +197,7 @@ public class TooltipDimensionManager {
         return ctx != null ? ctx.itemStack() : null;
     }
 
-    public static void setState(DrawContext context, TextRenderer textRenderer) {
+    public static void setState(GuiGraphics context, Font textRenderer) {
         currentContext = context;
         currentTextRenderer = textRenderer;
     }
@@ -212,18 +211,18 @@ public class TooltipDimensionManager {
     }
 
     public static int getScaledTooltipHeight() {
-        return heightCache.get(MinecraftClient.getInstance().getWindow().getScaledHeight(), ConfigManager.getConfig().max_height_percentage);
+        return heightCache.get(Minecraft.getInstance().getWindow().getGuiScaledHeight(), ConfigManager.getConfig().max_height_percentage);
     }
 
     public static int getScaledTooltipWidth() {
-        return widthCache.get(MinecraftClient.getInstance().getWindow().getScaledWidth(), ConfigManager.getConfig().max_width_percentage);
+        return widthCache.get(Minecraft.getInstance().getWindow().getGuiScaledWidth(), ConfigManager.getConfig().max_width_percentage);
     }
 
     public static int getModelOffset() {
         return getModelOffset(getCurrentStack(), null);
     }
 
-    public static int getModelOffset(ItemStack currentStack, List<TooltipComponent> currentComponents) {
+    public static int getModelOffset(ItemStack currentStack, List<ClientTooltipComponent> currentComponents) {
         if (IS_LT_LOADED) {
             return LegendaryTooltipsCompat.getItemModelComponentWidth(currentStack, currentComponents);
         }
@@ -237,7 +236,7 @@ public class TooltipDimensionManager {
         return (i == 0) ? TITLE_BODY_VERTICAL_GAP : 0;
     }
 
-    public static int getExtraWidth(TextRenderer textRenderer) {
+    public static int getExtraWidth(Font textRenderer) {
         if (IS_TO_LOADED) {
             return TooltipOverhaulLayoutFixer.getExtraWidth(textRenderer);
         }

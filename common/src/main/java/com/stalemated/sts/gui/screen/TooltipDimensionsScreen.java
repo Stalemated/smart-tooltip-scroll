@@ -7,20 +7,19 @@ import com.stalemated.sts.scroll.easing.ScrollEasingStyle;
 import com.stalemated.sts.resize.TitleOverflowMode;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.function.Function;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 public class TooltipDimensionsScreen {
 
     public static Screen create(Screen parent) {
         return YetAnotherConfigLib.createBuilder()
-                .title(Text.translatable("sts.tooltip_dimensions_screen.title"))
+                .title(Component.translatable("sts.tooltip_dimensions_screen.title"))
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.translatable("sts.tooltip_dimensions_screen.title"))
+                        .name(Component.translatable("sts.tooltip_dimensions_screen.title"))
                         .group(createCustomDimensionsGroup())
                         .group(createTitleOptionsGroup())
                         .group(createScrollingGroup())
@@ -32,7 +31,7 @@ public class TooltipDimensionsScreen {
 
     private static OptionGroup createCustomDimensionsGroup() {
         return OptionGroup.createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.category.custom_dimensions"))
+                .name(Component.translatable("sts.tooltip_dimensions_screen.category.custom_dimensions"))
                 .option(createBooleanOption("custom_tooltip_dimensions", "enable_custom_dimensions", cfg -> cfg.custom_tooltip_dimensions, true))
                 .option(createIntOption("max_height_percentage", "max_height_percentage", 1, 100, 1, cfg -> cfg.max_height_percentage, 50))
                 .option(createIntOption("max_width_percentage", "max_width_percentage", 1, 100, 1, cfg -> cfg.max_width_percentage, 50))
@@ -41,11 +40,11 @@ public class TooltipDimensionsScreen {
 
     private static OptionGroup createTitleOptionsGroup() {
         return OptionGroup.createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.category.title_options"))
+                .name(Component.translatable("sts.tooltip_dimensions_screen.category.title_options"))
                 .option(createEnumOption(
                         "title_overflow_mode",
                         "title_overflow_mode",
-                        mode -> Text.translatable("sts.tooltip_dimensions_screen.title_overflow_mode." + mode.name().toLowerCase()),
+                        mode -> Component.translatable("sts.tooltip_dimensions_screen.title_overflow_mode." + mode.name().toLowerCase()),
                         cfg -> cfg.title_overflow_mode,
                         TitleOverflowMode.SCROLL
                 ))
@@ -54,7 +53,7 @@ public class TooltipDimensionsScreen {
                         "title_scroll_speed",
                         "title_scroll_speed",
                         1.0, 100.0, 1.0,
-                        val -> Text.of(String.valueOf((int) Math.round(val))),
+                        val -> Component.nullToEmpty(String.valueOf((int) Math.round(val))),
                         cfg -> cfg.title_scroll_speed,
                         25.0
                 ))
@@ -64,12 +63,12 @@ public class TooltipDimensionsScreen {
 
     private static OptionGroup createScrollingGroup() {
         return OptionGroup.createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.category.scrolling"))
+                .name(Component.translatable("sts.tooltip_dimensions_screen.category.scrolling"))
                 .option(createFloatOption(
                         "scroll_smoothness",
                         "scroll_smoothness",
                         0.0f, 1.0f, 0.01f,
-                        val -> Text.of(new BigDecimal(Float.toString(val)).setScale(2, RoundingMode.HALF_UP).toString()),
+                        val -> Component.nullToEmpty(new BigDecimal(Float.toString(val)).setScale(2, RoundingMode.HALF_UP).toString()),
                         cfg -> cfg.scroll_smoothness,
                         0.25f
                 ))
@@ -77,14 +76,14 @@ public class TooltipDimensionsScreen {
                         "lines_per_scroll",
                         "lines_per_scroll",
                         0.5f, 5.0f, 0.5f,
-                        val -> Text.of(new BigDecimal(Float.toString(val)).setScale(1, RoundingMode.HALF_UP).toString()),
+                        val -> Component.nullToEmpty(new BigDecimal(Float.toString(val)).setScale(1, RoundingMode.HALF_UP).toString()),
                         cfg -> cfg.lines_per_scroll,
                         1.5f
                 ))
                 .option(createEnumOption(
                         "scroll_easing_style",
                         "scroll_easing_style",
-                        style -> Text.translatable("sts.tooltip_dimensions_screen.scroll_easing_style." + style.name().toLowerCase()),
+                        style -> Component.translatable("sts.tooltip_dimensions_screen.scroll_easing_style." + style.name().toLowerCase()),
                         cfg -> cfg.scroll_easing_style,
                         ScrollEasingStyle.SMOOTH
                 ))
@@ -93,14 +92,14 @@ public class TooltipDimensionsScreen {
                         "lock_container_scrolling",
                         cfg -> cfg.lock_container_scrolling,
                         true,
-                        Text.translatable("sts.tooltip_dimensions_screen.lock_container_scrolling.warning")
+                        Component.translatable("sts.tooltip_dimensions_screen.lock_container_scrolling.warning")
                 ))
                 .build();
     }
 
     private static OptionGroup createCompatibilityGroup() {
         return OptionGroup.createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen.category.compatibility"))
+                .name(Component.translatable("sts.tooltip_dimensions_screen.category.compatibility"))
                 .option(createBooleanOption("obscure_compat", "obscure_compat", cfg -> cfg.obscure_compat, true))
                 .option(createBooleanOption("tooltip_overhaul_compat", "tooltip_overhaul_compat", cfg -> cfg.tooltip_overhaul_compat, true))
                 .build();
@@ -110,12 +109,12 @@ public class TooltipDimensionsScreen {
         return createBooleanOption(configKey, langKey, getter, defaultValue, null);
     }
 
-    private static Option<Boolean> createBooleanOption(String configKey, String langKey, Function<STSConfig, Boolean> getter, boolean defaultValue, Text warning) {
+    private static Option<Boolean> createBooleanOption(String configKey, String langKey, Function<STSConfig, Boolean> getter, boolean defaultValue, Component warning) {
         OptionDescription desc = warning != null
-                ? OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description"), warning)
-                : OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description"));
+                ? OptionDescription.of(Component.translatable("sts.tooltip_dimensions_screen." + langKey + ".description"), warning)
+                : OptionDescription.of(Component.translatable("sts.tooltip_dimensions_screen." + langKey + ".description"));
         return Option.<Boolean>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .name(Component.translatable("sts.tooltip_dimensions_screen." + langKey))
                 .description(desc)
                 .binding(
                         defaultValue,
@@ -128,8 +127,8 @@ public class TooltipDimensionsScreen {
 
     private static Option<Integer> createIntOption(String configKey, String langKey, int min, int max, int step, Function<STSConfig, Integer> getter, int defaultValue) {
         return Option.<Integer>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
+                .name(Component.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .description(OptionDescription.of(Component.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
                 .binding(
                         defaultValue,
                         () -> getter.apply(ConfigManager.getConfig()),
@@ -141,8 +140,8 @@ public class TooltipDimensionsScreen {
 
     private static Option<Float> createFloatOption(String configKey, String langKey, float min, float max, float step, ValueFormatter<Float> formatter, Function<STSConfig, Float> getter, float defaultValue) {
         return Option.<Float>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
+                .name(Component.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .description(OptionDescription.of(Component.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
                 .binding(
                         defaultValue,
                         () -> getter.apply(ConfigManager.getConfig()),
@@ -158,8 +157,8 @@ public class TooltipDimensionsScreen {
 
     private static Option<Double> createDoubleOption(String configKey, String langKey, double min, double max, double step, ValueFormatter<Double> formatter, Function<STSConfig, Double> getter, double defaultValue) {
         return Option.<Double>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
+                .name(Component.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .description(OptionDescription.of(Component.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
                 .binding(
                         defaultValue,
                         () -> getter.apply(ConfigManager.getConfig()),
@@ -175,8 +174,8 @@ public class TooltipDimensionsScreen {
 
     private static <E extends Enum<E>> Option<E> createEnumOption(String configKey, String langKey, ValueFormatter<E> formatter, Function<STSConfig, E> getter, E defaultValue) {
         return Option.<E>createBuilder()
-                .name(Text.translatable("sts.tooltip_dimensions_screen." + langKey))
-                .description(OptionDescription.of(Text.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
+                .name(Component.translatable("sts.tooltip_dimensions_screen." + langKey))
+                .description(OptionDescription.of(Component.translatable("sts.tooltip_dimensions_screen." + langKey + ".description")))
                 .binding(
                         defaultValue,
                         () -> getter.apply(ConfigManager.getConfig()),

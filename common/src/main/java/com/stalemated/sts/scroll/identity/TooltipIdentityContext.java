@@ -1,14 +1,13 @@
 package com.stalemated.sts.scroll.identity;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.item.ItemStack;
-
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.ItemStack;
 
-public record TooltipIdentityContext(ItemStack itemStack, List<TooltipComponent> bodyComponents, TextRenderer textRenderer) {
-    public TooltipIdentityContext(ItemStack itemStack, List<TooltipComponent> bodyComponents, TextRenderer textRenderer) {
+public record TooltipIdentityContext(ItemStack itemStack, List<ClientTooltipComponent> bodyComponents, Font textRenderer) {
+    public TooltipIdentityContext(ItemStack itemStack, List<ClientTooltipComponent> bodyComponents, Font textRenderer) {
         this.itemStack = itemStack;
         this.bodyComponents = bodyComponents != null ? bodyComponents : Collections.emptyList();
         this.textRenderer = textRenderer;

@@ -6,11 +6,10 @@ import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.anthonyhilyard.legendarytooltips.tooltip.PaddingComponent;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.OrderedText;
-
 import java.util.List;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.ItemStack;
 
 public class LegendaryTooltipsCompat {
 
@@ -20,7 +19,7 @@ public class LegendaryTooltipsCompat {
         return getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack(), TooltipDimensionManager.processedTitleComponentList);
     }
 
-    public static int getItemModelComponentWidth(ItemStack stack, List<TooltipComponent> currentComponents) {
+    public static int getItemModelComponentWidth(ItemStack stack, List<ClientTooltipComponent> currentComponents) {
         if (stack == null || stack.isEmpty()) return 0;
         if (!LegendaryTooltipsConfig.showModelForItem(stack)) return 0;
 
@@ -44,8 +43,8 @@ public class LegendaryTooltipsCompat {
         return LT_ITEM_MODEL_OFFSET;
     }
 
-    private static boolean containsItemModel(List<TooltipComponent> components) {
-        for (TooltipComponent component : components) {
+    private static boolean containsItemModel(List<ClientTooltipComponent> components) {
+        for (ClientTooltipComponent component : components) {
             if (component instanceof ItemModelComponent) {
                 return true;
             }
@@ -53,7 +52,7 @@ public class LegendaryTooltipsCompat {
         return false;
     }
 
-    public static int getSplitIndex(List<TooltipComponent> components, int splitIndex) {
+    public static int getSplitIndex(List<ClientTooltipComponent> components, int splitIndex) {
         for (int i = 0; i < components.size(); i++) {
 
             if (components.get(i) instanceof PaddingComponent ||
@@ -65,7 +64,7 @@ public class LegendaryTooltipsCompat {
         return Math.min(splitIndex, components.size());
     }
 
-    public static int getPadding(List<OrderedText> wrapped, int i, int padding) {
+    public static int getPadding(List<FormattedCharSequence> wrapped, int i, int padding) {
         if (wrapped.size() > 1 && i == wrapped.size() - 1) {
             boolean hasModel = LegendaryTooltipsCompat.getItemModelComponentWidth() > 0;
 

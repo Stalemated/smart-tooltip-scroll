@@ -8,15 +8,15 @@ import dev.xylonity.tooltipoverhaul.client.util.Constants;
 import dev.xylonity.tooltipoverhaul.client.util.RenderUtils;
 import dev.xylonity.tooltipoverhaul.client.util.TextUtils;
 import dev.xylonity.tooltipoverhaul.config.TooltipsConfig;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec2f;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec2;
 
 import static com.stalemated.sts.scroll.ScrollState.PIXELS_PER_LINE;
 
@@ -25,10 +25,10 @@ public class TooltipOverhaulLayoutFixer {
     public static Optional<WrappedTitleTooltipComponent> getWrappedTitle(TooltipContext context) {
         if (context == null || !context.hasIcon()) return Optional.empty();
         
-        List<TooltipComponent> components = context.getComponents();
+        List<ClientTooltipComponent> components = context.getComponents();
         if (components == null || components.isEmpty()) return Optional.empty();
         
-        TooltipComponent first = components.get(0);
+        ClientTooltipComponent first = components.get(0);
         if (first instanceof WrappedTitleTooltipComponent wrapped) {
             return Optional.of(wrapped);
         }
@@ -55,20 +55,20 @@ public class TooltipOverhaulLayoutFixer {
         return 0;
     }
 
-    public static int getExtraWidth(TextRenderer textRenderer) {
+    public static int getExtraWidth(Font textRenderer) {
         if (!TooltipOverhaulStateManager.isHandlingTOTooltip()) return 0;
         
         TooltipContext ctx = TooltipOverhaulStateManager.getCurrentTOContext();
         if (ctx == null || !RenderUtils.hasRating(ctx)) return 0;
         
-        Text ratingText = TextUtils.getRatingText(ctx);
+        Component ratingText = TextUtils.getRatingText(ctx);
         if (ratingText != null) {
-            return textRenderer.getWidth(ratingText);
+            return textRenderer.width(ratingText);
         }
         return 0;
     }
 
-    public static Vec2f adjustDividerLineY(Vec2f position, TooltipContext context) {
+    public static Vec2 adjustDividerLineY(Vec2 position, TooltipContext context) {
         if (!TooltipOverhaulStateManager.isHandlingTOTooltip()) return position;
 
         return getWrappedTitle(context).map(wrapped -> {
@@ -76,13 +76,13 @@ public class TooltipOverhaulLayoutFixer {
 
             if (metrics.requiredDividerY() > metrics.defaultDividerY()) {
                 float newY = position.y + (metrics.requiredDividerY() - metrics.defaultDividerY());
-                return new Vec2f(position.x, newY);
+                return new Vec2(position.x, newY);
             }
             return position;
         }).orElse(position);
     }
 
-    public static int getTitleYAdjustment(TooltipContext context, TooltipComponent instance) {
+    public static int getTitleYAdjustment(TooltipContext context, ClientTooltipComponent instance) {
         if (context == null) return 0;
 
         if (instance instanceof WrappedTitleTooltipComponent wrapped) {

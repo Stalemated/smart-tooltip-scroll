@@ -1,8 +1,8 @@
 package com.stalemated.sts.state;
 
-import net.minecraft.item.ItemStack;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import net.minecraft.world.item.ItemStack;
 
 public class TooltipContextManager {
     private static final Deque<TooltipContext> contextStack = new ArrayDeque<>();

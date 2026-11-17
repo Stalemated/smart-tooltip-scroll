@@ -9,10 +9,9 @@ import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.mixin.client.compat.tooltipoverhaul.TooltipContextAccessor;
 import com.stalemated.sts.state.TooltipContext;
 import dev.xylonity.tooltipoverhaul.client.util.TooltipScrollState;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.item.ItemStack;
-
 import java.util.List;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.ItemStack;
 
 public class TooltipOverhaulCompat implements ExternalScrollStateResetter {
 
@@ -30,7 +29,7 @@ public class TooltipOverhaulCompat implements ExternalScrollStateResetter {
         if (!ConfigManager.getConfig().custom_tooltip_dimensions || !ConfigManager.getConfig().tooltip_overhaul_compat) return;
         if (!(contextObj instanceof dev.xylonity.tooltipoverhaul.client.render.TooltipContext context)) return;
 
-        List<TooltipComponent> componentsListRaw = context.getComponents();
+        List<ClientTooltipComponent> componentsListRaw = context.getComponents();
         if (componentsListRaw == null || componentsListRaw.isEmpty()) return;
 
         ItemStack stack = context.getStack();
@@ -57,7 +56,7 @@ public class TooltipOverhaulCompat implements ExternalScrollStateResetter {
                 return TooltipDimensionManager.calculateComponentListHeight(pinned);
             };
 
-            List<TooltipComponent> processed = TooltipDimensionManager.enforceHeightLimit(componentsListRaw, stsCtx);
+            List<ClientTooltipComponent> processed = TooltipDimensionManager.enforceHeightLimit(componentsListRaw, stsCtx);
             TooltipDimensionManager.pinnedHeightPredictor = null;
             
             ((TooltipContextAccessor) context).sts$setComponents(processed);

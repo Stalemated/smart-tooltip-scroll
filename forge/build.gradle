@@ -71,6 +71,10 @@ dependencies {
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 }
 
+tasks.named('compileJava') {
+    options.compilerArgs << '-AMSG_NO_OBFDATA_FOR_TARGET=warning'
+}
+
 processResources {
     inputs.property 'version', project.version
 

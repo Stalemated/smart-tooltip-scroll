@@ -6,7 +6,7 @@ import com.stalemated.sts.scroll.resetter.ScrollResetterManager;
 import com.stalemated.sts.state.TooltipContextManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

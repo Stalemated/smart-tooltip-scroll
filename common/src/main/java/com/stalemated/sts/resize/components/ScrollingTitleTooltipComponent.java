@@ -4,20 +4,20 @@ import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.util.OrderedTextUtil;
 import com.stalemated.sts.util.StsManagedTitle;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.text.OrderedText;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.FormattedCharSequence;
 import org.joml.Matrix4f;
 import com.stalemated.lib.util.math.ScrollMathUtil;
 
-public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent implements TooltipComponent, StsManagedTitle {
-    private final OrderedText text;
+public class ScrollingTitleTooltipComponent extends ClientTextTooltip implements ClientTooltipComponent, StsManagedTitle {
+    private final FormattedCharSequence text;
     private final int maxTitleWidth;
 
-    public ScrollingTitleTooltipComponent(OrderedText text, int maxTitleWidth) {
+    public ScrollingTitleTooltipComponent(FormattedCharSequence text, int maxTitleWidth) {
         super(text);
         this.text = text;
         this.maxTitleWidth = maxTitleWidth;
@@ -29,8 +29,8 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
     }
 
     @Override
-    public int getWidth(TextRenderer textRenderer) {
-        int textWidth = textRenderer.getWidth(this.text);
+    public int getWidth(Font textRenderer) {
+        int textWidth = textRenderer.width(this.text);
         return Math.min(textWidth, this.maxTitleWidth);
     }
 
@@ -42,10 +42,10 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
     }
 
     @Override
-    public void drawText(TextRenderer textRenderer, int x, int y, Matrix4f matrix, VertexConsumerProvider.Immediate vertexConsumers) {
-        int textWidth = textRenderer.getWidth(this.text);
+    public void renderText(Font textRenderer, int x, int y, Matrix4f matrix, MultiBufferSource.BufferSource vertexConsumers) {
+        int textWidth = textRenderer.width(this.text);
         if (textWidth <= this.maxTitleWidth) {
-            textRenderer.draw(this.text, (float) x, (float) y, -1, true, matrix, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
+            textRenderer.drawInBatch(this.text, (float) x, (float) y, -1, true, matrix, vertexConsumers, Font.DisplayMode.NORMAL, 0, 15728880);
             return;
         }
 
@@ -58,19 +58,19 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
         if (!TooltipDimensionManager.handlesModelOffsetNatively()) startX += offset;
         int endX = x + this.maxTitleWidth;
 
-        vertexConsumers.draw();
+        vertexConsumers.endBatch();
 
         Matrix4f translatedMatrix = new Matrix4f(matrix);
         translatedMatrix.translate(0, 0, 400);
 
-        DrawContext context = TooltipDimensionManager.currentContext;
+        GuiGraphics context = TooltipDimensionManager.currentContext;
 
         if (context != null) {
             context.enableScissor(startX, y, endX, y + getHeight());
         }
 
-        textRenderer.draw(this.text, (float) (x - scrollOffset), (float) y, -1, true, translatedMatrix, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
-        vertexConsumers.draw();
+        textRenderer.drawInBatch(this.text, (float) (x - scrollOffset), (float) y, -1, true, translatedMatrix, vertexConsumers, Font.DisplayMode.NORMAL, 0, 15728880);
+        vertexConsumers.endBatch();
 
         if (context != null) {
             context.disableScissor();
@@ -78,6 +78,6 @@ public class ScrollingTitleTooltipComponent extends OrderedTextTooltipComponent 
     }
 
     @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
+    public void renderImage(Font textRenderer, int x, int y, GuiGraphics context) {
     }
 }

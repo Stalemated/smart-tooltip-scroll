@@ -1,7 +1,7 @@
 package com.stalemated.sts.scroll.identity;
 
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.ItemStack;
 
 public class TooltipIdentityTracker {
     private ItemStack lastRenderedStack = null;
@@ -14,7 +14,7 @@ public class TooltipIdentityTracker {
         boolean isDifferentTooltip = false;
 
         if (currentStack != null && lastRenderedStack != null) {
-            if (!ItemStack.areEqual(currentStack, lastRenderedStack)) {
+            if (!ItemStack.matches(currentStack, lastRenderedStack)) {
                 isDifferentTooltip = true;
             }
         } else if (currentStack != lastRenderedStack) {
@@ -33,7 +33,7 @@ public class TooltipIdentityTracker {
 
     private int calculateIdentityHash(TooltipIdentityContext context) {
         int hash = 0;
-        for (TooltipComponent comp : context.bodyComponents()) {
+        for (ClientTooltipComponent comp : context.bodyComponents()) {
             if (comp != null) {
                 hash = 31 * hash + comp.getHeight();
                 if (context.textRenderer() != null) {

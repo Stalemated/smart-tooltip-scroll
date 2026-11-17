@@ -7,19 +7,19 @@ import com.stalemated.sts.config.ConfigManager;
 import com.stalemated.sts.compat.tierify.component.LegendaryTieredWrapper;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.ItemStack;
 
 import static com.stalemated.sts.resize.TooltipDimensionManager.TITLE_BODY_VERTICAL_GAP;
 
 public class TierifyLegendaryBridge {
-    public static List<TooltipComponent> wrapComponents(List<TooltipComponent> components) {
+    public static List<ClientTooltipComponent> wrapComponents(List<ClientTooltipComponent> components) {
         if (components == null || components.isEmpty()) return components;
 
         ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
@@ -27,7 +27,7 @@ public class TierifyLegendaryBridge {
 
         int titleSize = !TooltipDimensionManager.processedTitleComponentList.isEmpty() ? TooltipDimensionManager.processedTitleComponentList.size() : 1;
 
-        List<TooltipComponent> newList = new ArrayList<>(components);
+        List<ClientTooltipComponent> newList = new ArrayList<>(components);
 
         for (int i = 0; i < titleSize; i++) {
             if (!newList.isEmpty()) {
@@ -43,15 +43,15 @@ public class TierifyLegendaryBridge {
 
             return newList;
         }
-        List<TooltipComponent> titleComponentList = new ArrayList<>(components.subList(0, titleSize));
+        List<ClientTooltipComponent> titleComponentList = new ArrayList<>(components.subList(0, titleSize));
         newList.add(0, new WrappedTitleTooltipComponent(titleComponentList));
         if (TooltipDimensionManager.processedTitleComponentList.size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
 
         return newList;
     }
 
-    public static @NotNull LegendaryTieredWrapper getLegendaryTieredWrapper(List<TooltipComponent> components) {
-        List<TooltipComponent> titleComponents;
+    public static @NotNull LegendaryTieredWrapper getLegendaryTieredWrapper(List<ClientTooltipComponent> components) {
+        List<ClientTooltipComponent> titleComponents;
 
         if (ConfigManager.getConfig().custom_tooltip_dimensions && !TooltipDimensionManager.processedTitleComponentList.isEmpty()) {
             titleComponents = new ArrayList<>(TooltipDimensionManager.processedTitleComponentList);
@@ -72,7 +72,7 @@ public class TierifyLegendaryBridge {
         lastTooltipWidth = width;
     }
 
-    public static void drawSeparator(DrawContext context, List<TooltipComponent> components) {
+    public static void drawSeparator(GuiGraphics context, List<ClientTooltipComponent> components) {
         if (components.isEmpty()) return;
         if (ConfigManager.getConfig().custom_tooltip_dimensions && TooltipDimensionManager.bodyComponentList.isEmpty()) return;
         ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
@@ -84,11 +84,11 @@ public class TierifyLegendaryBridge {
             if (!LegendaryTooltipsConfig.showModelForItem(currentStack)) {
                 offsetY = TooltipDimensionManager.processedTitleComponentList.size() > 1 ? 0 : TITLE_BODY_VERTICAL_GAP / 2;
             }
-            TooltipDecor.drawSeparator(context.getMatrices(), lastTooltipX, lastTooltipY + components.get(0).getHeight() - offsetY, lastTooltipWidth, color);
+            TooltipDecor.drawSeparator(context.pose(), lastTooltipX, lastTooltipY + components.get(0).getHeight() - offsetY, lastTooltipWidth, color);
         }
     }
 
-    public static int getPredictedPinnedHeight(List<TooltipComponent> pinned) {
+    public static int getPredictedPinnedHeight(List<ClientTooltipComponent> pinned) {
         int extraWidth = TooltipDimensionManager.getModelOffset();
         
         if (extraWidth > 0 && !pinned.isEmpty()) {
@@ -107,9 +107,9 @@ public class TierifyLegendaryBridge {
         return rawPinnedHeight;
     }
 
-    public static int getWrapperHeight(List<TooltipComponent> pinned, int extraWidth) {
+    public static int getWrapperHeight(List<ClientTooltipComponent> pinned, int extraWidth) {
         int titleHeight = 0;
-        for (TooltipComponent component : pinned) {
+        for (ClientTooltipComponent component : pinned) {
             titleHeight += component.getHeight();
         }
 

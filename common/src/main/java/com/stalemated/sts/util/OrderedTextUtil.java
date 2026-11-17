@@ -1,13 +1,12 @@
 package com.stalemated.sts.util;
 
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 
 public class OrderedTextUtil {
-    public static OrderedText stripSpaces(OrderedText original) {
+    public static FormattedCharSequence stripSpaces(FormattedCharSequence original) {
         List<StyledChar> chars = new ArrayList<>();
 
         original.accept((index, style, codePoint) -> {
@@ -21,7 +20,7 @@ public class OrderedTextUtil {
         int end = chars.size() - 1;
         while (end >= start && Character.isWhitespace(chars.get(end).codePoint)) end--;
 
-        if (start > end) return OrderedText.EMPTY;
+        if (start > end) return FormattedCharSequence.EMPTY;
 
         final int finalStart = start;
         final int finalEnd = end;
@@ -37,7 +36,7 @@ public class OrderedTextUtil {
         };
     }
 
-    public static String getStringFromOrderedText(OrderedText text) {
+    public static String getStringFromOrderedText(FormattedCharSequence text) {
         StringBuilder builder = new StringBuilder();
         text.accept((index, style, codePoint) -> {
             builder.appendCodePoint(codePoint);

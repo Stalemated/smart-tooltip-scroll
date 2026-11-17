@@ -1,20 +1,20 @@
 package com.stalemated.sts.resize.components;
 
 import com.stalemated.sts.util.StsManagedTitle;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.text.OrderedText;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.FormattedCharSequence;
 import org.joml.Matrix4f;
 
-public class CenteredTextTooltipComponent extends OrderedTextTooltipComponent implements TooltipComponent, StsManagedTitle {
-    private final OrderedText text;
+public class CenteredTextTooltipComponent extends ClientTextTooltip implements ClientTooltipComponent, StsManagedTitle {
+    private final FormattedCharSequence text;
     private final int xOffset;
     private final int centerOffset;
     private final int bottomPadding;
 
-    public CenteredTextTooltipComponent(OrderedText text, int xOffset, int centerOffset, int bottomPadding) {
+    public CenteredTextTooltipComponent(FormattedCharSequence text, int xOffset, int centerOffset, int bottomPadding) {
         super(text);
         this.text = text;
         this.xOffset = xOffset;
@@ -22,13 +22,13 @@ public class CenteredTextTooltipComponent extends OrderedTextTooltipComponent im
         this.bottomPadding = bottomPadding;
     }
 
-    public OrderedText getText() {
+    public FormattedCharSequence getText() {
         return this.text;
     }
 
     @Override
-    public int getWidth(TextRenderer textRenderer) {
-        return textRenderer.getWidth(this.text) + this.xOffset;
+    public int getWidth(Font textRenderer) {
+        return textRenderer.width(this.text) + this.xOffset;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CenteredTextTooltipComponent extends OrderedTextTooltipComponent im
     }
 
     @Override
-    public void drawText(TextRenderer textRenderer, int x, int y, Matrix4f matrix, VertexConsumerProvider.Immediate vertexConsumers) {
-        super.drawText(textRenderer, x + this.xOffset + this.centerOffset, y, matrix, vertexConsumers);
+    public void renderText(Font textRenderer, int x, int y, Matrix4f matrix, MultiBufferSource.BufferSource vertexConsumers) {
+        super.renderText(textRenderer, x + this.xOffset + this.centerOffset, y, matrix, vertexConsumers);
     }
 }

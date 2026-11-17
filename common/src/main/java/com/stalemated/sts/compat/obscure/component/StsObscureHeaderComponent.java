@@ -8,29 +8,29 @@ import dev.obscuria.tooltips.client.component.BlankComponent;
 import dev.obscuria.tooltips.client.component.HeaderComponent;
 import dev.obscuria.tooltips.client.tooltip.particle.GraphicUtils;
 import dev.obscuria.tooltips.config.ClientConfig;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
 import org.joml.Matrix4f;
 
 import static com.stalemated.sts.compat.obscure.ObscureTooltipsCompat.*;
 
-public class StsObscureHeaderComponent implements TooltipComponent {
+public class StsObscureHeaderComponent implements ClientTooltipComponent {
 
     public static final int VERTICAL_PADDING = 1;
     public static final int OT_EFFECT_OFFSET_X = 10;
     public static final int OT_EFFECT_OFFSET_Y = 11;
 
     private final TooltipState state;
-    private final TooltipComponent title;
-    private final TooltipComponent label;
+    private final ClientTooltipComponent title;
+    private final ClientTooltipComponent label;
     private final boolean drawSeparator;
     private final ARGB separatorColor;
     private final int totalHeight;
     private int totalWidth = -1;
 
-    public StsObscureHeaderComponent(HeaderComponent original, TooltipComponent processedTitle) {
+    public StsObscureHeaderComponent(HeaderComponent original, ClientTooltipComponent processedTitle) {
         this.state = original.state();
         this.title = processedTitle;
         this.label = original.label();
@@ -60,29 +60,29 @@ public class StsObscureHeaderComponent implements TooltipComponent {
     }
 
     @Override
-    public int getWidth(TextRenderer textRenderer) {
+    public int getWidth(Font textRenderer) {
         return OT_ITEM_MODEL_OFFSET + Math.max(title.getWidth(textRenderer), label.getWidth(textRenderer));
     }
 
     @Override
-    public void drawText(TextRenderer textRenderer, int x, int y, Matrix4f matrix, VertexConsumerProvider.Immediate vertexConsumers) {
+    public void renderText(Font textRenderer, int x, int y, Matrix4f matrix, MultiBufferSource.BufferSource vertexConsumers) {
         boolean hasLabel = ClientConfig.LABELS_ENABLED.get() && !(this.label instanceof BlankComponent);
         int textBlockWidth = Math.max(0, (this.totalWidth > 0 ? this.totalWidth : getWidth(textRenderer)) - OT_ITEM_MODEL_OFFSET);
 
         int currentY = VERTICAL_PADDING + y;
         if (title instanceof WrappedTitleTooltipComponent wrapped) {
-            for (TooltipComponent line : wrapped.getWrappedLines()) {
+            for (ClientTooltipComponent line : wrapped.getWrappedLines()) {
                 int lineWidth = line.getWidth(textRenderer);
                 int centerOffset = getCenterOffset(textBlockWidth, lineWidth);
 
-                line.drawText(textRenderer, OT_ITEM_MODEL_OFFSET + x + centerOffset, currentY, matrix, vertexConsumers);
+                line.renderText(textRenderer, OT_ITEM_MODEL_OFFSET + x + centerOffset, currentY, matrix, vertexConsumers);
                 currentY += line.getHeight();
             }
             if (hasLabel) {
                 int labelWidth = label.getWidth(textRenderer);
                 int labelCenterOffset = getCenterOffset(textBlockWidth, labelWidth);
 
-                label.drawText(textRenderer, OT_ITEM_MODEL_OFFSET + x + labelCenterOffset, currentY + VERTICAL_PADDING, matrix, vertexConsumers);
+                label.renderText(textRenderer, OT_ITEM_MODEL_OFFSET + x + labelCenterOffset, currentY + VERTICAL_PADDING, matrix, vertexConsumers);
             }
         } else {
             int titleWidth = title.getWidth(textRenderer);
@@ -90,24 +90,24 @@ public class StsObscureHeaderComponent implements TooltipComponent {
 
             if (!hasLabel) {
                 int titleY = y + (this.totalHeight - (drawSeparator ? SEPARATOR_HEIGHT : 0) - title.getHeight()) / 2;
-                title.drawText(textRenderer, OT_ITEM_MODEL_OFFSET + x + centerOffset, Math.max(currentY, titleY), matrix, vertexConsumers);
+                title.renderText(textRenderer, OT_ITEM_MODEL_OFFSET + x + centerOffset, Math.max(currentY, titleY), matrix, vertexConsumers);
             } else {
-                title.drawText(textRenderer, OT_ITEM_MODEL_OFFSET + x + centerOffset, currentY, matrix, vertexConsumers);
+                title.renderText(textRenderer, OT_ITEM_MODEL_OFFSET + x + centerOffset, currentY, matrix, vertexConsumers);
                 int labelWidth = label.getWidth(textRenderer);
                 int labelCenterOffset = getCenterOffset(textBlockWidth, labelWidth);
-                label.drawText(textRenderer, OT_ITEM_MODEL_OFFSET + x + labelCenterOffset, currentY + title.getHeight() + VERTICAL_PADDING, matrix, vertexConsumers);
+                label.renderText(textRenderer, OT_ITEM_MODEL_OFFSET + x + labelCenterOffset, currentY + title.getHeight() + VERTICAL_PADDING, matrix, vertexConsumers);
             }
         }
     }
 
     @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
+    public void renderImage(Font textRenderer, int x, int y, GuiGraphics context) {
         state.style.slot().ifPresent(it -> it.render(context, x, y + VERTICAL_PADDING, OT_ICON_SIZE, OT_ICON_SIZE));
         state.style.effects().forEach(it -> it.renderIcon(state, context, x + OT_EFFECT_OFFSET_X, y + OT_EFFECT_OFFSET_Y));
         state.style.icon().ifPresent(it -> it.render(state, context, x + OT_EFFECT_OFFSET_X, y + OT_EFFECT_OFFSET_Y));
 
-        title.drawItems(textRenderer, OT_ITEM_MODEL_OFFSET + x, VERTICAL_PADDING + y, context);
-        label.drawItems(textRenderer, OT_ITEM_MODEL_OFFSET + x, VERTICAL_PADDING + y + title.getHeight(), context);
+        title.renderImage(textRenderer, OT_ITEM_MODEL_OFFSET + x, VERTICAL_PADDING + y, context);
+        label.renderImage(textRenderer, OT_ITEM_MODEL_OFFSET + x, VERTICAL_PADDING + y + title.getHeight(), context);
 
         if (!drawSeparator) return;
         int separatorY = y + totalHeight - SEPARATOR_HEIGHT;

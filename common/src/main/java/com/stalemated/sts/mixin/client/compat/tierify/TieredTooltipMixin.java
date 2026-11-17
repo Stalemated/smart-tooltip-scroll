@@ -7,10 +7,6 @@ import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.state.TooltipContextManager;
 import draylar.tiered.api.BorderTemplate;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.tooltip.TooltipPositioner;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -22,6 +18,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 
 import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
 import static com.stalemated.sts.state.StateManager.IS_TO_LOADED;
@@ -31,7 +31,7 @@ import static com.stalemated.sts.state.StateManager.IS_TO_LOADED;
 public abstract class TieredTooltipMixin {
 
     @Inject(method = "renderTieredTooltipFromComponents", at = @At("HEAD"))
-    private static void sts$captureContext(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
+    private static void sts$captureContext(GuiGraphics context, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
         TooltipDimensionManager.setState(context, textRenderer);
         StateManager.isTierifyTooltip = true;
         if (IS_TO_LOADED) {
@@ -40,8 +40,8 @@ public abstract class TieredTooltipMixin {
     }
 
     @ModifyVariable(method = "renderTieredTooltipFromComponents", at = @At("HEAD"), index = 2, argsOnly = true)
-    private static List<TooltipComponent> sts$applyDimensions(List<TooltipComponent> components) {
-        List<TooltipComponent> processedList = components;
+    private static List<ClientTooltipComponent> sts$applyDimensions(List<ClientTooltipComponent> components) {
+        List<ClientTooltipComponent> processedList = components;
 
         if (IS_LT_LOADED) {
             TooltipDimensionManager.pinnedHeightPredictor = TierifyLegendaryBridge::getPredictedPinnedHeight;
@@ -70,12 +70,12 @@ public abstract class TieredTooltipMixin {
     }
 
     @Inject(method = "renderTooltipBackground", at = @At("HEAD"), order = 900)
-    private static void sts$getTooltipPosition(DrawContext context, int x, int y, int width, int height, int z, int backgroundColor, int colorStart, int colorEnd, CallbackInfo ci) {
+    private static void sts$getTooltipPosition(GuiGraphics context, int x, int y, int width, int height, int z, int backgroundColor, int colorStart, int colorEnd, CallbackInfo ci) {
         if (IS_LT_LOADED) TierifyLegendaryBridge.setTooltipPosition(x, y, width);
     }
 
     @Inject(method = "renderTieredTooltipFromComponents", at = @At("TAIL"), order = 900)
-    private static void sts$clearContext(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
+    private static void sts$clearContext(GuiGraphics context, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
         if (IS_LT_LOADED) TierifyLegendaryBridge.drawSeparator(context, components);
 
         StateManager.isTierifyTooltip = false;
