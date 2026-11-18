@@ -1,0 +1,123 @@
+package com.stalemated.sts.compat.tierify;
+
+import com.anthonyhilyard.legendarytooltips.config.LegendaryTooltipsConfig;
+import com.anthonyhilyard.legendarytooltips.tooltip.PaddingComponent;
+import com.anthonyhilyard.legendarytooltips.tooltip.TooltipDecor;
+import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
+import com.stalemated.sts.compat.tierify.component.LegendaryTieredWrapper;
+import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.ItemStack;
+
+import static com.stalemated.sts.resize.TooltipDimensionManager.TITLE_BODY_VERTICAL_GAP;
+
+public class TierifyLegendaryBridge {
+    public static List<ClientTooltipComponent> wrapComponents(List<ClientTooltipComponent> components) {
+        if (components == null || components.isEmpty()) return components;
+
+        ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
+        if (currentStack == null || currentStack.isEmpty()) return components;
+
+        int titleSize = !TooltipDimensionManager.processedTitleComponentList.isEmpty() ? TooltipDimensionManager.processedTitleComponentList.size() : 1;
+
+        List<ClientTooltipComponent> newList = new ArrayList<>(components);
+
+        for (int i = 0; i < titleSize; i++) {
+            if (!newList.isEmpty()) {
+                newList.remove(0);
+            }
+        }
+
+        if (LegendaryTooltipsConfig.showModelForItem(currentStack)) {
+            LegendaryTieredWrapper wrapper = getLegendaryTieredWrapper(components);
+
+            newList.add(0, wrapper);
+            if (TooltipDimensionManager.processedTitleComponentList.size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
+
+            return newList;
+        }
+        List<ClientTooltipComponent> titleComponentList = new ArrayList<>(components.subList(0, titleSize));
+        newList.add(0, new WrappedTitleTooltipComponent(titleComponentList));
+        if (TooltipDimensionManager.processedTitleComponentList.size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
+
+        return newList;
+    }
+
+    public static @NotNull LegendaryTieredWrapper getLegendaryTieredWrapper(List<ClientTooltipComponent> components) {
+        List<ClientTooltipComponent> titleComponents;
+
+        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && !TooltipDimensionManager.processedTitleComponentList.isEmpty()) {
+            titleComponents = new ArrayList<>(TooltipDimensionManager.processedTitleComponentList);
+        } else {
+            titleComponents = Collections.singletonList(components.get(0));
+        }
+
+        return new LegendaryTieredWrapper(titleComponents);
+    }
+
+    private static int lastTooltipX = 0;
+    private static int lastTooltipY = 0;
+    private static int lastTooltipWidth = 0;
+
+    public static void setTooltipPosition(int x, int y, int width) {
+        lastTooltipX = x;
+        lastTooltipY = y;
+        lastTooltipWidth = width;
+    }
+
+    public static void drawSeparator(GuiGraphics context, List<ClientTooltipComponent> components) {
+        if (components.isEmpty()) return;
+        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && TooltipDimensionManager.bodyComponentList.isEmpty()) return;
+        ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
+        if (currentStack == null || currentStack.isEmpty()) return;
+
+        if (LegendaryTooltipsConfig.INSTANCE.nameSeparator.get()) {
+            int color = 0xFF996922;
+            int offsetY = TooltipDimensionManager.processedTitleComponentList.size() > 1 ? 0 : TITLE_BODY_VERTICAL_GAP;
+            if (!LegendaryTooltipsConfig.showModelForItem(currentStack)) {
+                offsetY = TooltipDimensionManager.processedTitleComponentList.size() > 1 ? 0 : TITLE_BODY_VERTICAL_GAP / 2;
+            }
+            TooltipDecor.drawSeparator(context.pose(), lastTooltipX, lastTooltipY + components.get(0).getHeight() - offsetY, lastTooltipWidth, color);
+        }
+    }
+
+    public static int getPredictedPinnedHeight(List<ClientTooltipComponent> pinned) {
+        int extraWidth = TooltipDimensionManager.getModelOffset();
+        
+        if (extraWidth > 0 && !pinned.isEmpty()) {
+            int wrapperHeight = getWrapperHeight(pinned, extraWidth);
+            int paddingHeight = TooltipDimensionManager.getPaddingOffset(0);
+            if (pinned.size() > 1) paddingHeight += TITLE_BODY_VERTICAL_GAP; // Compensate for PaddingComponent
+            
+            return wrapperHeight + paddingHeight;
+        }
+
+        int rawPinnedHeight = 0;
+        for (int i = 0; i < pinned.size(); i++) {
+            rawPinnedHeight += pinned.get(i).getHeight() + TooltipDimensionManager.getPaddingOffset(i);
+        }
+        if (pinned.size() > 1) rawPinnedHeight += TITLE_BODY_VERTICAL_GAP; // Compensate for PaddingComponent
+        return rawPinnedHeight;
+    }
+
+    public static int getWrapperHeight(List<ClientTooltipComponent> pinned, int extraWidth) {
+        int titleHeight = 0;
+        for (ClientTooltipComponent component : pinned) {
+            titleHeight += component.getHeight();
+        }
+
+        int firstLineHeight = pinned.get(0).getHeight();
+        if (pinned.get(0) instanceof WrappedTitleTooltipComponent) {
+            firstLineHeight = ((WrappedTitleTooltipComponent) pinned.get(0)).getFirstLineHeight();
+        }
+        int yOffset = Math.max(0, (extraWidth - firstLineHeight) / 2);
+        return Math.max(extraWidth, yOffset * 2 + titleHeight - TITLE_BODY_VERTICAL_GAP);
+    }
+}

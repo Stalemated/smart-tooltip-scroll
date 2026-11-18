@@ -1,0 +1,50 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+issueTrackerURL = "${sources}/issues"
+license = "MIT"
+clientSideOnly = true
+
+[[mods]]
+modId = "${id}"
+version = "${version}"
+displayName = "${name}"
+authors = "${author}"
+description = '''
+${description}
+'''
+logoFile = "assets/${id}/icon.png"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/smart-tooltip-scroll"
+
+[[mixins]]
+config = "${id}.mixins.json"
+
+[[mixins]]
+config = "${id}-forge.mixins.json"
+
+[[dependencies.${id}]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.${id}]]
+modId = "minecraft"
+mandatory = true
+versionRange = "${minecraft}"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.${id}]]
+modId = "s_lib"
+mandatory = true
+versionRange = "[${slib},)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.${id}]]
+modId = "yet_another_config_lib_v3"
+mandatory = false
+versionRange = "[3.6.2,)"
+ordering = "AFTER"
+side = "CLIENT"

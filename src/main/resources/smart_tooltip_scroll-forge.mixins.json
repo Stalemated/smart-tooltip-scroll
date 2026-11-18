@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.stalemated.sts.forge.mixin",
+  "compatibilityLevel": "${mixin_compatibility}",
+  "client": [
+    "ForgeHooksClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

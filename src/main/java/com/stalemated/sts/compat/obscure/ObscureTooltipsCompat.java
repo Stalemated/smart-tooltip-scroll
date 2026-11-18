@@ -1,0 +1,154 @@
+package com.stalemated.sts.compat.obscure;
+
+import com.stalemated.sts.compat.obscure.component.StsObscureHeaderComponent;
+import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
+import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
+import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
+import com.stalemated.sts.scroll.TooltipScrollManager;
+import dev.obscuria.tooltips.client.component.HeaderComponent;
+import dev.obscuria.tooltips.client.component.SplitComponent;
+import dev.obscuria.tooltips.client.component.StackBuffer;
+import dev.obscuria.tooltips.config.ClientConfig;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+
+import static com.stalemated.sts.resize.TooltipDimensionManager.MIN_TOOLTIP_HEIGHT;
+import static com.stalemated.sts.resize.TooltipDimensionManager.MIN_TOOLTIP_WIDTH;
+
+public class ObscureTooltipsCompat {
+    public static final int OT_ICON_SIZE = 20;
+    public static final int OT_ICON_MARGIN = 2;
+    public static final int OT_ITEM_MODEL_OFFSET = OT_ICON_SIZE + OT_ICON_MARGIN;
+    public static final int SEPARATOR_HEIGHT = 3;
+    public static final int SPLIT_GAP = 3;
+
+    private static int getContentMargin() {
+        return ClientConfig.CONTENT_MARGIN.get();
+    }
+
+    public static boolean isCompatActive() {
+        return SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && SmartTooltipScrollConfigRegistry.CONFIG.get().obscure_compat;
+    }
+
+    public static boolean isObscureHandling(List<ClientTooltipComponent> components) {
+        if (!ClientConfig.ENABLED.get()) return false;
+        boolean isIgnored = TooltipDimensionManager.getCurrentStack() != null && ClientConfig.isIgnored(TooltipDimensionManager.getCurrentStack().getItem());
+        if (isIgnored) return false;
+
+        return containsStackBuffer(components);
+    }
+
+    private static boolean containsStackBuffer(List<ClientTooltipComponent> components) {
+        if (components == null || components.isEmpty()) return false;
+
+        for (ClientTooltipComponent comp : components) {
+            if (comp instanceof StackBuffer) {
+                return true;
+            }
+            if (comp != null && comp.getClass().getName().contains("ClientGroupTooltip")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static List<ClientTooltipComponent> processComponents(List<ClientTooltipComponent> components, Font textRenderer) {
+        if (components == null || components.isEmpty() || textRenderer == null) {
+            return components;
+        }
+
+        if (components.size() == 1 && components.get(0) instanceof SplitComponent split) {
+            return processSplitComponent(split, textRenderer);
+        }
+
+        if (components.get(0) instanceof HeaderComponent || components.get(0) instanceof StsObscureHeaderComponent) {
+            return processStandardComponents(components, textRenderer);
+        }
+
+        return components;
+    }
+
+    private static ClientTooltipComponent processHeader(ClientTooltipComponent headerComp, int availableTextWidth, Font textRenderer) {
+        if (headerComp instanceof HeaderComponent header) {
+            ClientTooltipComponent titleComp = header.title();
+
+            List<ClientTooltipComponent> processedTitleList = TitleOverflowStrategyFactory.getStrategy().processComponentPhase(Collections.singletonList(titleComp), textRenderer, availableTextWidth);
+            ClientTooltipComponent processedTitle = processedTitleList.isEmpty() ? titleComp : processedTitleList.get(0);
+
+            return new StsObscureHeaderComponent(header, processedTitle);
+        }
+        return headerComp;
+    }
+
+    private static List<ClientTooltipComponent> processStandardComponents(List<ClientTooltipComponent> components, Font textRenderer) {
+        int scaledWidth = TooltipDimensionManager.getScaledTooltipWidth();
+        int scaledHeight = TooltipDimensionManager.getScaledTooltipHeight();
+
+        int maxAllowedWidth = Math.max(scaledWidth - (getContentMargin() * 2), MIN_TOOLTIP_WIDTH);
+        int maxAllowedHeight = Math.max(scaledHeight - (getContentMargin() * 2), MIN_TOOLTIP_HEIGHT);
+        int availableTextWidth = Math.max(1, maxAllowedWidth - OT_ITEM_MODEL_OFFSET);
+
+        ClientTooltipComponent processedHeader = processHeader(components.get(0), availableTextWidth, textRenderer);
+
+        if (components.size() <= 1) {
+            TooltipIdentityContext context = new TooltipIdentityContext(TooltipDimensionManager.getCurrentStack(), Collections.emptyList(), textRenderer);
+            TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
+            return Collections.singletonList(processedHeader);
+        }
+
+        List<ClientTooltipComponent> bodyRaw = new ArrayList<>(components.subList(1, components.size()));
+
+        List<ClientTooltipComponent> result = TooltipDimensionManager.buildScrollableLayout(Collections.singletonList(processedHeader), bodyRaw, maxAllowedWidth, maxAllowedHeight, processedHeader.getHeight(), textRenderer);
+
+        int totalTooltipWidth = TooltipDimensionManager.calculateTooltipWidth(result, textRenderer);
+        if (processedHeader instanceof StsObscureHeaderComponent stsHeader) {
+            stsHeader.setTotalWidth(totalTooltipWidth);
+        }
+
+        return result;
+    }
+
+    private static List<ClientTooltipComponent> processSplitComponent(SplitComponent splitComponent, Font textRenderer) {
+        ClientTooltipComponent left = splitComponent.left();
+        List<ClientTooltipComponent> right = splitComponent.right();
+
+        if (right == null || right.isEmpty()) {
+            TooltipIdentityContext context = new TooltipIdentityContext(TooltipDimensionManager.getCurrentStack(), Collections.emptyList(), textRenderer);
+            TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
+            return Collections.singletonList(splitComponent);
+        }
+
+        int leftWidth = left.getWidth(textRenderer);
+        int scaledWidth = TooltipDimensionManager.getScaledTooltipWidth();
+        int scaledHeight = TooltipDimensionManager.getScaledTooltipHeight();
+
+        int maxAllowedWidth = Math.max(scaledWidth - (getContentMargin() * 2), MIN_TOOLTIP_WIDTH);
+        int maxAllowedHeight = Math.max(scaledHeight - (getContentMargin() * 2), MIN_TOOLTIP_HEIGHT);
+
+        int rightAllowedWidth = Math.max(maxAllowedWidth - leftWidth - SPLIT_GAP, MIN_TOOLTIP_WIDTH);
+        int availableTextWidth = Math.max(1, rightAllowedWidth - OT_ITEM_MODEL_OFFSET);
+
+        ClientTooltipComponent processedHeader = processHeader(right.get(0), availableTextWidth, textRenderer);
+        List<ClientTooltipComponent> bodyRaw = right.size() > 1 ? new ArrayList<>(right.subList(1, right.size())) : Collections.emptyList();
+        List<ClientTooltipComponent> newRight;
+
+        if (bodyRaw.isEmpty()) {
+            TooltipIdentityContext context = new TooltipIdentityContext(TooltipDimensionManager.getCurrentStack(), Collections.emptyList(), textRenderer);
+            TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
+            newRight = Collections.singletonList(processedHeader);
+        } else {
+            newRight = TooltipDimensionManager.buildScrollableLayout(Collections.singletonList(processedHeader), bodyRaw, rightAllowedWidth, maxAllowedHeight, processedHeader.getHeight(), textRenderer);
+            int totalRightWidth = TooltipDimensionManager.calculateTooltipWidth(newRight, textRenderer);
+
+            if (processedHeader instanceof StsObscureHeaderComponent stsHeader) {
+                stsHeader.setTotalWidth(totalRightWidth);
+            }
+        }
+
+        return Collections.singletonList(new SplitComponent(left, newRight));
+    }
+}
