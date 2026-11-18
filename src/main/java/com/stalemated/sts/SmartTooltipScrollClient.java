@@ -2,7 +2,7 @@ package com.stalemated.sts;
 
 import com.stalemated.lib.client.SLibConfigScreens;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
-import com.stalemated.sts.gui.screen.TooltipDimensionsScreen;
+import com.stalemated.sts.config.SmartTooltipScrollConfigScreen;
 import com.stalemated.sts.keybind.StsKeybinds;
 import com.stalemated.sts.scroll.resetter.ScrollResetterManager;
 import com.stalemated.sts.state.TooltipContextManager;
@@ -33,7 +33,7 @@ implements ClientModInitializer
         SmartTooltipScrollConfigRegistry.register();
         ScrollResetterManager.register();
         StsKeybinds.register();
-        SLibConfigScreens.register(SmartTooltipScroll.MOD_ID, () -> TooltipDimensionsScreen::create);
+        SLibConfigScreens.register(SmartTooltipScroll.MOD_ID, () -> SmartTooltipScrollConfigScreen::create);
         registerTooltipEvent();
     }
 
