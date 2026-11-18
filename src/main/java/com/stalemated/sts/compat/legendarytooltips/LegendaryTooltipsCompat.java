@@ -6,6 +6,7 @@ import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.anthonyhilyard.legendarytooltips.tooltip.PaddingComponent;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
+import com.stalemated.sts.state.TooltipDraw;
 import java.util.List;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.util.FormattedCharSequence;
@@ -16,7 +17,7 @@ public class LegendaryTooltipsCompat {
     private static final int LT_ITEM_MODEL_OFFSET = 24;
 
     public static int getItemModelComponentWidth() {
-        return getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack(), TooltipDimensionManager.processedTitleComponentList);
+        return getItemModelComponentWidth(TooltipDimensionManager.getCurrentStack(), TooltipDraw.titleComponents());
     }
 
     public static int getItemModelComponentWidth(ItemStack stack, List<ClientTooltipComponent> currentComponents) {
@@ -27,10 +28,10 @@ public class LegendaryTooltipsCompat {
             return LT_ITEM_MODEL_OFFSET;
         }
 
-        boolean hasTitleComponents = !TooltipDimensionManager.processedTitleComponentList.isEmpty();
+        boolean hasTitleComponents = !TooltipDraw.titleComponents().isEmpty();
 
         if (hasTitleComponents) {
-            if (containsItemModel(TooltipDimensionManager.processedTitleComponentList)) {
+            if (containsItemModel(TooltipDraw.titleComponents())) {
                 return LT_ITEM_MODEL_OFFSET;
             }
             return 0;

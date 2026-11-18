@@ -6,6 +6,7 @@ import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.TooltipContext;
 import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipDraw;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,18 +25,18 @@ import static com.stalemated.sts.state.StateManager.IS_OT_LOADED;
 public abstract class DrawContextMixin {
 
     @Inject(method = "renderTooltipInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V", at = @At("HEAD"))
-    private void sts$captureDrawContext(Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, CallbackInfo ci) {
+    private void sts$captureDrawContext(Font font, List<ClientTooltipComponent> list, int i, int j, ClientTooltipPositioner clientTooltipPositioner, CallbackInfo ci) {
         if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions) {
-            TooltipDimensionManager.setState((GuiGraphics) (Object) this, textRenderer);
+            TooltipDraw.begin((GuiGraphics) (Object) this, font);
         }
     }
 
     @ModifyVariable(method = "renderTooltipInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V", at = @At("HEAD"), argsOnly = true, index = 2)
-    private List<ClientTooltipComponent> sts$applyDimensionsHeight(List<ClientTooltipComponent> components) {
+    private List<ClientTooltipComponent> sts$applyDimensionsHeight(List<ClientTooltipComponent> list) {
         if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions) {
             if (IS_OT_LOADED) {
-                if (ObscureTooltipsCompat.isObscureHandling(components)) {
-                    return components;
+                if (ObscureTooltipsCompat.isObscureHandling(list)) {
+                    return list;
                 }
             }
 
@@ -45,18 +46,14 @@ public abstract class DrawContextMixin {
             boolean isForced = SharedTooltipState.isCustomDimensionsRequested();
 
             if (isItem || isForced) {
-                return TooltipDimensionManager.enforceHeightLimit(components, ctx);
+                return TooltipDimensionManager.enforceHeightLimit(list, ctx);
             }
         }
-        return components;
+        return list;
     }
 
     @Inject(method = "renderTooltipInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V", at = @At("TAIL"))
     private void sts$clearStateAfterRender(CallbackInfo ci) {
-        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions) {
-            TooltipDimensionManager.clearState();
-            TooltipContextManager.pop();
-            SharedTooltipState.clearCustomDimensionsRequest();
-        }
+        TooltipDraw.end();
     }
 }

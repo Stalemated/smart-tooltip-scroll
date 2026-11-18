@@ -1,9 +1,7 @@
 package com.stalemated.sts.compat.tooltipoverhaul;
 
-import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
-import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipDraw;
 import dev.xylonity.tooltipoverhaul.client.render.TooltipContext;
 import dev.xylonity.tooltipoverhaul.client.util.TooltipScrollState;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,7 +34,7 @@ public class TooltipOverhaulStateManager {
         if (!SmartTooltipScrollConfigRegistry.CONFIG.get().tooltip_overhaul_compat) return;
 
         if (contextObj instanceof TooltipContext context) {
-            TooltipDimensionManager.setState(context.getGraphics(), context.getFont());
+            TooltipDraw.begin(context.getGraphics(), context.getFont());
             if (stsActiveForCurrentTooltip) {
                 currentTOContext = context;
             }
@@ -46,9 +44,7 @@ public class TooltipOverhaulStateManager {
     public static void clearContext() {
         if (!SmartTooltipScrollConfigRegistry.CONFIG.get().tooltip_overhaul_compat) return;
 
-        TooltipDimensionManager.clearState();
-        TooltipContextManager.pop();
-        SharedTooltipState.clearCustomDimensionsRequest();
+        TooltipDraw.end();
         stsActiveForCurrentTooltip = false;
         currentTOContext = null;
     }

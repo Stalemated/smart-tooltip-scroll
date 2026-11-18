@@ -8,6 +8,7 @@ import com.stalemated.sts.scroll.resetter.ExternalScrollStateResetter;
 import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.mixin.client.compat.tooltipoverhaul.TooltipContextAccessor;
 import com.stalemated.sts.state.TooltipContext;
+import com.stalemated.sts.state.TooltipDraw;
 import dev.xylonity.tooltipoverhaul.client.util.TooltipScrollState;
 import java.util.List;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -40,7 +41,7 @@ public class TooltipOverhaulCompat implements ExternalScrollStateResetter {
 
         if (isItem || isForced) {
             TooltipOverhaulStateManager.setContext(context);
-            TooltipDimensionManager.setState(context.getGraphics(), context.getFont());
+            TooltipDraw.begin(context.getGraphics(), context.getFont());
 
             if (stsCtx == null) {
                 stsCtx = new TooltipContext(stack);

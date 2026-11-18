@@ -1,10 +1,8 @@
 package com.stalemated.sts.mixin.client.compat.obscure;
 
 import com.stalemated.lib.mixin.RequiresMod;
-import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.compat.obscure.ObscureTooltipsCompat;
-import com.stalemated.sts.resize.TooltipDimensionManager;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipDraw;
 import dev.obscuria.tooltips.client.TooltipHelper;
 import dev.obscuria.tooltips.client.TooltipState;
 import dev.obscuria.tooltips.client.tooltip.TooltipScroll;
@@ -30,7 +28,7 @@ public abstract class ObscureTooltipRendererMixin {
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)Z", at = @At("HEAD"))
     private static void sts$onRenderHead(GuiGraphics graphics, Font font, List<ClientTooltipComponent> components, int mouseX, int mouseY, ClientTooltipPositioner positioner, CallbackInfoReturnable<Boolean> cir) {
         if (ObscureTooltipsCompat.isCompatActive()) {
-            TooltipDimensionManager.setState(graphics, font);
+            TooltipDraw.begin(graphics, font);
         }
     }
 
@@ -71,9 +69,7 @@ public abstract class ObscureTooltipRendererMixin {
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)Z", at = @At("RETURN"))
     private static void sts$onRenderReturn(CallbackInfoReturnable<Boolean> cir) {
         if (ObscureTooltipsCompat.isCompatActive() && cir.getReturnValueZ()) {
-            TooltipDimensionManager.clearState();
-            TooltipContextManager.pop();
-            SharedTooltipState.clearCustomDimensionsRequest();
+            TooltipDraw.end();
         }
     }
 }

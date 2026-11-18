@@ -19,12 +19,6 @@ public class TooltipContextManager {
         return contextStack.peek();
     }
 
-    public static void pop() {
-        if (!contextStack.isEmpty()) {
-            contextStack.pop();
-        }
-    }
-
     public static void clear() {
         contextStack.clear();
     }

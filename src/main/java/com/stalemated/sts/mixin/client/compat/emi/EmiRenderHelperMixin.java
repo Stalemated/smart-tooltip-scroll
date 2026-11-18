@@ -1,17 +1,19 @@
 package com.stalemated.sts.mixin.client.compat.emi;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.stalemated.lib.mixin.RequiresMod;
-import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
+import com.stalemated.sts.state.TooltipDraw;
+import dev.emi.emi.mixin.accessor.DrawContextAccessor;
 import dev.emi.emi.runtime.EmiDrawContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
@@ -30,17 +32,9 @@ public class EmiRenderHelperMixin {
         return maxWidth;
     }
 
-    @Inject(method = "drawTooltip(Lnet/minecraft/client/gui/screens/Screen;Ldev/emi/emi/runtime/EmiDrawContext;Ljava/util/List;IIILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
+    @WrapOperation(method = "drawTooltip(Lnet/minecraft/client/gui/screens/Screen;Ldev/emi/emi/runtime/EmiDrawContext;Ljava/util/List;IIILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
             at = @At(value = "INVOKE", target = "Ldev/emi/emi/mixin/accessor/DrawContextAccessor;invokeDrawTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V"))
-    private static void sts$beforeDrawTooltip(Screen screen, EmiDrawContext context, List<ClientTooltipComponent> components, int x, int y, int maxWidth, ClientTooltipPositioner positioner, CallbackInfo ci) {
-        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions) {
-            SharedTooltipState.requestCustomDimensions();
-        }
-    }
-
-    @Inject(method = "drawTooltip(Lnet/minecraft/client/gui/screens/Screen;Ldev/emi/emi/runtime/EmiDrawContext;Ljava/util/List;IIILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
-            at = @At(value = "INVOKE", target = "Ldev/emi/emi/mixin/accessor/DrawContextAccessor;invokeDrawTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V", shift = At.Shift.AFTER))
-    private static void sts$afterDrawTooltip(Screen screen, EmiDrawContext context, List<ClientTooltipComponent> components, int x, int y, int maxWidth, ClientTooltipPositioner positioner, CallbackInfo ci) {
-        SharedTooltipState.clearCustomDimensionsRequest();
+    private static void smart_tooltip_scroll$drawWithCustomDimensions(DrawContextAccessor graphics, Font font, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Operation<Void> original) {
+        TooltipDraw.withCustomDimensions(() -> original.call(graphics, font, components, x, y, positioner));
     }
 }

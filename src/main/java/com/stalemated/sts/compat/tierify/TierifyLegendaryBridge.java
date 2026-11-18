@@ -7,6 +7,7 @@ import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.compat.tierify.component.LegendaryTieredWrapper;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
+import com.stalemated.sts.state.TooltipDraw;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class TierifyLegendaryBridge {
         ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
         if (currentStack == null || currentStack.isEmpty()) return components;
 
-        int titleSize = !TooltipDimensionManager.processedTitleComponentList.isEmpty() ? TooltipDimensionManager.processedTitleComponentList.size() : 1;
+        int titleSize = !TooltipDraw.titleComponents().isEmpty() ? TooltipDraw.titleComponents().size() : 1;
 
         List<ClientTooltipComponent> newList = new ArrayList<>(components);
 
@@ -39,13 +40,13 @@ public class TierifyLegendaryBridge {
             LegendaryTieredWrapper wrapper = getLegendaryTieredWrapper(components);
 
             newList.add(0, wrapper);
-            if (TooltipDimensionManager.processedTitleComponentList.size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
+            if (TooltipDraw.titleComponents().size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
 
             return newList;
         }
         List<ClientTooltipComponent> titleComponentList = new ArrayList<>(components.subList(0, titleSize));
         newList.add(0, new WrappedTitleTooltipComponent(titleComponentList));
-        if (TooltipDimensionManager.processedTitleComponentList.size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
+        if (TooltipDraw.titleComponents().size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
 
         return newList;
     }
@@ -53,8 +54,8 @@ public class TierifyLegendaryBridge {
     public static @NotNull LegendaryTieredWrapper getLegendaryTieredWrapper(List<ClientTooltipComponent> components) {
         List<ClientTooltipComponent> titleComponents;
 
-        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && !TooltipDimensionManager.processedTitleComponentList.isEmpty()) {
-            titleComponents = new ArrayList<>(TooltipDimensionManager.processedTitleComponentList);
+        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && !TooltipDraw.titleComponents().isEmpty()) {
+            titleComponents = new ArrayList<>(TooltipDraw.titleComponents());
         } else {
             titleComponents = Collections.singletonList(components.get(0));
         }
@@ -74,15 +75,15 @@ public class TierifyLegendaryBridge {
 
     public static void drawSeparator(GuiGraphics context, List<ClientTooltipComponent> components) {
         if (components.isEmpty()) return;
-        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && TooltipDimensionManager.bodyComponentList.isEmpty()) return;
+        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && TooltipDraw.bodyComponents().isEmpty()) return;
         ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
         if (currentStack == null || currentStack.isEmpty()) return;
 
         if (LegendaryTooltipsConfig.INSTANCE.nameSeparator.get()) {
             int color = 0xFF996922;
-            int offsetY = TooltipDimensionManager.processedTitleComponentList.size() > 1 ? 0 : TITLE_BODY_VERTICAL_GAP;
+            int offsetY = TooltipDraw.titleComponents().size() > 1 ? 0 : TITLE_BODY_VERTICAL_GAP;
             if (!LegendaryTooltipsConfig.showModelForItem(currentStack)) {
-                offsetY = TooltipDimensionManager.processedTitleComponentList.size() > 1 ? 0 : TITLE_BODY_VERTICAL_GAP / 2;
+                offsetY = TooltipDraw.titleComponents().size() > 1 ? 0 : TITLE_BODY_VERTICAL_GAP / 2;
             }
             TooltipDecor.drawSeparator(context.pose(), lastTooltipX, lastTooltipY + components.get(0).getHeight() - offsetY, lastTooltipWidth, color);
         }

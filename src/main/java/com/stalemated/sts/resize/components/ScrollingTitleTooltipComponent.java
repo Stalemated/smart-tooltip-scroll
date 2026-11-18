@@ -2,6 +2,7 @@ package com.stalemated.sts.resize.components;
 
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.state.TooltipDraw;
 import com.stalemated.sts.util.OrderedTextUtil;
 import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.gui.Font;
@@ -40,7 +41,7 @@ public class ScrollingTitleTooltipComponent extends ClientTextTooltip implements
     private int getOffset() {
         return TooltipDimensionManager.getModelOffset(
             TooltipDimensionManager.getCurrentStack(),
-            TooltipDimensionManager.processedTitleComponentList
+            TooltipDraw.titleComponents()
         );
     }
 
@@ -66,7 +67,7 @@ public class ScrollingTitleTooltipComponent extends ClientTextTooltip implements
         Matrix4f translatedMatrix = new Matrix4f(matrix);
         translatedMatrix.translate(0, 0, 400);
 
-        GuiGraphics context = TooltipDimensionManager.currentContext;
+        GuiGraphics context = TooltipDraw.graphics();
 
         if (context != null) {
             context.enableScissor(startX, y, endX, y + getHeight());

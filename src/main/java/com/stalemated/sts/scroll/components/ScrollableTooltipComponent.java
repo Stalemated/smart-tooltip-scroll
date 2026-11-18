@@ -6,6 +6,7 @@ import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.state.StateManager;
+import com.stalemated.sts.state.TooltipDraw;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
 
     @Override
     public void renderText(Font textRenderer, int x, int y, Matrix4f matrix, MultiBufferSource.BufferSource vertexConsumers) {
-        GuiGraphics context = TooltipDimensionManager.currentContext;
+        GuiGraphics context = TooltipDraw.graphics();
         if (context == null) return;
 
         int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();

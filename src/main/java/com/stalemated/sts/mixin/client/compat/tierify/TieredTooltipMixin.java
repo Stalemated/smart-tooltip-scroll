@@ -7,6 +7,7 @@ import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipDimensionManager;
 import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipDraw;
 import draylar.tiered.api.BorderTemplate;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,7 +35,7 @@ public abstract class TieredTooltipMixin {
 
     @Inject(method = "renderTieredTooltipFromComponents", at = @At("HEAD"))
     private static void sts$captureContext(GuiGraphics context, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
-        TooltipDimensionManager.setState(context, textRenderer);
+        TooltipDraw.begin(context, textRenderer);
         StateManager.isTierifyTooltip = true;
         if (IS_TO_LOADED) {
             TierifyTOBridge.captureState(context, textRenderer, x, y, positioner);
@@ -89,7 +90,7 @@ public abstract class TieredTooltipMixin {
         if (IS_LT_LOADED) TierifyLegendaryBridge.drawSeparator(context, components);
 
         StateManager.isTierifyTooltip = false;
-        TooltipDimensionManager.clearState();
+        TooltipDraw.end();
 
         if (IS_TO_LOADED) TierifyTOBridge.clearState();
     }

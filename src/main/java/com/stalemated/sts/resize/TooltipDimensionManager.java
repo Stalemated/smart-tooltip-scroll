@@ -13,14 +13,13 @@ import com.stalemated.sts.scroll.components.ScrollableTooltipComponent;
 import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.state.TooltipContext;
 import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipDraw;
 import com.stalemated.sts.util.TooltipWrapUtil;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,15 +28,11 @@ import static com.stalemated.sts.state.StateManager.IS_TO_LOADED;
 
 public class TooltipDimensionManager {
 
-    public static GuiGraphics currentContext = null;
-    public static Font currentTextRenderer = null;
     public static final int MIN_TOOLTIP_HEIGHT = 32;
     public static final int MIN_TOOLTIP_WIDTH = 64;
     public static final int TOOLTIP_PADDING_X = 8;
     private static final int TOOLTIP_PADDING_Y = 4;
     public static final int TITLE_BODY_VERTICAL_GAP = 2;
-    public static List<ClientTooltipComponent> processedTitleComponentList = Collections.emptyList();
-    public static List<ClientTooltipComponent> bodyComponentList = Collections.emptyList();
     public static Function<List<ClientTooltipComponent>, Integer> pinnedHeightPredictor = null;
 
     private static final DimensionCache widthCache = new DimensionCache(TOOLTIP_PADDING_X, MIN_TOOLTIP_WIDTH);
@@ -104,28 +99,30 @@ public class TooltipDimensionManager {
         List<ClientTooltipComponent> pinned = new ArrayList<>(components.subList(0, splitIndex));
         List<ClientTooltipComponent> scrollableContentRaw = new ArrayList<>(components.subList(splitIndex, components.size()));
 
-        if (currentTextRenderer != null) {
-            processedTitleComponentList = pinned;
-            pinned = TitleOverflowStrategyFactory.getStrategy().processComponentPhase(pinned, currentTextRenderer, titleMaxWidth);
-            processedTitleComponentList = pinned;
+        Font font = TooltipDraw.font();
+        if (font != null) {
+            TooltipDraw.setTitleComponents(pinned);
+            pinned = TitleOverflowStrategyFactory.getStrategy().processComponentPhase(pinned, font, titleMaxWidth);
+            TooltipDraw.setTitleComponents(pinned);
             
             int pinnedHeight = (pinnedHeightPredictor != null) ? pinnedHeightPredictor.apply(pinned) : calculateComponentListHeight(pinned);
             
-            List<ClientTooltipComponent> result = buildScrollableLayout(pinned, scrollableContentRaw, scaledTooltipWidth, scaledTooltipHeight, pinnedHeight, currentTextRenderer);
+            List<ClientTooltipComponent> result = buildScrollableLayout(pinned, scrollableContentRaw, scaledTooltipWidth, scaledTooltipHeight, pinnedHeight, font);
 
-            bodyComponentList = new ArrayList<>(result.subList(pinned.size(), result.size()));
+            List<ClientTooltipComponent> body = new ArrayList<>(result.subList(pinned.size(), result.size()));
+            TooltipDraw.setBodyComponents(body);
 
             if (SmartTooltipScrollConfigRegistry.CONFIG.get().title_centering) {
-                int cleanPinnedWidth = TitleCenteringProcessor.getCleanPinnedWidth(pinned, currentTextRenderer, componentWidth);
-                int bodyWidth = calculateTooltipWidth(bodyComponentList, currentTextRenderer);
+                int cleanPinnedWidth = TitleCenteringProcessor.getCleanPinnedWidth(pinned, font, componentWidth);
+                int bodyWidth = calculateTooltipWidth(body, font);
                 int totalTooltipWidth = Math.max(cleanPinnedWidth, bodyWidth);
 
                 if (StateManager.isTierifyTooltip) {
                     totalTooltipWidth = Math.max(totalTooltipWidth, MIN_TOOLTIP_WIDTH);
                 }
 
-                pinned = TitleCenteringProcessor.applyCentering(pinned, currentTextRenderer, totalTooltipWidth, componentWidth);
-                processedTitleComponentList = pinned;
+                pinned = TitleCenteringProcessor.applyCentering(pinned, font, totalTooltipWidth, componentWidth);
+                TooltipDraw.setTitleComponents(pinned);
                 
                 for (int i = 0; i < pinned.size(); i++) {
                     result.set(i, pinned.get(i));
@@ -134,8 +131,8 @@ public class TooltipDimensionManager {
             return result;
         }
 
-        processedTitleComponentList = pinned;
-        bodyComponentList = scrollableContentRaw;
+        TooltipDraw.setTitleComponents(pinned);
+        TooltipDraw.setBodyComponents(scrollableContentRaw);
         return components;
     }
 
@@ -195,19 +192,6 @@ public class TooltipDimensionManager {
     public static ItemStack getCurrentStack() {
         TooltipContext ctx = TooltipContextManager.peek();
         return ctx != null ? ctx.itemStack() : null;
-    }
-
-    public static void setState(GuiGraphics context, Font textRenderer) {
-        currentContext = context;
-        currentTextRenderer = textRenderer;
-    }
-
-    public static void clearState() {
-        currentContext = null;
-        currentTextRenderer = null;
-        TooltipContextManager.clear();
-        processedTitleComponentList = Collections.emptyList();
-        bodyComponentList = Collections.emptyList();
     }
 
     public static int getScaledTooltipHeight() {
