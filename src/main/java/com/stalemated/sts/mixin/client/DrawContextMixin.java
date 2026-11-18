@@ -3,7 +3,7 @@ package com.stalemated.sts.mixin.client;
 import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.compat.obscure.ObscureTooltipsCompat;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.TooltipLayout;
 import com.stalemated.sts.state.TooltipContext;
 import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.state.TooltipDraw;
@@ -46,7 +46,7 @@ public abstract class DrawContextMixin {
             boolean isForced = SharedTooltipState.isCustomDimensionsRequested();
 
             if (isItem || isForced) {
-                return TooltipDimensionManager.enforceHeightLimit(list, ctx);
+                return TooltipLayout.apply(list, ctx);
             }
         }
         return list;

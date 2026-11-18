@@ -1,7 +1,8 @@
 package com.stalemated.sts.resize.components;
 
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.TooltipStyles;
+import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.state.TooltipDraw;
 import com.stalemated.sts.util.OrderedTextUtil;
 import com.stalemated.sts.util.StsManagedTitle;
@@ -39,8 +40,8 @@ public class ScrollingTitleTooltipComponent extends ClientTextTooltip implements
     }
 
     private int getOffset() {
-        return TooltipDimensionManager.getModelOffset(
-            TooltipDimensionManager.getCurrentStack(),
+        return TooltipStyles.loaded().modelOffset(
+            TooltipContextManager.currentStack(),
             TooltipDraw.titleComponents()
         );
     }
@@ -59,7 +60,7 @@ public class ScrollingTitleTooltipComponent extends ClientTextTooltip implements
         long elapsedTime = TITLE_SCROLL_CLOCK.elapsedMillis(identity);
         int scrollOffset = ScrollMathUtil.calculateScrollOffset(overflowWidth, SmartTooltipScrollConfigRegistry.CONFIG.get().title_scroll_speed, SmartTooltipScrollConfigRegistry.CONFIG.get().title_scroll_pause_time_ms, elapsedTime);
         int startX = x;
-        if (!TooltipDimensionManager.handlesModelOffsetNatively()) startX += offset;
+        if (!TooltipStyles.drawsModelOffsetNatively()) startX += offset;
         int endX = x + this.maxTitleWidth;
 
         vertexConsumers.endBatch();

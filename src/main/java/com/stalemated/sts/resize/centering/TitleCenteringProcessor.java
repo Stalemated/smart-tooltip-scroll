@@ -1,14 +1,12 @@
 package com.stalemated.sts.resize.centering;
 
 import com.stalemated.lib.util.style.TooltipStyleUtils;
-import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.components.CenteredTextTooltipComponent;
 import com.stalemated.sts.resize.components.ScrollingTitleTooltipComponent;
 import com.stalemated.sts.resize.components.StsIndentedTextTooltipComponent;
 import com.stalemated.sts.resize.components.TruncatedTitleTooltipComponent;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.util.OrderedTextUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +15,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.util.FormattedCharSequence;
 
 import static com.stalemated.sts.scroll.ScrollState.PIXELS_PER_LINE;
-import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
 
 public class TitleCenteringProcessor {
 
@@ -61,7 +58,7 @@ public class TitleCenteringProcessor {
             }
         }
         
-        maxWidth = Math.max(maxWidth, TooltipDimensionManager.getExtraWidth(font) + modelOffset);
+        maxWidth = Math.max(maxWidth, TooltipStyles.loaded().extraTitleWidth(font) + modelOffset);
         
         return maxWidth;
     }
@@ -89,7 +86,7 @@ public class TitleCenteringProcessor {
             bottomPadding = Math.max(0, stsInd.getHeight() - PIXELS_PER_LINE);
         }
         
-        if (TooltipDimensionManager.handlesModelOffsetNatively()) {
+        if (TooltipStyles.drawsModelOffsetNatively()) {
             itemModelOffset = 0;
         }
 
@@ -97,10 +94,6 @@ public class TitleCenteringProcessor {
     }
 
     private static FormattedCharSequence stripCenteredTextSpaces(FormattedCharSequence text) {
-        if (IS_LT_LOADED) {
-            boolean hasItemModel = LegendaryTooltipsCompat.getItemModelComponentWidth() > 0;
-            if (hasItemModel) text = OrderedTextUtil.stripSpaces(text);
-        }
-        return text;
+        return TooltipStyles.loaded().centeredTitle(text);
     }
 }

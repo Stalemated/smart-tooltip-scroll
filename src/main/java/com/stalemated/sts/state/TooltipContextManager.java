@@ -19,6 +19,11 @@ public class TooltipContextManager {
         return contextStack.peek();
     }
 
+    public static ItemStack currentStack() {
+        TooltipContext context = contextStack.peek();
+        return context != null ? context.itemStack() : null;
+    }
+
     public static void clear() {
         contextStack.clear();
     }

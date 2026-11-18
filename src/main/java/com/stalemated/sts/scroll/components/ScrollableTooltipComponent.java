@@ -1,11 +1,13 @@
 package com.stalemated.sts.scroll.components;
 
 import com.stalemated.lib.util.math.MathUtils;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.TooltipBounds;
+import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.state.StateManager;
+import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.state.TooltipDraw;
 import org.joml.Matrix4f;
 
@@ -37,8 +39,8 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
             height += component.getHeight();
         }
         
-        int maxPinnedWidth = TitleCenteringProcessor.getCleanPinnedWidth(pinned, textRenderer, TooltipDimensionManager.getModelOffset());
-        int minBound = StateManager.isTierifyTooltip ? TooltipDimensionManager.MIN_TOOLTIP_WIDTH : 0;
+        int maxPinnedWidth = TitleCenteringProcessor.getCleanPinnedWidth(pinned, textRenderer, TooltipStyles.currentModelOffset());
+        int minBound = StateManager.isTierifyTooltip ? TooltipBounds.MIN_WIDTH : 0;
 
         int contentWidth = Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth);
         this.maxWidth = MathUtils.clamp(contentWidth, minBound, maxWidth);
@@ -46,7 +48,7 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
         this.totalHeight = height;
         this.scrollbarHeight = this.maxHeight - SCROLLBAR_PADDING_Y;
 
-        TooltipIdentityContext context = new TooltipIdentityContext(TooltipDimensionManager.getCurrentStack(), this.components, textRenderer);
+        TooltipIdentityContext context = new TooltipIdentityContext(TooltipContextManager.currentStack(), this.components, textRenderer);
         TooltipScrollManager.INSTANCE.onTooltipRendered(this.totalHeight - this.scrollbarHeight, context);
     }
 

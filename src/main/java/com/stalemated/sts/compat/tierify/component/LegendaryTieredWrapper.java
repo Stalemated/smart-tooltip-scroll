@@ -2,8 +2,9 @@ package com.stalemated.sts.compat.tierify.component;
 
 import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
+import com.stalemated.sts.state.TooltipContextManager;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;
 
-import static com.stalemated.sts.resize.TooltipDimensionManager.TITLE_BODY_VERTICAL_GAP;
+import static com.stalemated.sts.resize.TooltipLayout.TITLE_BODY_GAP;
 
 public class LegendaryTieredWrapper implements ClientTooltipComponent {
 
@@ -23,9 +24,9 @@ public class LegendaryTieredWrapper implements ClientTooltipComponent {
 
     public LegendaryTieredWrapper(List<ClientTooltipComponent> titleComponents) {
         this.titleComponents = titleComponents;
-        ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
+        ItemStack currentStack = TooltipContextManager.currentStack();
         this.modelComponent = new ItemModelComponent(currentStack);
-        this.extraWidth = TooltipDimensionManager.getModelOffset();
+        this.extraWidth = TooltipStyles.currentModelOffset();
     }
 
     private int getTitleHeight() {
@@ -52,7 +53,7 @@ public class LegendaryTieredWrapper implements ClientTooltipComponent {
     @Override
     public int getHeight() {
         int yOffset = Math.max(0, (this.extraWidth - getFirstLineHeight()) / 2);
-        return Math.max(this.extraWidth, yOffset * 2 + getTitleHeight() - TITLE_BODY_VERTICAL_GAP);
+        return Math.max(this.extraWidth, yOffset * 2 + getTitleHeight() - TITLE_BODY_GAP);
     }
 
     private int getCalculatedX(ClientTooltipComponent component, int x, int i) {

@@ -2,8 +2,7 @@ package com.stalemated.sts.util;
 
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
 import com.stalemated.lib.util.style.TooltipStyleUtils;
-import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsCompat;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.components.StsIndentedTextTooltipComponent;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
 import net.minecraft.client.gui.Font;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
 
 public class TooltipWrapUtil {
     public static boolean isHandlingCustomWrap = false;
@@ -60,10 +58,10 @@ public class TooltipWrapUtil {
                 if (i == 0) {
                     if (TooltipStyleUtils.convertOrderedTextToMutable(w).getString().isBlank()) continue;
                 } else {
-                    if (!TooltipDimensionManager.handlesModelOffsetNatively()) currentOffset = TooltipDimensionManager.getModelOffset();
+                    if (!TooltipStyles.drawsModelOffsetNatively()) currentOffset = TooltipStyles.currentModelOffset();
                 }
 
-                int padding = getPadding(wrapped, i);
+                int padding = TooltipStyles.loaded().wrappedTitlePadding(wrapped, i);
 
                 if (padding > 0) titleLines.add(new StsIndentedTextTooltipComponent(w, currentOffset, padding));
                 else titleLines.add(new IndentedTextTooltipComponent(w, currentOffset));
@@ -77,13 +75,5 @@ public class TooltipWrapUtil {
             else wrappedComponents.add(new WrappedTitleTooltipComponent(titleLines));
         }
         return true;
-    }
-
-    public static int getPadding(List<FormattedCharSequence> wrapped, int i) {
-        int padding = 0;
-        if (IS_LT_LOADED) {
-            padding = LegendaryTooltipsCompat.getPadding(wrapped, i, padding);
-        }
-        return padding;
     }
 }

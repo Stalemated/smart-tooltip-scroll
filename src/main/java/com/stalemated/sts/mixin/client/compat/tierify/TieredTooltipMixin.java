@@ -4,7 +4,7 @@ import com.stalemated.lib.mixin.RequiresMod;
 import com.stalemated.sts.compat.tierify.TierifyLegendaryBridge;
 import com.stalemated.sts.compat.tierify.TierifyTOBridge;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.TooltipLayout;
 import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.state.TooltipDraw;
@@ -46,18 +46,12 @@ public abstract class TieredTooltipMixin {
     private static List<ClientTooltipComponent> sts$applyDimensions(List<ClientTooltipComponent> components) {
         List<ClientTooltipComponent> processedList = components;
 
-        if (IS_LT_LOADED) {
-            TooltipDimensionManager.pinnedHeightPredictor = TierifyLegendaryBridge::getPredictedPinnedHeight;
-        }
-
         if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions) {
-            if (!IS_TO_LOADED || IS_LT_LOADED) {
-                processedList = TooltipDimensionManager.enforceHeightLimit(components, TooltipContextManager.peek());
-            }
+            if (IS_LT_LOADED) processedList = TooltipLayout.apply(components, TooltipContextManager.peek(), TierifyLegendaryBridge::getPredictedPinnedHeight);
+            else if (!IS_TO_LOADED) processedList = TooltipLayout.apply(components, TooltipContextManager.peek());
         }
 
         if (IS_LT_LOADED) {
-            TooltipDimensionManager.pinnedHeightPredictor = null;
             processedList = TierifyLegendaryBridge.wrapComponents(processedList);
         } else if (IS_TO_LOADED) {
             processedList = TierifyTOBridge.wrapComponents(processedList);

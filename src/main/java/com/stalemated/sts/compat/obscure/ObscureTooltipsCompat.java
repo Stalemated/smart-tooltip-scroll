@@ -2,10 +2,12 @@ package com.stalemated.sts.compat.obscure;
 
 import com.stalemated.sts.compat.obscure.component.StsObscureHeaderComponent;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.TooltipBounds;
+import com.stalemated.sts.resize.TooltipLayout;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
 import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
+import com.stalemated.sts.state.TooltipContextManager;
 import dev.obscuria.tooltips.client.component.HeaderComponent;
 import dev.obscuria.tooltips.client.component.SplitComponent;
 import dev.obscuria.tooltips.client.component.StackBuffer;
@@ -16,8 +18,8 @@ import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 
-import static com.stalemated.sts.resize.TooltipDimensionManager.MIN_TOOLTIP_HEIGHT;
-import static com.stalemated.sts.resize.TooltipDimensionManager.MIN_TOOLTIP_WIDTH;
+import static com.stalemated.sts.resize.TooltipBounds.MIN_HEIGHT;
+import static com.stalemated.sts.resize.TooltipBounds.MIN_WIDTH;
 
 public class ObscureTooltipsCompat {
     public static final int OT_ICON_SIZE = 20;
@@ -36,7 +38,7 @@ public class ObscureTooltipsCompat {
 
     public static boolean isObscureHandling(List<ClientTooltipComponent> components) {
         if (!ClientConfig.ENABLED.get()) return false;
-        boolean isIgnored = TooltipDimensionManager.getCurrentStack() != null && ClientConfig.isIgnored(TooltipDimensionManager.getCurrentStack().getItem());
+        boolean isIgnored = TooltipContextManager.currentStack() != null && ClientConfig.isIgnored(TooltipContextManager.currentStack().getItem());
         if (isIgnored) return false;
 
         return containsStackBuffer(components);
@@ -85,26 +87,26 @@ public class ObscureTooltipsCompat {
     }
 
     private static List<ClientTooltipComponent> processStandardComponents(List<ClientTooltipComponent> components, Font textRenderer) {
-        int scaledWidth = TooltipDimensionManager.getScaledTooltipWidth();
-        int scaledHeight = TooltipDimensionManager.getScaledTooltipHeight();
+        int scaledWidth = TooltipBounds.current().maxWidth();
+        int scaledHeight = TooltipBounds.current().maxHeight();
 
-        int maxAllowedWidth = Math.max(scaledWidth - (getContentMargin() * 2), MIN_TOOLTIP_WIDTH);
-        int maxAllowedHeight = Math.max(scaledHeight - (getContentMargin() * 2), MIN_TOOLTIP_HEIGHT);
+        int maxAllowedWidth = Math.max(scaledWidth - (getContentMargin() * 2), MIN_WIDTH);
+        int maxAllowedHeight = Math.max(scaledHeight - (getContentMargin() * 2), MIN_HEIGHT);
         int availableTextWidth = Math.max(1, maxAllowedWidth - OT_ITEM_MODEL_OFFSET);
 
         ClientTooltipComponent processedHeader = processHeader(components.get(0), availableTextWidth, textRenderer);
 
         if (components.size() <= 1) {
-            TooltipIdentityContext context = new TooltipIdentityContext(TooltipDimensionManager.getCurrentStack(), Collections.emptyList(), textRenderer);
+            TooltipIdentityContext context = new TooltipIdentityContext(TooltipContextManager.currentStack(), Collections.emptyList(), textRenderer);
             TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
             return Collections.singletonList(processedHeader);
         }
 
         List<ClientTooltipComponent> bodyRaw = new ArrayList<>(components.subList(1, components.size()));
 
-        List<ClientTooltipComponent> result = TooltipDimensionManager.buildScrollableLayout(Collections.singletonList(processedHeader), bodyRaw, maxAllowedWidth, maxAllowedHeight, processedHeader.getHeight(), textRenderer);
+        List<ClientTooltipComponent> result = TooltipLayout.withScrollableBody(Collections.singletonList(processedHeader), bodyRaw, maxAllowedWidth, maxAllowedHeight, processedHeader.getHeight(), textRenderer);
 
-        int totalTooltipWidth = TooltipDimensionManager.calculateTooltipWidth(result, textRenderer);
+        int totalTooltipWidth = TooltipLayout.width(result, textRenderer);
         if (processedHeader instanceof StsObscureHeaderComponent stsHeader) {
             stsHeader.setTotalWidth(totalTooltipWidth);
         }
@@ -117,19 +119,19 @@ public class ObscureTooltipsCompat {
         List<ClientTooltipComponent> right = splitComponent.right();
 
         if (right == null || right.isEmpty()) {
-            TooltipIdentityContext context = new TooltipIdentityContext(TooltipDimensionManager.getCurrentStack(), Collections.emptyList(), textRenderer);
+            TooltipIdentityContext context = new TooltipIdentityContext(TooltipContextManager.currentStack(), Collections.emptyList(), textRenderer);
             TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
             return Collections.singletonList(splitComponent);
         }
 
         int leftWidth = left.getWidth(textRenderer);
-        int scaledWidth = TooltipDimensionManager.getScaledTooltipWidth();
-        int scaledHeight = TooltipDimensionManager.getScaledTooltipHeight();
+        int scaledWidth = TooltipBounds.current().maxWidth();
+        int scaledHeight = TooltipBounds.current().maxHeight();
 
-        int maxAllowedWidth = Math.max(scaledWidth - (getContentMargin() * 2), MIN_TOOLTIP_WIDTH);
-        int maxAllowedHeight = Math.max(scaledHeight - (getContentMargin() * 2), MIN_TOOLTIP_HEIGHT);
+        int maxAllowedWidth = Math.max(scaledWidth - (getContentMargin() * 2), MIN_WIDTH);
+        int maxAllowedHeight = Math.max(scaledHeight - (getContentMargin() * 2), MIN_HEIGHT);
 
-        int rightAllowedWidth = Math.max(maxAllowedWidth - leftWidth - SPLIT_GAP, MIN_TOOLTIP_WIDTH);
+        int rightAllowedWidth = Math.max(maxAllowedWidth - leftWidth - SPLIT_GAP, MIN_WIDTH);
         int availableTextWidth = Math.max(1, rightAllowedWidth - OT_ITEM_MODEL_OFFSET);
 
         ClientTooltipComponent processedHeader = processHeader(right.get(0), availableTextWidth, textRenderer);
@@ -137,12 +139,12 @@ public class ObscureTooltipsCompat {
         List<ClientTooltipComponent> newRight;
 
         if (bodyRaw.isEmpty()) {
-            TooltipIdentityContext context = new TooltipIdentityContext(TooltipDimensionManager.getCurrentStack(), Collections.emptyList(), textRenderer);
+            TooltipIdentityContext context = new TooltipIdentityContext(TooltipContextManager.currentStack(), Collections.emptyList(), textRenderer);
             TooltipScrollManager.INSTANCE.onTooltipRendered(0, context);
             newRight = Collections.singletonList(processedHeader);
         } else {
-            newRight = TooltipDimensionManager.buildScrollableLayout(Collections.singletonList(processedHeader), bodyRaw, rightAllowedWidth, maxAllowedHeight, processedHeader.getHeight(), textRenderer);
-            int totalRightWidth = TooltipDimensionManager.calculateTooltipWidth(newRight, textRenderer);
+            newRight = TooltipLayout.withScrollableBody(Collections.singletonList(processedHeader), bodyRaw, rightAllowedWidth, maxAllowedHeight, processedHeader.getHeight(), textRenderer);
+            int totalRightWidth = TooltipLayout.width(newRight, textRenderer);
 
             if (processedHeader instanceof StsObscureHeaderComponent stsHeader) {
                 stsHeader.setTotalWidth(totalRightWidth);

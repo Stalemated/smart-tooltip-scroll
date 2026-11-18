@@ -5,8 +5,10 @@ import com.anthonyhilyard.legendarytooltips.tooltip.PaddingComponent;
 import com.anthonyhilyard.legendarytooltips.tooltip.TooltipDecor;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.compat.tierify.component.LegendaryTieredWrapper;
-import com.stalemated.sts.resize.TooltipDimensionManager;
+import com.stalemated.sts.resize.TooltipLayout;
+import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
+import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.state.TooltipDraw;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,13 +19,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
-import static com.stalemated.sts.resize.TooltipDimensionManager.TITLE_BODY_VERTICAL_GAP;
+import static com.stalemated.sts.resize.TooltipLayout.TITLE_BODY_GAP;
 
 public class TierifyLegendaryBridge {
     public static List<ClientTooltipComponent> wrapComponents(List<ClientTooltipComponent> components) {
         if (components == null || components.isEmpty()) return components;
 
-        ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
+        ItemStack currentStack = TooltipContextManager.currentStack();
         if (currentStack == null || currentStack.isEmpty()) return components;
 
         int titleSize = !TooltipDraw.titleComponents().isEmpty() ? TooltipDraw.titleComponents().size() : 1;
@@ -40,13 +42,13 @@ public class TierifyLegendaryBridge {
             LegendaryTieredWrapper wrapper = getLegendaryTieredWrapper(components);
 
             newList.add(0, wrapper);
-            if (TooltipDraw.titleComponents().size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
+            if (TooltipDraw.titleComponents().size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_GAP));
 
             return newList;
         }
         List<ClientTooltipComponent> titleComponentList = new ArrayList<>(components.subList(0, titleSize));
         newList.add(0, new WrappedTitleTooltipComponent(titleComponentList));
-        if (TooltipDraw.titleComponents().size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_VERTICAL_GAP));
+        if (TooltipDraw.titleComponents().size() > 1) newList.add(1, new PaddingComponent(TITLE_BODY_GAP));
 
         return newList;
     }
@@ -76,35 +78,35 @@ public class TierifyLegendaryBridge {
     public static void drawSeparator(GuiGraphics context, List<ClientTooltipComponent> components) {
         if (components.isEmpty()) return;
         if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && TooltipDraw.bodyComponents().isEmpty()) return;
-        ItemStack currentStack = TooltipDimensionManager.getCurrentStack();
+        ItemStack currentStack = TooltipContextManager.currentStack();
         if (currentStack == null || currentStack.isEmpty()) return;
 
         if (LegendaryTooltipsConfig.INSTANCE.nameSeparator.get()) {
             int color = 0xFF996922;
-            int offsetY = TooltipDraw.titleComponents().size() > 1 ? 0 : TITLE_BODY_VERTICAL_GAP;
+            int offsetY = TooltipDraw.titleComponents().size() > 1 ? 0 : TITLE_BODY_GAP;
             if (!LegendaryTooltipsConfig.showModelForItem(currentStack)) {
-                offsetY = TooltipDraw.titleComponents().size() > 1 ? 0 : TITLE_BODY_VERTICAL_GAP / 2;
+                offsetY = TooltipDraw.titleComponents().size() > 1 ? 0 : TITLE_BODY_GAP / 2;
             }
             TooltipDecor.drawSeparator(context.pose(), lastTooltipX, lastTooltipY + components.get(0).getHeight() - offsetY, lastTooltipWidth, color);
         }
     }
 
     public static int getPredictedPinnedHeight(List<ClientTooltipComponent> pinned) {
-        int extraWidth = TooltipDimensionManager.getModelOffset();
+        int extraWidth = TooltipStyles.currentModelOffset();
         
         if (extraWidth > 0 && !pinned.isEmpty()) {
             int wrapperHeight = getWrapperHeight(pinned, extraWidth);
-            int paddingHeight = TooltipDimensionManager.getPaddingOffset(0);
-            if (pinned.size() > 1) paddingHeight += TITLE_BODY_VERTICAL_GAP; // Compensate for PaddingComponent
+            int paddingHeight = TooltipLayout.lineGap(0);
+            if (pinned.size() > 1) paddingHeight += TITLE_BODY_GAP; // Compensate for PaddingComponent
             
             return wrapperHeight + paddingHeight;
         }
 
         int rawPinnedHeight = 0;
         for (int i = 0; i < pinned.size(); i++) {
-            rawPinnedHeight += pinned.get(i).getHeight() + TooltipDimensionManager.getPaddingOffset(i);
+            rawPinnedHeight += pinned.get(i).getHeight() + TooltipLayout.lineGap(i);
         }
-        if (pinned.size() > 1) rawPinnedHeight += TITLE_BODY_VERTICAL_GAP; // Compensate for PaddingComponent
+        if (pinned.size() > 1) rawPinnedHeight += TITLE_BODY_GAP; // Compensate for PaddingComponent
         return rawPinnedHeight;
     }
 
@@ -119,6 +121,6 @@ public class TierifyLegendaryBridge {
             firstLineHeight = ((WrappedTitleTooltipComponent) pinned.get(0)).getFirstLineHeight();
         }
         int yOffset = Math.max(0, (extraWidth - firstLineHeight) / 2);
-        return Math.max(extraWidth, yOffset * 2 + titleHeight - TITLE_BODY_VERTICAL_GAP);
+        return Math.max(extraWidth, yOffset * 2 + titleHeight - TITLE_BODY_GAP);
     }
 }

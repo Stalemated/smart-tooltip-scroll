@@ -1,6 +1,5 @@
 package com.stalemated.sts.compat.tooltipoverhaul;
 
-import com.stalemated.sts.resize.TooltipDimensionManager;
 import dev.xylonity.tooltipoverhaul.client.frame.CustomFrameData;
 import dev.xylonity.tooltipoverhaul.client.frame.CustomFrameManager;
 import dev.xylonity.tooltipoverhaul.client.render.TooltipContext;
@@ -9,6 +8,7 @@ import dev.xylonity.tooltipoverhaul.client.util.RenderUtils;
 import dev.xylonity.tooltipoverhaul.client.util.TextUtils;
 import dev.xylonity.tooltipoverhaul.config.TooltipsConfig;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
+import com.stalemated.sts.state.TooltipContextManager;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +41,7 @@ public class TooltipOverhaulLayoutFixer {
         if (context != null && context.hasIcon()) {
             return Constants.getIconSize(context) + Constants.getIconTitleSeparation(context);
         } else if (context == null) {
-            ItemStack stack = TooltipDimensionManager.getCurrentStack();
+            ItemStack stack = TooltipContextManager.currentStack();
 
             if (stack != null && !stack.isEmpty()) {
                 CustomFrameData frameData = CustomFrameManager.of(stack).orElse(null);
