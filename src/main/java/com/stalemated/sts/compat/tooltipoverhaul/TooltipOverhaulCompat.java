@@ -4,7 +4,6 @@ import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipLayout;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.scroll.resetter.ExternalScrollStateResetter;
 import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.mixin.client.compat.tooltipoverhaul.TooltipContextAccessor;
 import com.stalemated.sts.state.TooltipContext;
@@ -14,10 +13,9 @@ import java.util.List;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
-public class TooltipOverhaulCompat implements ExternalScrollStateResetter {
+public class TooltipOverhaulCompat {
 
-    @Override
-    public void resetState() {
+    public static void resetScrollState() {
         if (!SmartTooltipScrollConfigRegistry.CONFIG.get().tooltip_overhaul_compat) return;
         try {
             TooltipScrollState.reset();

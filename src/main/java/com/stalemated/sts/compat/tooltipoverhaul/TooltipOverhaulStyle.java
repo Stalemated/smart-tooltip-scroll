@@ -50,4 +50,9 @@ public final class TooltipOverhaulStyle implements TooltipStyle {
     public FormattedCharSequence centeredTitle(FormattedCharSequence title) {
         return next.centeredTitle(title);
     }
+
+    @Override
+    public void resetExternalScroll() {
+        TooltipOverhaulCompat.resetScrollState();
+    }
 }

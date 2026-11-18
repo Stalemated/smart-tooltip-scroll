@@ -76,6 +76,11 @@ public final class LegendaryTooltipsStyle implements TooltipStyle {
         return currentModelOffset() > 0 ? OrderedTextUtil.stripSpaces(title) : title;
     }
 
+    @Override
+    public void resetExternalScroll() {
+        next.resetExternalScroll();
+    }
+
     private int currentModelOffset() {
         return modelOffset(TooltipContextManager.currentStack(), TooltipDraw.titleComponents());
     }

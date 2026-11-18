@@ -42,4 +42,8 @@ public final class VanillaTooltipStyle implements TooltipStyle {
     public FormattedCharSequence centeredTitle(FormattedCharSequence title) {
         return title;
     }
+
+    @Override
+    public void resetExternalScroll() {
+    }
 }

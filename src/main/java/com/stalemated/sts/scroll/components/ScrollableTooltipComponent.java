@@ -4,10 +4,8 @@ import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.sts.resize.TooltipBounds;
 import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
-import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.state.StateManager;
-import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.state.TooltipDraw;
 import org.joml.Matrix4f;
 
@@ -47,9 +45,10 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
         this.maxTextWidth = Math.max(0, this.maxWidth - SCROLLBAR_WIDTH);
         this.totalHeight = height;
         this.scrollbarHeight = this.maxHeight - SCROLLBAR_PADDING_Y;
+    }
 
-        TooltipIdentityContext context = new TooltipIdentityContext(TooltipContextManager.currentStack(), this.components, textRenderer);
-        TooltipScrollManager.INSTANCE.onTooltipRendered(this.totalHeight - this.scrollbarHeight, context);
+    public int maxScroll() {
+        return this.totalHeight - this.scrollbarHeight;
     }
 
     @Override
@@ -99,7 +98,7 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
     }
 
     private void drawScrollbar(GuiGraphics context, int x, int y) {
-        int maxScroll = this.totalHeight - this.scrollbarHeight;
+        int maxScroll = maxScroll();
         if (maxScroll <= 0) return;
 
         int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();

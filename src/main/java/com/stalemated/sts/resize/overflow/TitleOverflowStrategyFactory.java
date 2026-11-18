@@ -12,15 +12,10 @@ public class TitleOverflowStrategyFactory {
 
     public static TitleOverflowStrategy getStrategy() {
         TitleOverflowMode mode = SmartTooltipScrollConfigRegistry.CONFIG.get().title_overflow_mode;
-        
-        if (mode == null) {
-            return SCROLL_STRATEGY; // Fallback
-        }
-
         return switch (mode) {
             case TRUNCATE -> TRUNCATE_STRATEGY;
             case WRAP -> WRAP_STRATEGY;
-            default -> SCROLL_STRATEGY;
+            case SCROLL -> SCROLL_STRATEGY;
         };
     }
 }

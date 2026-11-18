@@ -5,10 +5,8 @@ import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.scroll.components.ScrollableTooltipComponent;
-import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.state.TooltipContext;
-import com.stalemated.sts.state.TooltipContextManager;
 import com.stalemated.sts.state.TooltipDraw;
 import com.stalemated.sts.util.TooltipWrapUtil;
 import net.minecraft.client.gui.Font;
@@ -71,7 +69,7 @@ public final class TooltipLayout {
 
     public static List<ClientTooltipComponent> withScrollableBody(List<ClientTooltipComponent> title, List<ClientTooltipComponent> rawBody, int maxWidth, int maxHeight, int titleHeight, Font font) {
         if (rawBody.isEmpty()) {
-            TooltipScrollManager.INSTANCE.onTooltipRendered(0, new TooltipIdentityContext(TooltipContextManager.currentStack(), rawBody, font));
+            TooltipScrollManager.INSTANCE.track(rawBody, font, 0);
             return new ArrayList<>(title);
         }
 
@@ -81,11 +79,13 @@ public final class TooltipLayout {
         if (titleHeight + height(body) > maxHeight) {
             body = TooltipWrapUtil.wrapComponents(rawBody, maxWidth - ScrollableTooltipComponent.SCROLLBAR_WIDTH, font, false);
             int visibleHeight = Math.max(maxHeight - titleHeight, TooltipBounds.MIN_HEIGHT);
-            laidOut.add(new ScrollableTooltipComponent(body, title, visibleHeight, maxWidth, font));
+            ScrollableTooltipComponent scrollableBody = new ScrollableTooltipComponent(body, title, visibleHeight, maxWidth, font);
+            TooltipScrollManager.INSTANCE.track(body, font, scrollableBody.maxScroll());
+            laidOut.add(scrollableBody);
             return laidOut;
         }
 
-        TooltipScrollManager.INSTANCE.onTooltipRendered(0, new TooltipIdentityContext(TooltipContextManager.currentStack(), body, font));
+        TooltipScrollManager.INSTANCE.track(body, font, 0);
         laidOut.addAll(body);
         return laidOut;
     }

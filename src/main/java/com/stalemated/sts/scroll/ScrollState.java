@@ -1,7 +1,6 @@
 package com.stalemated.sts.scroll;
 
 import com.stalemated.lib.util.math.MathUtils;
-import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 
 public class ScrollState {
     private int targetScroll = 0;
@@ -14,26 +13,26 @@ public class ScrollState {
     private static final int SMOOTHNESS_TIME_MS = 1000;
     public static final int PIXELS_PER_LINE = 10;
 
-    public void updateMaxScroll(int newMaxScroll, long currentTime) {
+    public void updateMaxScroll(int newMaxScroll, long currentTime, ScrollSettings settings) {
         this.maxScroll = Math.max(0, newMaxScroll);
         
         int oldTarget = this.targetScroll;
         this.targetScroll = MathUtils.clamp(this.targetScroll, 0, this.maxScroll);
         
         if (this.targetScroll != oldTarget) {
-            this.startScroll = getScrollOffset(currentTime);
+            this.startScroll = getScrollOffset(currentTime, settings);
             this.scrollStartTime = currentTime;
         }
     }
 
-    public boolean scroll(double amount, long currentTime) {
+    public boolean scroll(double amount, long currentTime, ScrollSettings settings) {
         if (this.maxScroll <= 0) return false;
 
         if (currentTime - this.lastRenderTime < MAX_UNHOVERED_RENDER_TIME_MS) {
-            this.startScroll = getScrollOffset(currentTime);
+            this.startScroll = getScrollOffset(currentTime, settings);
             this.scrollStartTime = currentTime;
             
-            this.targetScroll -= (int) (amount * PIXELS_PER_LINE * SmartTooltipScrollConfigRegistry.CONFIG.get().lines_per_scroll);
+            this.targetScroll -= (int) (amount * PIXELS_PER_LINE * settings.linesPerScroll());
             this.targetScroll = MathUtils.clamp(this.targetScroll, 0, this.maxScroll);
             return true;
         }
@@ -46,10 +45,10 @@ public class ScrollState {
         this.scrollStartTime = currentTime;
     }
 
-    public int getScrollOffset(long currentTime) {
+    public int getScrollOffset(long currentTime, ScrollSettings settings) {
         if (this.targetScroll == this.startScroll) return this.targetScroll;
         
-        float smoothness = SmartTooltipScrollConfigRegistry.CONFIG.get().scroll_smoothness;
+        float smoothness = settings.smoothness();
         if (smoothness <= 0.0f) return this.targetScroll;
 
         int durationMs = (int) (smoothness * SMOOTHNESS_TIME_MS);
@@ -61,15 +60,7 @@ public class ScrollState {
             return this.targetScroll;
         }
         
-        double t = (double) elapsed / durationMs;
-        double progress;
-        
-        switch (SmartTooltipScrollConfigRegistry.CONFIG.get().scroll_easing_style) {
-            case CLASSIC -> progress = MathUtils.lerp(0.0, 1.0, t);
-            case SNAPPY -> progress = MathUtils.easeOutExpo(t);
-            default -> progress = MathUtils.easeOutCubic(t);
-        }
-        
+        double progress = settings.easing().progress((double) elapsed / durationMs);
         return (int) (this.startScroll + (this.targetScroll - this.startScroll) * progress);
     }
     
