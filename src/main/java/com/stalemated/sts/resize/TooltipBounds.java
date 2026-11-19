@@ -19,12 +19,17 @@ public record TooltipBounds(int maxWidth, int maxHeight) {
     }
 
     public static TooltipBounds forWindow(int scaledWidth, int scaledHeight, int widthPercent, int heightPercent) {
+        requirePercentage("max_width_percentage", widthPercent);
+        requirePercentage("max_height_percentage", heightPercent);
         return new TooltipBounds(maxSide(scaledWidth, widthPercent, PADDING_X, MIN_WIDTH), maxSide(scaledHeight, heightPercent, PADDING_Y, MIN_HEIGHT));
+    }
+
+    private static void requirePercentage(String option, int percent) {
+        if (percent < 1 || percent > 100) throw new IllegalArgumentException(option + " must be 1-100, got " + percent);
     }
 
     private static int maxSide(int windowSide, int percent, int padding, int minSide) {
         int usableSide = windowSide - padding;
-        int safePercent = MathUtils.clamp(percent, 1, 100);
-        return MathUtils.clamp(usableSide * safePercent / 100, minSide, usableSide);
+        return MathUtils.clamp(usableSide * percent / 100, minSide, usableSide);
     }
 }

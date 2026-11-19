@@ -3,6 +3,7 @@ package com.stalemated.sts.resize;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TooltipBoundsTest {
     @Test
@@ -23,5 +24,12 @@ class TooltipBoundsTest {
     @Test
     void widthAndHeightFollowTheirOwnPercentages() {
         assertEquals(new TooltipBounds(392, 148), TooltipBounds.forWindow(400, 300, 100, 50));
+    }
+
+    @Test
+    void aWidthOfZeroPercentIsRejected() {
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> TooltipBounds.forWindow(400, 300, 0, 50));
+
+        assertEquals("max_width_percentage must be 1-100, got 0", error.getMessage());
     }
 }

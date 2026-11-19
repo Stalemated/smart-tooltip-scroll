@@ -24,4 +24,16 @@ class SmartTooltipScrollConfigLoadTest {
         assertEquals(ScrollEasingStyle.SMOOTH, manager.get().scroll_easing_style);
         assertEquals(TitleOverflowMode.SCROLL, manager.get().title_overflow_mode);
     }
+
+    @Test
+    void zeroPercentagesInTheConfigFileLoadAsOne(@TempDir Path dir) throws Exception {
+        Path file = dir.resolve("smart_tooltip_scroll.json5");
+        Files.writeString(file, "{\n  max_width_percentage: 0,\n  max_height_percentage: 0\n}\n");
+
+        LocalConfigManager<SmartTooltipScrollConfig> manager = SLibConfig.local("smart_tooltip_scroll_percentage_test", SmartTooltipScrollConfig.class).configPath(file).build();
+        manager.register();
+
+        assertEquals(1, manager.get().max_width_percentage);
+        assertEquals(1, manager.get().max_height_percentage);
+    }
 }
