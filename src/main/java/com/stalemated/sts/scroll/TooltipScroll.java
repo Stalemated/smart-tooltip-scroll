@@ -6,6 +6,7 @@ import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.identity.TooltipIdentityTracker;
+import com.stalemated.sts.scroll.identity.TooltipLines;
 import com.stalemated.sts.state.TooltipContexts;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -23,7 +24,7 @@ public class TooltipScroll {
     private TooltipScroll() {}
 
     public void track(List<ClientTooltipComponent> body, Font font, int maxScroll) {
-        TooltipIdentityContext context = new TooltipIdentityContext(TooltipContexts.currentStack(), body, font);
+        TooltipIdentityContext context = new TooltipIdentityContext(TooltipContexts.currentStack(), TooltipLines.measure(body, font));
         long currentTime = now();
 
         if (identityTracker.hasTooltipChanged(context) || scrollState.isUnhovered(currentTime)) {

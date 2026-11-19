@@ -1,46 +1,22 @@
 package com.stalemated.sts.scroll.identity;
 
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class TooltipIdentityTracker {
     private ItemStack lastRenderedStack = null;
-    private int lastTooltipIdentityHash = 0;
+    private TooltipLines lastLines = TooltipLines.NONE;
 
     public boolean hasTooltipChanged(TooltipIdentityContext context) {
         ItemStack currentStack = context.itemStack();
-        int identityHash = calculateIdentityHash(context);
+        TooltipLines lines = context.lines();
 
-        boolean isDifferentTooltip = false;
-
-        if (currentStack != null && lastRenderedStack != null) {
-            if (!ItemStack.matches(currentStack, lastRenderedStack)) {
-                isDifferentTooltip = true;
-            }
-        } else if (currentStack != lastRenderedStack) {
-            isDifferentTooltip = true;
-        } else if (identityHash != lastTooltipIdentityHash) {
-            isDifferentTooltip = true; // Fallback for non-item tooltips
-        }
-
-        return isDifferentTooltip;
+        if (currentStack != null && lastRenderedStack != null) return !ItemStack.matches(currentStack, lastRenderedStack) || !lines.sameHeights(lastLines);
+        if (currentStack != lastRenderedStack) return true;
+        return !lines.equals(lastLines); // Fallback for non-item tooltips
     }
 
     public void updateIdentity(TooltipIdentityContext context) {
         this.lastRenderedStack = context.itemStack();
-        this.lastTooltipIdentityHash = calculateIdentityHash(context);
-    }
-
-    private int calculateIdentityHash(TooltipIdentityContext context) {
-        int hash = 0;
-        for (ClientTooltipComponent comp : context.bodyComponents()) {
-            if (comp != null) {
-                hash = 31 * hash + comp.getHeight();
-                if (context.textRenderer() != null) {
-                    hash = 31 * hash + comp.getWidth(context.textRenderer());
-                }
-            }
-        }
-        return hash;
+        this.lastLines = context.lines();
     }
 }
