@@ -22,6 +22,11 @@ class TooltipBoundsTest {
     }
 
     @Test
+    void aWindowSmallerThanTheMinimumTooltipStillGetsTheMinimumSize() {
+        assertEquals(new TooltipBounds(TooltipBounds.MIN_WIDTH, TooltipBounds.MIN_HEIGHT), TooltipBounds.forWindow(60, 30, 50, 50));
+    }
+
+    @Test
     void widthAndHeightFollowTheirOwnPercentages() {
         assertEquals(new TooltipBounds(392, 148), TooltipBounds.forWindow(400, 300, 100, 50));
     }

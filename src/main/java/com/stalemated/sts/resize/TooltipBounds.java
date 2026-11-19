@@ -1,7 +1,6 @@
 package com.stalemated.sts.resize;
 
 import com.mojang.blaze3d.platform.Window;
-import com.stalemated.lib.util.math.MathUtils;
 import com.stalemated.sts.config.SmartTooltipScrollConfig;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import net.minecraft.client.Minecraft;
@@ -30,6 +29,6 @@ public record TooltipBounds(int maxWidth, int maxHeight) {
 
     private static int maxSide(int windowSide, int percent, int padding, int minSide) {
         int usableSide = windowSide - padding;
-        return MathUtils.clamp(usableSide * percent / 100, minSide, usableSide);
+        return Math.max(usableSide * percent / 100, minSide);
     }
 }
