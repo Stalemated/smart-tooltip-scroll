@@ -26,6 +26,17 @@ publish.modrinth_environment = "client_only"
 publish.requires = ["s-lib"]
 publish.optional = ["yacl"]
 
+dev.legendary_tooltips = true
+dev.iceberg = true
+dev.emi = true
+dev.tooltip_overhaul = false
+dev.obscure_tooltips = false
+dev.tierify = true
+dev.puffish_skills = true
+dev.spell_engine = true
+dev.spell_engine_latest = false
+dev.cta = true
+
 
 ["1.20.1"]
 mod.mc_releases = ["1.20", "1.20.1"]
@@ -48,6 +59,23 @@ deps.obscure_tooltips = "curse.maven:obscure-tooltips-715660:7568505"
 deps.fragmentum = "dev.obscuria:fragmentum-api:1.20.1-1.1.0"
 deps.spell_engine = "maven.modrinth:spell-engine:0.15.12+1.20.1"
 deps.cta = "com.stalemated.cta:custom_tooltip_api-fabric:5.3.0.1+1.20.1"
+deps.fragmentum_mod = "maven.modrinth:fragmentum:ZAzQplZj"
+deps.cloth_config = "maven.modrinth:cloth-config:11.1.136+fabric"
+deps.player_animator = "maven.modrinth:playeranimator:1.0.2-rc1+1.20-fabric"
+deps.spell_power = "maven.modrinth:spell-power:0.12.0+1.20.1"
+deps.spell_engine_latest = "maven.modrinth:spell-engine:1.10.10+1.20.1-fabric"
+deps.spell_power_latest = "maven.modrinth:spell-power:1.6.1+1.20.1-fabric"
+deps.mixinextras_fabric = "io.github.llamalad7:mixinextras-fabric:0.5.5"
+runtime.legendary_tooltips = ["legendary_tooltips", "iceberg", "prism", "forge_config_api_port"]
+runtime.iceberg = ["iceberg"]
+runtime.emi = ["emi"]
+runtime.tooltip_overhaul = ["tooltip_overhaul"]
+runtime.obscure_tooltips = ["obscure_tooltips", "fragmentum_mod"]
+runtime.tierify = ["tierify", "necronomicon", "cloth_config"]
+runtime.puffish_skills = ["puffish_skills"]
+runtime.spell_engine = ["spell_engine", "spell_power", "player_animator", "cloth_config"]
+runtime.spell_engine_latest = ["spell_engine_latest", "spell_power_latest", "player_animator", "cloth_config", "mixinextras_fabric"]
+runtime.cta = ["cta"]
 
 [forge."1.20.1"]
 mod.mc_compat = "[1.20, 1.20.1]"
@@ -64,6 +92,15 @@ deps.obscure_tooltips = "maven.modrinth:obscure-tooltips:sFFZXXl8"
 deps.fragmentum = "dev.obscuria:fragmentum-api:1.20.1-1.1.0"
 deps.spell_engine = "maven.modrinth:spell-engine:1.10.10+1.20.1-forge"
 deps.cta = "com.stalemated.cta:custom_tooltip_api-forge:5.3.0.1+1.20.1"
+deps.puffish_skills = "maven.modrinth:skills:eLDXb816"
+deps.fragmentum_mod = "maven.modrinth:fragmentum:1nysmgB4"
+runtime.legendary_tooltips = ["legendary_tooltips", "iceberg", "prism"]
+runtime.iceberg = ["iceberg"]
+runtime.emi = ["emi", "emiffect"]
+runtime.tooltip_overhaul = ["tooltip_overhaul"]
+runtime.obscure_tooltips = ["obscure_tooltips", "fragmentum_mod"]
+runtime.puffish_skills = ["puffish_skills"]
+runtime.cta = ["cta"]
 
 
 ["1.20.4"]

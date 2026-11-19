@@ -10,6 +10,7 @@ plugins {
     id("mod-conventions")
     id("mod-publishing")
     id("slib")
+    id("dev-mods")
 }
 
 dependencies {

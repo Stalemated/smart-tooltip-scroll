@@ -12,12 +12,12 @@ plugins {
     id("mod-conventions")
     id("mod-publishing")
     id("slib")
+    id("dev-mods")
 }
 
 val modId = property("mod.id") as String
 val mixinConfigs = listOf("$modId.mixins.json", "$modId-forge.mixins.json")
 val compatMods = listOf("legendary_tooltips", "iceberg", "prism", "emi", "tooltip_overhaul", "obscure_tooltips", "spell_engine")
-val devRuntimeMods = listOf("legendary_tooltips", "iceberg", "prism", "emi", "emiffect", "cta")
 
 repositories {
     exclusiveContent {
@@ -43,7 +43,6 @@ dependencies {
 
     compatMods.forEach { mod -> findProperty("deps.$mod")?.let { modCompileOnly(it as String) } }
     listOf("fragmentum", "tierify").forEach { lib -> findProperty("deps.$lib")?.let { compileOnly(it as String) } }
-    devRuntimeMods.forEach { mod -> findProperty("deps.$mod")?.let { modRuntimeOnly(it as String) { isTransitive = false } } }
 
     testRuntimeOnly(files(sourceSets.main.get().runtimeClasspath))
     testRuntimeOnly("org.slf4j:slf4j-api:${property("deps.slf4j")}")

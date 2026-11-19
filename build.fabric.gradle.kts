@@ -3,13 +3,13 @@ plugins {
     id("mod-conventions")
     id("mod-publishing")
     id("slib")
+    id("dev-mods")
 }
 
 val compatMods = listOf(
     "legendary_tooltips", "iceberg", "prism", "forge_config_api_port", "emi", "tooltip_overhaul",
     "puffish_skills", "tierify", "necronomicon", "obscure_tooltips", "spell_engine",
 )
-val devRuntimeMods = listOf("emi", "cta")
 
 repositories {
     exclusiveContent {
@@ -39,7 +39,6 @@ dependencies {
 
     compatMods.forEach { mod -> findProperty("deps.$mod")?.let { modCompileOnly(it as String) } }
     findProperty("deps.fragmentum")?.let { compileOnly(it as String) }
-    devRuntimeMods.forEach { mod -> findProperty("deps.$mod")?.let { modLocalRuntime(it as String) { isTransitive = false } } }
 
     testRuntimeOnly(files(sourceSets.main.get().compileClasspath))
 }
