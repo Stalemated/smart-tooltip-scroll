@@ -4,7 +4,7 @@ import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.stalemated.lib.component.IndentedTextTooltipComponent;
 import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class LegendaryTieredWrapper implements ClientTooltipComponent {
 
     public LegendaryTieredWrapper(List<ClientTooltipComponent> titleComponents) {
         this.titleComponents = titleComponents;
-        ItemStack currentStack = TooltipContextManager.currentStack();
+        ItemStack currentStack = TooltipContexts.currentStack();
         this.modelComponent = new ItemModelComponent(currentStack);
         this.extraWidth = TooltipStyles.currentModelOffset();
     }

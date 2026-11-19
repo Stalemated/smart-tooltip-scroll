@@ -21,7 +21,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositione
 @RequiresMod("emi")
 @Pseudo
 @Mixin(targets = "dev.emi.emi.EmiRenderHelper")
-public class EmiRenderHelperMixin {
+public abstract class EmiRenderHelperMixin {
 
     @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/gui/screens/Screen;Ldev/emi/emi/runtime/EmiDrawContext;Ljava/util/List;IIILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
             at = @At("HEAD"), argsOnly = true, ordinal = 2)

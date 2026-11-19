@@ -2,9 +2,9 @@ package com.stalemated.sts.resize.components;
 
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipStyles;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import com.stalemated.sts.state.TooltipDraw;
-import com.stalemated.sts.util.OrderedTextUtil;
+import com.stalemated.sts.util.FormattedCharSequences;
 import com.stalemated.sts.util.StsManagedTitle;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -41,7 +41,7 @@ public class ScrollingTitleTooltipComponent extends ClientTextTooltip implements
 
     private int getOffset() {
         return TooltipStyles.loaded().modelOffset(
-            TooltipContextManager.currentStack(),
+            TooltipContexts.currentStack(),
             TooltipDraw.titleComponents()
         );
     }
@@ -56,7 +56,7 @@ public class ScrollingTitleTooltipComponent extends ClientTextTooltip implements
 
         int offset = getOffset();
         int overflowWidth = textWidth - this.maxTitleWidth;
-        int identity = OrderedTextUtil.getStringFromOrderedText(this.text).hashCode();
+        int identity = FormattedCharSequences.plainString(this.text).hashCode();
         long elapsedTime = TITLE_SCROLL_CLOCK.elapsedMillis(identity);
         int scrollOffset = ScrollMathUtil.calculateScrollOffset(overflowWidth, SmartTooltipScrollConfigRegistry.CONFIG.get().title_scroll_speed, SmartTooltipScrollConfigRegistry.CONFIG.get().title_scroll_pause_time_ms, elapsedTime);
         int startX = x;

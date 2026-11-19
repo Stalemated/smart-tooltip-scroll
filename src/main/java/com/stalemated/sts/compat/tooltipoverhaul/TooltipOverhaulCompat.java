@@ -4,7 +4,7 @@ import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipLayout;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import com.stalemated.sts.mixin.client.compat.tooltipoverhaul.TooltipContextAccessor;
 import com.stalemated.sts.state.TooltipContext;
 import com.stalemated.sts.state.TooltipDraw;
@@ -17,13 +17,11 @@ public class TooltipOverhaulCompat {
 
     public static void resetScrollState() {
         if (!SmartTooltipScrollConfigRegistry.CONFIG.get().tooltip_overhaul_compat) return;
-        try {
-            TooltipScrollState.reset();
-        } catch (Exception ignored) {}
+        TooltipScrollState.reset();
     }
 
     public static void applyDimensions(Object contextObj) {
-        TooltipOverhaulStateManager.setStsActive(false);
+        TooltipOverhaulDraw.setStsActive(false);
 
         if (!SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions || !SmartTooltipScrollConfigRegistry.CONFIG.get().tooltip_overhaul_compat) return;
         if (!(contextObj instanceof dev.xylonity.tooltipoverhaul.client.render.TooltipContext context)) return;
@@ -32,13 +30,13 @@ public class TooltipOverhaulCompat {
         if (componentsListRaw == null || componentsListRaw.isEmpty()) return;
 
         ItemStack stack = context.getStack();
-        TooltipContext stsCtx = TooltipContextManager.peek();
+        TooltipContext stsCtx = TooltipContexts.peek();
 
         boolean isItem = stsCtx != null || !stack.isEmpty();
         boolean isForced = SharedTooltipState.isCustomDimensionsRequested();
 
         if (isItem || isForced) {
-            TooltipOverhaulStateManager.setContext(context);
+            TooltipOverhaulDraw.setContext(context);
             TooltipDraw.begin(context.getGraphics(), context.getFont());
 
             if (stsCtx == null) {
@@ -57,7 +55,7 @@ public class TooltipOverhaulCompat {
             
             ((TooltipContextAccessor) context).smart_tooltip_scroll$setComponents(processed);
 
-            TooltipOverhaulStateManager.setStsActive(true);
+            TooltipOverhaulDraw.setStsActive(true);
         }
     }
 }

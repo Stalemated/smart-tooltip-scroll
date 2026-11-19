@@ -8,45 +8,30 @@ import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
-public class TooltipWrapUtil {
-    public static boolean isHandlingCustomWrap = false;
+public class TooltipWrap {
 
     public static List<ClientTooltipComponent> wrapComponents(List<ClientTooltipComponent> components, int targetWidth, Font textRenderer, boolean isTitle) {
+        if (textRenderer == null) return new ArrayList<>(components);
+
         List<ClientTooltipComponent> wrappedComponents = new ArrayList<>();
 
         for (ClientTooltipComponent comp : components) {
-            boolean wrappedFallback = false;
+            Optional<FormattedCharSequence> text = TooltipStyleUtils.getExtractedTextValue(comp);
 
-            if (textRenderer != null) {
-                Optional<FormattedCharSequence> extracted = TooltipStyleUtils.getExtractedTextValue(comp);
-
-                if (extracted.isPresent()) {
-                    FormattedCharSequence value = extracted.get();
-
-                    if (textRenderer.width(value) > targetWidth) {
-                        MutableComponent mutable = TooltipStyleUtils.convertOrderedTextToMutable(value);
-                        wrappedFallback = handleCustomWrap(targetWidth, textRenderer, wrappedComponents, mutable, isTitle);
-                    }
-                }
-            }
-            if (wrappedFallback) continue;
-            wrappedComponents.add(comp);
+            if (text.isPresent() && textRenderer.width(text.get()) > targetWidth) wrapText(TooltipStyleUtils.convertOrderedTextToMutable(text.get()), targetWidth, textRenderer, wrappedComponents, isTitle);
+            else wrappedComponents.add(comp);
         }
         return wrappedComponents;
     }
 
-    public static boolean handleCustomWrap(int targetWidth, Font textRenderer, List<ClientTooltipComponent> wrappedComponents, FormattedText visitable, boolean isTitle) {
-        isHandlingCustomWrap = true;
+    private static void wrapText(FormattedText visitable, int targetWidth, Font textRenderer, List<ClientTooltipComponent> wrappedComponents, boolean isTitle) {
         List<FormattedCharSequence> wrapped = new ArrayList<>(textRenderer.split(visitable, targetWidth));
-        isHandlingCustomWrap = false;
 
         List<ClientTooltipComponent> titleLines = new ArrayList<>();
 
@@ -74,6 +59,5 @@ public class TooltipWrapUtil {
             if (titleLines.size() == 1) wrappedComponents.add(titleLines.get(0));
             else wrappedComponents.add(new WrappedTitleTooltipComponent(titleLines));
         }
-        return true;
     }
 }

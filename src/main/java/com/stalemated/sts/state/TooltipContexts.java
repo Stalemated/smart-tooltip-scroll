@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import net.minecraft.world.item.ItemStack;
 
-public class TooltipContextManager {
+public class TooltipContexts {
     private static final Deque<TooltipContext> contextStack = new ArrayDeque<>();
     private static final int MAX_STACK_DEPTH = 10;
 

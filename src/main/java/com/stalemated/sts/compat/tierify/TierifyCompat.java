@@ -1,10 +1,10 @@
 package com.stalemated.sts.compat.tierify;
 
+import com.stalemated.sts.compat.LoadedMods;
 import com.stalemated.sts.config.SmartTooltipScrollConfig;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipLayout;
-import com.stalemated.sts.state.StateManager;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import com.stalemated.sts.state.TooltipDraw;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,29 +13,32 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositione
 
 import java.util.List;
 
-import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
-import static com.stalemated.sts.state.StateManager.IS_TO_LOADED;
-
 public final class TierifyCompat {
+    private static boolean drawing;
+
     private TierifyCompat() {
+    }
+
+    public static boolean isDrawing() {
+        return drawing;
     }
 
     public static void beginDraw(GuiGraphics graphics, Font font, int x, int y, ClientTooltipPositioner positioner) {
         TooltipDraw.begin(graphics, font);
-        StateManager.isTierifyTooltip = true;
-        if (IS_TO_LOADED) TierifyTOBridge.captureState(graphics, font, x, y, positioner);
+        drawing = true;
+        if (LoadedMods.TOOLTIP_OVERHAUL) TierifyTOBridge.captureState(graphics, font, x, y, positioner);
     }
 
     public static List<ClientTooltipComponent> layOut(List<ClientTooltipComponent> components) {
         List<ClientTooltipComponent> laidOut = components;
 
         if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions) {
-            if (IS_LT_LOADED) laidOut = TooltipLayout.apply(components, TooltipContextManager.peek(), TierifyLegendaryBridge::getPredictedPinnedHeight);
-            else if (!IS_TO_LOADED) laidOut = TooltipLayout.apply(components, TooltipContextManager.peek());
+            if (LoadedMods.LEGENDARY_TOOLTIPS) laidOut = TooltipLayout.apply(components, TooltipContexts.peek(), TierifyLegendaryBridge::getPredictedPinnedHeight);
+            else if (!LoadedMods.TOOLTIP_OVERHAUL) laidOut = TooltipLayout.apply(components, TooltipContexts.peek());
         }
 
-        if (IS_LT_LOADED) return TierifyLegendaryBridge.wrapComponents(laidOut);
-        if (IS_TO_LOADED) return TierifyTOBridge.wrapComponents(laidOut);
+        if (LoadedMods.LEGENDARY_TOOLTIPS) return TierifyLegendaryBridge.wrapComponents(laidOut);
+        if (LoadedMods.TOOLTIP_OVERHAUL) return TierifyTOBridge.wrapComponents(laidOut);
         return laidOut;
     }
 
@@ -46,15 +49,15 @@ public final class TierifyCompat {
     }
 
     public static void recordBackground(int x, int y, int width) {
-        if (IS_LT_LOADED) TierifyLegendaryBridge.setTooltipPosition(x, y, width);
+        if (LoadedMods.LEGENDARY_TOOLTIPS) TierifyLegendaryBridge.setTooltipPosition(x, y, width);
     }
 
     public static void endDraw(GuiGraphics graphics, List<ClientTooltipComponent> components) {
-        if (IS_LT_LOADED) TierifyLegendaryBridge.drawSeparator(graphics, components);
+        if (LoadedMods.LEGENDARY_TOOLTIPS) TierifyLegendaryBridge.drawSeparator(graphics, components);
 
-        StateManager.isTierifyTooltip = false;
+        drawing = false;
         TooltipDraw.end();
 
-        if (IS_TO_LOADED) TierifyTOBridge.clearState();
+        if (LoadedMods.TOOLTIP_OVERHAUL) TierifyTOBridge.clearState();
     }
 }

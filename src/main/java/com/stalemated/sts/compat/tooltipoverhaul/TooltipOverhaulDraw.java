@@ -5,7 +5,7 @@ import com.stalemated.sts.state.TooltipDraw;
 import dev.xylonity.tooltipoverhaul.client.render.TooltipContext;
 import dev.xylonity.tooltipoverhaul.client.util.TooltipScrollState;
 
-public class TooltipOverhaulStateManager {
+public class TooltipOverhaulDraw {
     private static boolean stsActiveForCurrentTooltip = false;
     private static TooltipContext currentTOContext = null;
 
@@ -51,9 +51,7 @@ public class TooltipOverhaulStateManager {
     public static boolean takeOverToScroll() {
         if (!stsActiveForCurrentTooltip || !SmartTooltipScrollConfigRegistry.CONFIG.get().tooltip_overhaul_compat) return false;
 
-        try {
-            TooltipScrollState.reset();
-        } catch (Exception ignored) {}
+        TooltipScrollState.reset();
         return true;
     }
 }

@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.stalemated.lib.mixin.RequiresMod;
 import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulCompat;
 import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulLayoutFixer;
-import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulStateManager;
+import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulDraw;
 import dev.xylonity.tooltipoverhaul.client.render.TooltipContext;
 import net.minecraft.world.phys.Vec2;
 import org.spongepowered.asm.mixin.Final;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @RequiresMod("tooltipoverhaul")
 @Pseudo
 @Mixin(targets = "dev.xylonity.tooltipoverhaul.client.render.TooltipRenderer")
-public class TooltipRendererMixin {
+public abstract class TooltipRendererMixin {
 
     @Final
     @Shadow
@@ -37,21 +37,21 @@ public class TooltipRendererMixin {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void smart_tooltip_scroll$beginRender(CallbackInfoReturnable<Boolean> cir) {
-        TooltipOverhaulStateManager.ensureContext(this.context);
+        TooltipOverhaulDraw.ensureContext(this.context);
     }
 
     @Inject(method = "renderOut", at = @At("HEAD"))
     private void smart_tooltip_scroll$beginRenderOut(float progress, CallbackInfo ci) {
-        TooltipOverhaulStateManager.ensureContext(this.context);
+        TooltipOverhaulDraw.ensureContext(this.context);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     private void smart_tooltip_scroll$endRender(CallbackInfoReturnable<Boolean> cir) {
-        TooltipOverhaulStateManager.clearContext();
+        TooltipOverhaulDraw.clearContext();
     }
 
     @Inject(method = "renderOut", at = @At("TAIL"))
     private void smart_tooltip_scroll$endRenderOut(float progress, CallbackInfo ci) {
-        TooltipOverhaulStateManager.clearContext();
+        TooltipOverhaulDraw.clearContext();
     }
 }

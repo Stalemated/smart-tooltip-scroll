@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.stalemated.lib.client.ClientPlatformHelper;
 import net.minecraft.client.KeyMapping;
 
-public class StsKeybinds {
+public class SmartTooltipScrollKeys {
     public static final KeyMapping SCROLL_BYPASS_KEY = new KeyMapping(
             "key.smart_tooltip_scroll.bypass_scroll",
             InputConstants.Type.KEYSYM,

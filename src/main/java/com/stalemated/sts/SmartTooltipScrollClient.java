@@ -3,8 +3,8 @@ package com.stalemated.sts;
 import com.stalemated.lib.client.SLibConfigScreens;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.config.SmartTooltipScrollConfigScreen;
-import com.stalemated.sts.keybind.StsKeybinds;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.keybind.SmartTooltipScrollKeys;
+import com.stalemated.sts.state.TooltipContexts;
 import net.minecraft.world.item.ItemStack;
 
 //? if fabric {
@@ -30,7 +30,7 @@ implements ClientModInitializer
 
     static void init() {
         SmartTooltipScrollConfigRegistry.register();
-        StsKeybinds.register();
+        SmartTooltipScrollKeys.register();
         SLibConfigScreens.register(SmartTooltipScroll.MOD_ID, () -> SmartTooltipScrollConfigScreen::create);
         registerTooltipEvent();
     }
@@ -47,6 +47,6 @@ implements ClientModInitializer
 
     private static void onItemTooltip(ItemStack stack) {
         if (stack.isEmpty()) return;
-        TooltipContextManager.push(stack);
+        TooltipContexts.push(stack);
     }
 }

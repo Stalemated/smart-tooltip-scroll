@@ -8,7 +8,7 @@ import dev.xylonity.tooltipoverhaul.client.util.RenderUtils;
 import dev.xylonity.tooltipoverhaul.client.util.TextUtils;
 import dev.xylonity.tooltipoverhaul.config.TooltipsConfig;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,12 +38,12 @@ public class TooltipOverhaulLayoutFixer {
     }
 
     public static int getIconOffset() {
-        TooltipContext context = TooltipOverhaulStateManager.getCurrentTOContext();
+        TooltipContext context = TooltipOverhaulDraw.getCurrentTOContext();
 
         if (context != null && context.hasIcon()) {
             return Constants.getIconSize(context) + Constants.getIconTitleSeparation(context);
         } else if (context == null) {
-            ItemStack stack = TooltipContextManager.currentStack();
+            ItemStack stack = TooltipContexts.currentStack();
 
             if (stack != null && !stack.isEmpty()) {
                 CustomFrameData frameData = CustomFrameManager.of(stack).orElse(null);
@@ -58,9 +58,9 @@ public class TooltipOverhaulLayoutFixer {
     }
 
     public static int getExtraWidth(Font textRenderer) {
-        if (!TooltipOverhaulStateManager.isHandlingTOTooltip()) return 0;
+        if (!TooltipOverhaulDraw.isHandlingTOTooltip()) return 0;
         
-        TooltipContext ctx = TooltipOverhaulStateManager.getCurrentTOContext();
+        TooltipContext ctx = TooltipOverhaulDraw.getCurrentTOContext();
         if (ctx == null || !RenderUtils.hasRating(ctx)) return 0;
         
         Component ratingText = TextUtils.getRatingText(ctx);
@@ -71,9 +71,9 @@ public class TooltipOverhaulLayoutFixer {
     }
 
     public static Vec2 adjustDividerLineY(Vec2 position) {
-        if (!TooltipOverhaulStateManager.isHandlingTOTooltip()) return position;
+        if (!TooltipOverhaulDraw.isHandlingTOTooltip()) return position;
 
-        TooltipContext context = TooltipOverhaulStateManager.getCurrentTOContext();
+        TooltipContext context = TooltipOverhaulDraw.getCurrentTOContext();
 
         return getWrappedTitle(context).map(wrapped -> {
             TooltipOverhaulLayoutMetrics metrics = TooltipOverhaulLayoutMetrics.calculate(context, wrapped);
@@ -87,7 +87,7 @@ public class TooltipOverhaulLayoutFixer {
     }
 
     public static int titleTextY(ClientTooltipComponent title, int y) {
-        return y + getTitleYAdjustment(TooltipOverhaulStateManager.getCurrentTOContext(), title);
+        return y + getTitleYAdjustment(TooltipOverhaulDraw.getCurrentTOContext(), title);
     }
 
     private static int getTitleYAdjustment(TooltipContext context, ClientTooltipComponent instance) {
@@ -102,7 +102,7 @@ public class TooltipOverhaulLayoutFixer {
     }
 
     public static int adjustDrawStringY(int y) {
-        return y + getWrappedTitle(TooltipOverhaulStateManager.getCurrentTOContext())
+        return y + getWrappedTitle(TooltipOverhaulDraw.getCurrentTOContext())
                 .map(wrapped -> wrapped.getHeight() - wrapped.getFirstLineHeight())
                 .orElse(0);
     }
@@ -120,7 +120,7 @@ public class TooltipOverhaulLayoutFixer {
     }
 
     private static float fixBoxHeight(float originalHeight, TooltipContext context) {
-        if (!TooltipOverhaulStateManager.isHandlingTOTooltip()) return originalHeight;
+        if (!TooltipOverhaulDraw.isHandlingTOTooltip()) return originalHeight;
         
         return getWrappedTitle(context).map(wrapped -> {
             TooltipOverhaulLayoutMetrics metrics = TooltipOverhaulLayoutMetrics.calculate(context, wrapped);

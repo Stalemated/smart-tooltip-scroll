@@ -1,11 +1,11 @@
 package com.stalemated.sts.scroll.components;
 
 import com.stalemated.lib.util.math.MathUtils;
+import com.stalemated.sts.compat.tierify.TierifyCompat;
 import com.stalemated.sts.resize.TooltipBounds;
 import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
-import com.stalemated.sts.scroll.TooltipScrollManager;
-import com.stalemated.sts.state.StateManager;
+import com.stalemated.sts.scroll.TooltipScroll;
 import com.stalemated.sts.state.TooltipDraw;
 import org.joml.Matrix4f;
 
@@ -38,7 +38,7 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
         }
         
         int maxPinnedWidth = TitleCenteringProcessor.getCleanPinnedWidth(pinned, textRenderer, TooltipStyles.currentModelOffset());
-        int minBound = StateManager.isTierifyTooltip ? TooltipBounds.MIN_WIDTH : 0;
+        int minBound = TierifyCompat.isDrawing() ? TooltipBounds.MIN_WIDTH : 0;
 
         int contentWidth = Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth);
         this.maxWidth = MathUtils.clamp(contentWidth, minBound, maxWidth);
@@ -66,7 +66,7 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
         GuiGraphics context = TooltipDraw.graphics();
         if (context == null) return;
 
-        int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();
+        int scroll = TooltipScroll.INSTANCE.getScrollOffset();
         vertexConsumers.endBatch();
         context.enableScissor(x, y, x + this.maxTextWidth, y + this.maxHeight);
         int currentY = y - scroll;
@@ -82,7 +82,7 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
 
     @Override
     public void renderImage(Font textRenderer, int x, int y, GuiGraphics context) {
-        int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();
+        int scroll = TooltipScroll.INSTANCE.getScrollOffset();
 
         context.enableScissor(x, y, x + this.maxTextWidth, y + this.maxHeight);
         int currentY = y - scroll;
@@ -101,7 +101,7 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
         int maxScroll = maxScroll();
         if (maxScroll <= 0) return;
 
-        int scroll = TooltipScrollManager.INSTANCE.getScrollOffset();
+        int scroll = TooltipScroll.INSTANCE.getScrollOffset();
         int scrollbarX = x + this.maxWidth - SCROLLBAR_WIDTH / 2;
 
         int minThumbHeight = 2;

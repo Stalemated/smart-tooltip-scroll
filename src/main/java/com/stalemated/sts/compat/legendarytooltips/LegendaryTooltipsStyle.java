@@ -4,12 +4,12 @@ import com.anthonyhilyard.iceberg.util.Tooltips;
 import com.anthonyhilyard.legendarytooltips.config.LegendaryTooltipsConfig;
 import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.anthonyhilyard.legendarytooltips.tooltip.PaddingComponent;
+import com.stalemated.sts.compat.tierify.TierifyCompat;
 import com.stalemated.sts.resize.TitleOverflowMode;
 import com.stalemated.sts.resize.TooltipStyle;
-import com.stalemated.sts.state.StateManager;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import com.stalemated.sts.state.TooltipDraw;
-import com.stalemated.sts.util.OrderedTextUtil;
+import com.stalemated.sts.util.FormattedCharSequences;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.util.FormattedCharSequence;
@@ -39,7 +39,7 @@ public final class LegendaryTooltipsStyle implements TooltipStyle {
     public int modelOffset(ItemStack stack, List<ClientTooltipComponent> components) {
         if (stack == null || stack.isEmpty()) return 0;
         if (!LegendaryTooltipsConfig.showModelForItem(stack)) return 0;
-        if (StateManager.isTierifyTooltip) return ITEM_MODEL_WIDTH;
+        if (TierifyCompat.isDrawing()) return ITEM_MODEL_WIDTH;
 
         List<ClientTooltipComponent> title = TooltipDraw.titleComponents();
         if (!title.isEmpty()) return containsItemModel(title) ? ITEM_MODEL_WIDTH : 0;
@@ -67,13 +67,13 @@ public final class LegendaryTooltipsStyle implements TooltipStyle {
         if (lines.size() <= 1 || line != lines.size() - 1) return 0;
 
         boolean hasModel = currentModelOffset() > 0;
-        if (StateManager.isTierifyTooltip) return hasModel ? 2 : 1;
+        if (TierifyCompat.isDrawing()) return hasModel ? 2 : 1;
         return hasModel ? 0 : 1;
     }
 
     @Override
     public FormattedCharSequence centeredTitle(FormattedCharSequence title) {
-        return currentModelOffset() > 0 ? OrderedTextUtil.stripSpaces(title) : title;
+        return currentModelOffset() > 0 ? FormattedCharSequences.stripSpaces(title) : title;
     }
 
     @Override
@@ -82,7 +82,7 @@ public final class LegendaryTooltipsStyle implements TooltipStyle {
     }
 
     private int currentModelOffset() {
-        return modelOffset(TooltipContextManager.currentStack(), TooltipDraw.titleComponents());
+        return modelOffset(TooltipContexts.currentStack(), TooltipDraw.titleComponents());
     }
 
     private static boolean containsItemModel(List<ClientTooltipComponent> components) {

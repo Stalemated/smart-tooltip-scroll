@@ -13,6 +13,6 @@ public class TooltipOverhaulAlignments {
     }
 
     private static boolean centersTitle() {
-        return TooltipOverhaulStateManager.isHandlingTOTooltip() && SmartTooltipScrollConfigRegistry.CONFIG.get().title_centering;
+        return TooltipOverhaulDraw.isHandlingTOTooltip() && SmartTooltipScrollConfigRegistry.CONFIG.get().title_centering;
     }
 }

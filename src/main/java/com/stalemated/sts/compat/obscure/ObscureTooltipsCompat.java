@@ -5,8 +5,8 @@ import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipBounds;
 import com.stalemated.sts.resize.TooltipLayout;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
-import com.stalemated.sts.scroll.TooltipScrollManager;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.scroll.TooltipScroll;
+import com.stalemated.sts.state.TooltipContexts;
 import com.stalemated.sts.state.TooltipDraw;
 import dev.obscuria.tooltips.client.component.HeaderComponent;
 import dev.obscuria.tooltips.client.component.SplitComponent;
@@ -57,7 +57,7 @@ public class ObscureTooltipsCompat {
 
     public static boolean isObscureHandling(List<ClientTooltipComponent> components) {
         if (!ClientConfig.ENABLED.get()) return false;
-        ItemStack stack = TooltipContextManager.currentStack();
+        ItemStack stack = TooltipContexts.currentStack();
         boolean isIgnored = stack != null && ClientConfig.isIgnored(stack.getItem());
         if (isIgnored) return false;
 
@@ -117,7 +117,7 @@ public class ObscureTooltipsCompat {
         ClientTooltipComponent processedHeader = processHeader(components.get(0), availableTextWidth, textRenderer);
 
         if (components.size() <= 1) {
-            TooltipScrollManager.INSTANCE.track(Collections.emptyList(), textRenderer, 0);
+            TooltipScroll.INSTANCE.track(Collections.emptyList(), textRenderer, 0);
             return Collections.singletonList(processedHeader);
         }
 
@@ -138,7 +138,7 @@ public class ObscureTooltipsCompat {
         List<ClientTooltipComponent> right = splitComponent.right();
 
         if (right == null || right.isEmpty()) {
-            TooltipScrollManager.INSTANCE.track(Collections.emptyList(), textRenderer, 0);
+            TooltipScroll.INSTANCE.track(Collections.emptyList(), textRenderer, 0);
             return Collections.singletonList(splitComponent);
         }
 
@@ -157,7 +157,7 @@ public class ObscureTooltipsCompat {
         List<ClientTooltipComponent> newRight;
 
         if (bodyRaw.isEmpty()) {
-            TooltipScrollManager.INSTANCE.track(Collections.emptyList(), textRenderer, 0);
+            TooltipScroll.INSTANCE.track(Collections.emptyList(), textRenderer, 0);
             newRight = Collections.singletonList(processedHeader);
         } else {
             newRight = TooltipLayout.withScrollableBody(Collections.singletonList(processedHeader), bodyRaw, rightAllowedWidth, maxAllowedHeight, processedHeader.getHeight(), textRenderer);

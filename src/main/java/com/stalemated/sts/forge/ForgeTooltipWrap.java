@@ -3,7 +3,7 @@ package com.stalemated.sts.forge;
 //? if forge {
 /*import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import net.minecraft.world.item.ItemStack;
 
 public final class ForgeTooltipWrap {
@@ -18,7 +18,7 @@ public final class ForgeTooltipWrap {
             return;
         }
 
-        boolean isItem = (stack != null && !stack.isEmpty()) || TooltipContextManager.peek() != null;
+        boolean isItem = (stack != null && !stack.isEmpty()) || TooltipContexts.peek() != null;
         keepsLinesWhole = isItem || SharedTooltipState.isCustomDimensionsRequested();
     }
 

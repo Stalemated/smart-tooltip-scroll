@@ -6,24 +6,24 @@ import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
 import com.stalemated.sts.scroll.identity.TooltipIdentityTracker;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 
 import java.util.List;
 
-import static com.stalemated.sts.keybind.StsKeybinds.SCROLL_BYPASS_KEY;
+import static com.stalemated.sts.keybind.SmartTooltipScrollKeys.SCROLL_BYPASS_KEY;
 
-public class TooltipScrollManager {
-    public static final TooltipScrollManager INSTANCE = new TooltipScrollManager();
+public class TooltipScroll {
+    public static final TooltipScroll INSTANCE = new TooltipScroll();
 
     private final ScrollState scrollState = new ScrollState();
     private final TooltipIdentityTracker identityTracker = new TooltipIdentityTracker();
 
-    private TooltipScrollManager() {}
+    private TooltipScroll() {}
 
     public void track(List<ClientTooltipComponent> body, Font font, int maxScroll) {
-        TooltipIdentityContext context = new TooltipIdentityContext(TooltipContextManager.currentStack(), body, font);
+        TooltipIdentityContext context = new TooltipIdentityContext(TooltipContexts.currentStack(), body, font);
         long currentTime = now();
 
         if (identityTracker.hasTooltipChanged(context) || scrollState.isUnhovered(currentTime)) {

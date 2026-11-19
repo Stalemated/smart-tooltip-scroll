@@ -1,14 +1,14 @@
 package com.stalemated.sts.resize;
 
+import com.stalemated.sts.compat.tierify.TierifyCompat;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
-import com.stalemated.sts.scroll.TooltipScrollManager;
+import com.stalemated.sts.scroll.TooltipScroll;
 import com.stalemated.sts.scroll.components.ScrollableTooltipComponent;
-import com.stalemated.sts.state.StateManager;
 import com.stalemated.sts.state.TooltipContext;
 import com.stalemated.sts.state.TooltipDraw;
-import com.stalemated.sts.util.TooltipWrapUtil;
+import com.stalemated.sts.util.TooltipWrap;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 
@@ -57,7 +57,7 @@ public final class TooltipLayout {
 
         int titleWidth = TitleCenteringProcessor.getCleanPinnedWidth(title, font, modelOffset);
         int tooltipWidth = Math.max(titleWidth, width(body, font));
-        if (StateManager.isTierifyTooltip) tooltipWidth = Math.max(tooltipWidth, TooltipBounds.MIN_WIDTH);
+        if (TierifyCompat.isDrawing()) tooltipWidth = Math.max(tooltipWidth, TooltipBounds.MIN_WIDTH);
 
         title = TitleCenteringProcessor.applyCentering(title, font, tooltipWidth, modelOffset);
         TooltipDraw.setTitleComponents(title);
@@ -69,23 +69,23 @@ public final class TooltipLayout {
 
     public static List<ClientTooltipComponent> withScrollableBody(List<ClientTooltipComponent> title, List<ClientTooltipComponent> rawBody, int maxWidth, int maxHeight, int titleHeight, Font font) {
         if (rawBody.isEmpty()) {
-            TooltipScrollManager.INSTANCE.track(rawBody, font, 0);
+            TooltipScroll.INSTANCE.track(rawBody, font, 0);
             return new ArrayList<>(title);
         }
 
-        List<ClientTooltipComponent> body = TooltipWrapUtil.wrapComponents(rawBody, maxWidth, font, false);
+        List<ClientTooltipComponent> body = TooltipWrap.wrapComponents(rawBody, maxWidth, font, false);
         List<ClientTooltipComponent> laidOut = new ArrayList<>(title);
 
         if (titleHeight + height(body) > maxHeight) {
-            body = TooltipWrapUtil.wrapComponents(rawBody, maxWidth - ScrollableTooltipComponent.SCROLLBAR_WIDTH, font, false);
+            body = TooltipWrap.wrapComponents(rawBody, maxWidth - ScrollableTooltipComponent.SCROLLBAR_WIDTH, font, false);
             int visibleHeight = Math.max(maxHeight - titleHeight, TooltipBounds.MIN_HEIGHT);
             ScrollableTooltipComponent scrollableBody = new ScrollableTooltipComponent(body, title, visibleHeight, maxWidth, font);
-            TooltipScrollManager.INSTANCE.track(body, font, scrollableBody.maxScroll());
+            TooltipScroll.INSTANCE.track(body, font, scrollableBody.maxScroll());
             laidOut.add(scrollableBody);
             return laidOut;
         }
 
-        TooltipScrollManager.INSTANCE.track(body, font, 0);
+        TooltipScroll.INSTANCE.track(body, font, 0);
         laidOut.addAll(body);
         return laidOut;
     }
@@ -105,7 +105,7 @@ public final class TooltipLayout {
         for (ClientTooltipComponent component : components) {
             width = Math.max(width, component.getWidth(font));
         }
-        if (StateManager.isTierifyTooltip) width = Math.max(width, TooltipBounds.MIN_WIDTH);
+        if (TierifyCompat.isDrawing()) width = Math.max(width, TooltipBounds.MIN_WIDTH);
         return width;
     }
 
@@ -115,7 +115,7 @@ public final class TooltipLayout {
 
     private static int titleMaxWidth(TooltipStyle style, int maxWidth, int modelOffset) {
         int width = Math.max(maxWidth, TooltipBounds.MIN_WIDTH);
-        boolean reservesModelWidth = StateManager.isTierifyTooltip || style.titleReservesModelWidth(SmartTooltipScrollConfigRegistry.CONFIG.get().title_overflow_mode);
+        boolean reservesModelWidth = TierifyCompat.isDrawing() || style.titleReservesModelWidth(SmartTooltipScrollConfigRegistry.CONFIG.get().title_overflow_mode);
         return reservesModelWidth ? width - modelOffset : width;
     }
 }

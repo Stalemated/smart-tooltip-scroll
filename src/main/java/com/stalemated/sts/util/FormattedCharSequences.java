@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 
-public class OrderedTextUtil {
+public class FormattedCharSequences {
     public static FormattedCharSequence stripSpaces(FormattedCharSequence original) {
         List<StyledChar> chars = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class OrderedTextUtil {
         };
     }
 
-    public static String getStringFromOrderedText(FormattedCharSequence text) {
+    public static String plainString(FormattedCharSequence text) {
         StringBuilder builder = new StringBuilder();
         text.accept((index, style, codePoint) -> {
             builder.appendCodePoint(codePoint);

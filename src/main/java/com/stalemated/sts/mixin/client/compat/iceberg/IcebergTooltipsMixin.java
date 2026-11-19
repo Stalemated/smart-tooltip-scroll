@@ -17,7 +17,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 @RequiresMod("iceberg")
 @Pseudo
 @Mixin(targets = "com.anthonyhilyard.iceberg.util.Tooltips")
-public class IcebergTooltipsMixin {
+public abstract class IcebergTooltipsMixin {
 
     @ModifyArg(method = "lambda$gatherTooltipComponents$5", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;split(Lnet/minecraft/network/chat/FormattedText;I)Ljava/util/List;"), index = 1)
     private static int smart_tooltip_scroll$keepLinesWhole(int width) {

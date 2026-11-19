@@ -1,6 +1,6 @@
 package com.stalemated.sts.mixin.client;
 
-import com.stalemated.sts.scroll.TooltipScrollManager;
+import com.stalemated.sts.scroll.TooltipScroll;
 import net.minecraft.client.MouseHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MouseMixin {
     @Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
     private void smart_tooltip_scroll$scrollTooltip(long window, double horizontal, double vertical, CallbackInfo ci) {
-        if (TooltipScrollManager.INSTANCE.consumeWheel(vertical)) ci.cancel();
+        if (TooltipScroll.INSTANCE.consumeWheel(vertical)) ci.cancel();
     }
 }

@@ -2,7 +2,7 @@ package com.stalemated.sts.compat.tierify;
 
 import com.stalemated.sts.compat.tierify.component.TOTieredWrapper;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.Font;
@@ -31,7 +31,7 @@ public class TierifyTOBridge {
         if (components == null || components.isEmpty()) return components;
         if (!SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions) return components;
 
-        ItemStack currentStack = TooltipContextManager.currentStack();
+        ItemStack currentStack = TooltipContexts.currentStack();
         if (currentStack == null || currentStack.isEmpty()) return components;
 
         TOTieredWrapper wrapper = new TOTieredWrapper(new ArrayList<>(components), currentContext, currentTextRenderer, currentX, currentY, currentPositioner, currentStack);

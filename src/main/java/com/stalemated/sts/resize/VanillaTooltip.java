@@ -1,18 +1,17 @@
 package com.stalemated.sts.resize;
 
 import com.stalemated.lib.util.state.SharedTooltipState;
+import com.stalemated.sts.compat.LoadedMods;
 import com.stalemated.sts.compat.obscure.ObscureTooltipsCompat;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.state.TooltipContext;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import com.stalemated.sts.state.TooltipDraw;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 
 import java.util.List;
-
-import static com.stalemated.sts.state.StateManager.IS_OT_LOADED;
 
 public final class VanillaTooltip {
     private VanillaTooltip() {
@@ -24,9 +23,9 @@ public final class VanillaTooltip {
 
     public static List<ClientTooltipComponent> layOut(List<ClientTooltipComponent> components) {
         if (!customDimensions()) return components;
-        if (IS_OT_LOADED && ObscureTooltipsCompat.isObscureHandling(components)) return components;
+        if (LoadedMods.OBSCURE_TOOLTIPS && ObscureTooltipsCompat.isObscureHandling(components)) return components;
 
-        TooltipContext context = TooltipContextManager.peek();
+        TooltipContext context = TooltipContexts.peek();
         if (context == null && !SharedTooltipState.isCustomDimensionsRequested()) return components;
         return TooltipLayout.apply(components, context);
     }

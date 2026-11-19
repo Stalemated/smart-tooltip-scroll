@@ -8,7 +8,7 @@ import com.stalemated.sts.compat.tierify.component.LegendaryTieredWrapper;
 import com.stalemated.sts.resize.TooltipLayout;
 import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.components.WrappedTitleTooltipComponent;
-import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipContexts;
 import com.stalemated.sts.state.TooltipDraw;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,7 @@ public class TierifyLegendaryBridge {
     public static List<ClientTooltipComponent> wrapComponents(List<ClientTooltipComponent> components) {
         if (components == null || components.isEmpty()) return components;
 
-        ItemStack currentStack = TooltipContextManager.currentStack();
+        ItemStack currentStack = TooltipContexts.currentStack();
         if (currentStack == null || currentStack.isEmpty()) return components;
 
         int titleSize = !TooltipDraw.titleComponents().isEmpty() ? TooltipDraw.titleComponents().size() : 1;
@@ -78,7 +78,7 @@ public class TierifyLegendaryBridge {
     public static void drawSeparator(GuiGraphics context, List<ClientTooltipComponent> components) {
         if (components.isEmpty()) return;
         if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && TooltipDraw.bodyComponents().isEmpty()) return;
-        ItemStack currentStack = TooltipContextManager.currentStack();
+        ItemStack currentStack = TooltipContexts.currentStack();
         if (currentStack == null || currentStack.isEmpty()) return;
 
         if (LegendaryTooltipsConfig.INSTANCE.nameSeparator.get()) {

@@ -27,7 +27,7 @@ public final class TooltipDraw {
         font = null;
         titleComponents = List.of();
         bodyComponents = List.of();
-        TooltipContextManager.clear();
+        TooltipContexts.clear();
         SharedTooltipState.clearCustomDimensionsRequest();
     }
 

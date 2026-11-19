@@ -33,12 +33,12 @@ public final class TooltipOverhaulStyle implements TooltipStyle {
 
     @Override
     public boolean drawsModelOffset() {
-        return TooltipOverhaulStateManager.isHandlingTOTooltip();
+        return TooltipOverhaulDraw.isHandlingTOTooltip();
     }
 
     @Override
     public boolean titleReservesModelWidth(TitleOverflowMode mode) {
-        return mode == TitleOverflowMode.WRAP || !TooltipOverhaulStateManager.isStsActive();
+        return mode == TitleOverflowMode.WRAP || !TooltipOverhaulDraw.isStsActive();
     }
 
     @Override

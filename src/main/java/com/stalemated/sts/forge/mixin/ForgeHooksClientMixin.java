@@ -19,7 +19,7 @@ import java.util.List;
 
 @Pseudo
 @Mixin(targets = "net.minecraftforge.client.ForgeHooksClient")
-public class ForgeHooksClientMixin {
+public abstract class ForgeHooksClientMixin {
 
     @Inject(method = "gatherTooltipComponentsFromElements(Lnet/minecraft/world/item/ItemStack;Ljava/util/List;IIILnet/minecraft/client/gui/Font;)Ljava/util/List;", at = @At("HEAD"))
     private static void smart_tooltip_scroll$beginGather(ItemStack stack, List<Either<FormattedText, TooltipComponent>> elements, int mouseX, int screenWidth, int screenHeight, Font fallbackFont, CallbackInfoReturnable<List<ClientTooltipComponent>> cir) {
