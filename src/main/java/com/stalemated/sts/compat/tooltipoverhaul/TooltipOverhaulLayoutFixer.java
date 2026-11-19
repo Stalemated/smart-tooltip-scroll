@@ -21,6 +21,8 @@ import net.minecraft.world.phys.Vec2;
 import static com.stalemated.sts.scroll.ScrollState.PIXELS_PER_LINE;
 
 public class TooltipOverhaulLayoutFixer {
+    private static final int DEFAULT_ICON_SIZE = 22;
+    private static final int ICON_TITLE_SEPARATION = 3;
 
     public static Optional<WrappedTitleTooltipComponent> getWrappedTitle(TooltipContext context) {
         if (context == null || !context.hasIcon()) return Optional.empty();
@@ -48,7 +50,7 @@ public class TooltipOverhaulLayoutFixer {
                 boolean disableIcon = frameData != null ? frameData.shouldDisableIcon() : TooltipsConfig.DISABLE_ICON;
 
                 if (!disableIcon) {
-                    return Constants.getIconSize(null) + Constants.getIconTitleSeparation(null);
+                    return DEFAULT_ICON_SIZE + ICON_TITLE_SEPARATION;
                 }
             }
         }
@@ -68,8 +70,10 @@ public class TooltipOverhaulLayoutFixer {
         return 0;
     }
 
-    public static Vec2 adjustDividerLineY(Vec2 position, TooltipContext context) {
+    public static Vec2 adjustDividerLineY(Vec2 position) {
         if (!TooltipOverhaulStateManager.isHandlingTOTooltip()) return position;
+
+        TooltipContext context = TooltipOverhaulStateManager.getCurrentTOContext();
 
         return getWrappedTitle(context).map(wrapped -> {
             TooltipOverhaulLayoutMetrics metrics = TooltipOverhaulLayoutMetrics.calculate(context, wrapped);
@@ -82,7 +86,11 @@ public class TooltipOverhaulLayoutFixer {
         }).orElse(position);
     }
 
-    public static int getTitleYAdjustment(TooltipContext context, ClientTooltipComponent instance) {
+    public static int titleTextY(ClientTooltipComponent title, int y) {
+        return y + getTitleYAdjustment(TooltipOverhaulStateManager.getCurrentTOContext(), title);
+    }
+
+    private static int getTitleYAdjustment(TooltipContext context, ClientTooltipComponent instance) {
         if (context == null) return 0;
 
         if (instance instanceof WrappedTitleTooltipComponent wrapped) {
@@ -93,22 +101,25 @@ public class TooltipOverhaulLayoutFixer {
         return 0;
     }
 
-    public static int adjustDrawStringY(int y, TooltipContext context) {
-        return y + getWrappedTitle(context)
+    public static int adjustDrawStringY(int y) {
+        return y + getWrappedTitle(TooltipOverhaulStateManager.getCurrentTOContext())
                 .map(wrapped -> wrapped.getHeight() - wrapped.getFirstLineHeight())
                 .orElse(0);
     }
 
-    public static int fixIconTitleSeparation(TooltipContext context) {
-        int separation = Constants.getIconTitleSeparation(context);
-
+    public static int fixIconTitleSeparation(TooltipContext context, int separation) {
         return getWrappedTitle(context).map(wrapped -> {
             TooltipOverhaulLayoutMetrics metrics = TooltipOverhaulLayoutMetrics.calculate(context, wrapped);
             return metrics.getTargetDividerY() - metrics.currentYAdded();
         }).orElse(separation);
     }
 
-    public static float fixBoxHeight(float originalHeight, TooltipContext context) {
+    public static Vec2 fixBoxSize(Vec2 size, TooltipContext context) {
+        float height = fixBoxHeight(size.y, context);
+        return height == size.y ? size : new Vec2(size.x, height);
+    }
+
+    private static float fixBoxHeight(float originalHeight, TooltipContext context) {
         if (!TooltipOverhaulStateManager.isHandlingTOTooltip()) return originalHeight;
         
         return getWrappedTitle(context).map(wrapped -> {

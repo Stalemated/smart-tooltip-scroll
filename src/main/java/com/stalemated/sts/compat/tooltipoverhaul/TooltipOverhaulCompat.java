@@ -55,7 +55,7 @@ public class TooltipOverhaulCompat {
                 return TooltipLayout.height(pinned);
             });
             
-            ((TooltipContextAccessor) context).sts$setComponents(processed);
+            ((TooltipContextAccessor) context).smart_tooltip_scroll$setComponents(processed);
 
             TooltipOverhaulStateManager.setStsActive(true);
         }

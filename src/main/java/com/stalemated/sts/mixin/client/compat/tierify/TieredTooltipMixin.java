@@ -1,22 +1,15 @@
 package com.stalemated.sts.mixin.client.compat.tierify;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.stalemated.lib.mixin.RequiresMod;
-import com.stalemated.sts.compat.tierify.TierifyLegendaryBridge;
-import com.stalemated.sts.compat.tierify.TierifyTOBridge;
-import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
-import com.stalemated.sts.resize.TooltipLayout;
-import com.stalemated.sts.state.StateManager;
-import com.stalemated.sts.state.TooltipContextManager;
-import com.stalemated.sts.state.TooltipDraw;
+import com.stalemated.sts.compat.tierify.TierifyCompat;
 import draylar.tiered.api.BorderTemplate;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import elocindev.tierify.config.ClientConfig;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -25,45 +18,24 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 
-import static com.stalemated.sts.state.StateManager.IS_LT_LOADED;
-import static com.stalemated.sts.state.StateManager.IS_TO_LOADED;
-
 @RequiresMod("tiered")
 @Pseudo
 @Mixin(targets = "elocindev.tierify.util.TieredTooltip")
 public abstract class TieredTooltipMixin {
 
     @Inject(method = "renderTieredTooltipFromComponents", at = @At("HEAD"))
-    private static void sts$captureContext(GuiGraphics context, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
-        TooltipDraw.begin(context, textRenderer);
-        StateManager.isTierifyTooltip = true;
-        if (IS_TO_LOADED) {
-            TierifyTOBridge.captureState(context, textRenderer, x, y, positioner);
-        }
+    private static void smart_tooltip_scroll$beginDraw(GuiGraphics context, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
+        TierifyCompat.beginDraw(context, textRenderer, x, y, positioner);
     }
 
-    @ModifyVariable(method = "renderTieredTooltipFromComponents", at = @At("HEAD"), index = 2, argsOnly = true)
-    private static List<ClientTooltipComponent> sts$applyDimensions(List<ClientTooltipComponent> components) {
-        List<ClientTooltipComponent> processedList = components;
-
-        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions) {
-            if (IS_LT_LOADED) processedList = TooltipLayout.apply(components, TooltipContextManager.peek(), TierifyLegendaryBridge::getPredictedPinnedHeight);
-            else if (!IS_TO_LOADED) processedList = TooltipLayout.apply(components, TooltipContextManager.peek());
-        }
-
-        if (IS_LT_LOADED) {
-            processedList = TierifyLegendaryBridge.wrapComponents(processedList);
-        } else if (IS_TO_LOADED) {
-            processedList = TierifyTOBridge.wrapComponents(processedList);
-        }
-
-        return processedList;
+    @ModifyVariable(method = "renderTieredTooltipFromComponents", at = @At("HEAD"), argsOnly = true)
+    private static List<ClientTooltipComponent> smart_tooltip_scroll$layOut(List<ClientTooltipComponent> components) {
+        return TierifyCompat.layOut(components);
     }
 
-    @Redirect(method = "renderTieredTooltipFromComponents", at = @At(value = "FIELD", target = "Lelocindev/tierify/config/ClientConfig;centerName:Z", opcode = Opcodes.GETFIELD))
-    private static boolean sts$redirectCenterName(ClientConfig config) {
-        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && SmartTooltipScrollConfigRegistry.CONFIG.get().title_centering) return false;
-        return config.centerName;
+    @ModifyExpressionValue(method = "renderTieredTooltipFromComponents", at = @At(value = "FIELD", target = "Lelocindev/tierify/config/ClientConfig;centerName:Z", opcode = Opcodes.GETFIELD))
+    private static boolean smart_tooltip_scroll$centerName(boolean tierifyCentersName) {
+        return TierifyCompat.centersName(tierifyCentersName);
     }
 
     //? if fabric {
@@ -71,8 +43,8 @@ public abstract class TieredTooltipMixin {
     //?} else {
     /*@Inject(method = "renderTooltipBackground", at = @At("HEAD"))
     *///?}
-    private static void sts$getTooltipPosition(GuiGraphics context, int x, int y, int width, int height, int z, int backgroundColor, int colorStart, int colorEnd, CallbackInfo ci) {
-        if (IS_LT_LOADED) TierifyLegendaryBridge.setTooltipPosition(x, y, width);
+    private static void smart_tooltip_scroll$recordBackground(GuiGraphics context, int x, int y, int width, int height, int z, int backgroundColor, int colorStart, int colorEnd, CallbackInfo ci) {
+        TierifyCompat.recordBackground(x, y, width);
     }
 
     //? if fabric {
@@ -80,12 +52,7 @@ public abstract class TieredTooltipMixin {
     //?} else {
     /*@Inject(method = "renderTieredTooltipFromComponents", at = @At("TAIL"))
     *///?}
-    private static void sts$clearContext(GuiGraphics context, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
-        if (IS_LT_LOADED) TierifyLegendaryBridge.drawSeparator(context, components);
-
-        StateManager.isTierifyTooltip = false;
-        TooltipDraw.end();
-
-        if (IS_TO_LOADED) TierifyTOBridge.clearState();
+    private static void smart_tooltip_scroll$endDraw(GuiGraphics context, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, BorderTemplate borderTemplate, CallbackInfo ci) {
+        TierifyCompat.endDraw(context, components);
     }
 }

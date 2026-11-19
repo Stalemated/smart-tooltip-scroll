@@ -1,5 +1,7 @@
 package com.stalemated.sts.scroll;
 
+import com.stalemated.lib.util.input.KeyBindingUtil;
+import com.stalemated.sts.config.SmartTooltipScrollConfig;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.scroll.identity.TooltipIdentityContext;
@@ -9,6 +11,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 
 import java.util.List;
+
+import static com.stalemated.sts.keybind.StsKeybinds.SCROLL_BYPASS_KEY;
 
 public class TooltipScrollManager {
     public static final TooltipScrollManager INSTANCE = new TooltipScrollManager();
@@ -32,8 +36,12 @@ public class TooltipScrollManager {
         scrollState.updateMaxScroll(maxScroll, currentTime, settings());
     }
 
-    public boolean scroll(double amount) {
-        return scrollState.scroll(amount, now(), settings());
+    public boolean consumeWheel(double amount) {
+        if (KeyBindingUtil.isKeyDownInGui(SCROLL_BYPASS_KEY)) return false;
+
+        SmartTooltipScrollConfig config = SmartTooltipScrollConfigRegistry.CONFIG.get();
+        if (!config.custom_tooltip_dimensions) return false;
+        return scrollState.scroll(amount, now(), settings()) && config.lock_container_scrolling;
     }
 
     public int getScrollOffset() {

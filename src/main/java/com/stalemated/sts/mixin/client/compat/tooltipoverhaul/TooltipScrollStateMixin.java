@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TooltipScrollStateMixin {
 
     @Inject(method = "begin", at = @At("HEAD"), cancellable = true)
-    private static void sts$disableToScroll(int contentHeight, int viewportHeight, CallbackInfo ci) {
-        TooltipOverhaulStateManager.disableToScroll(ci);
+    private static void smart_tooltip_scroll$disableToScroll(int contentHeight, int viewportHeight, CallbackInfo ci) {
+        if (TooltipOverhaulStateManager.takeOverToScroll()) ci.cancel();
     }
 }

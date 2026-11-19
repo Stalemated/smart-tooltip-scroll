@@ -4,7 +4,6 @@ import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.state.TooltipDraw;
 import dev.xylonity.tooltipoverhaul.client.render.TooltipContext;
 import dev.xylonity.tooltipoverhaul.client.util.TooltipScrollState;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class TooltipOverhaulStateManager {
     private static boolean stsActiveForCurrentTooltip = false;
@@ -49,12 +48,12 @@ public class TooltipOverhaulStateManager {
         currentTOContext = null;
     }
 
-    public static void disableToScroll(CallbackInfo ci) {
-        if (stsActiveForCurrentTooltip && SmartTooltipScrollConfigRegistry.CONFIG.get().tooltip_overhaul_compat) {
-            try {
-                TooltipScrollState.reset();
-            } catch (Exception ignored) {}
-            ci.cancel();
-        }
+    public static boolean takeOverToScroll() {
+        if (!stsActiveForCurrentTooltip || !SmartTooltipScrollConfigRegistry.CONFIG.get().tooltip_overhaul_compat) return false;
+
+        try {
+            TooltipScrollState.reset();
+        } catch (Exception ignored) {}
+        return true;
     }
 }

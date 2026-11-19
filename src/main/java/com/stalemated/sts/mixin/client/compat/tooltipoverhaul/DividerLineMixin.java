@@ -2,7 +2,6 @@ package com.stalemated.sts.mixin.client.compat.tooltipoverhaul;
 
 import com.stalemated.lib.mixin.RequiresMod;
 import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulLayoutFixer;
-import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulStateManager;
 import net.minecraft.world.phys.Vec2;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -19,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class DividerLineMixin {
 
     @ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true)
-    private Vec2 sts$modifyDividerPosition(Vec2 position) {
-        return TooltipOverhaulLayoutFixer.adjustDividerLineY(position, TooltipOverhaulStateManager.getCurrentTOContext());
+    private Vec2 smart_tooltip_scroll$moveDivider(Vec2 position) {
+        return TooltipOverhaulLayoutFixer.adjustDividerLineY(position);
     }
 }

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ScreenMixin {
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void sts$clearTrashFromStack(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void smart_tooltip_scroll$clearTooltipContexts(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         TooltipContextManager.clear();
     }
 }

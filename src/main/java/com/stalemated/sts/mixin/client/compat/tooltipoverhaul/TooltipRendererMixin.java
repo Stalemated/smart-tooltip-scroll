@@ -1,5 +1,6 @@
 package com.stalemated.sts.mixin.client.compat.tooltipoverhaul;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.stalemated.lib.mixin.RequiresMod;
 import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulCompat;
 import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulLayoutFixer;
@@ -14,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import dev.xylonity.tooltipoverhaul.client.layout.TooltipSizeCalculator;
 
 @RequiresMod("tooltipoverhaul")
 @Pseudo
@@ -27,37 +26,32 @@ public class TooltipRendererMixin {
     private TooltipContext context;
 
     @Inject(method = "init", at = @At("HEAD"))
-    private void sts$applyDimensionsToTO(CallbackInfo ci) {
+    private void smart_tooltip_scroll$applyDimensions(CallbackInfo ci) {
         TooltipOverhaulCompat.applyDimensions(this.context);
     }
 
-    @Redirect(method = "init", at = @At(value = "INVOKE", target = "Ldev/xylonity/tooltipoverhaul/client/layout/TooltipSizeCalculator;calculate()Lnet/minecraft/world/phys/Vec2;"))
-    private Vec2 sts$redirectCalculate(TooltipSizeCalculator instance) {
-        Vec2 original = instance.calculate();
-        float newHeight = TooltipOverhaulLayoutFixer.fixBoxHeight(original.y, this.context);
-        if (newHeight != original.y) {
-            return new Vec2(original.x, newHeight);
-        }
-        return original;
+    @ModifyExpressionValue(method = "init", at = @At(value = "INVOKE", target = "Ldev/xylonity/tooltipoverhaul/client/layout/TooltipSizeCalculator;calculate()Lnet/minecraft/world/phys/Vec2;"))
+    private Vec2 smart_tooltip_scroll$fixBoxSize(Vec2 size) {
+        return TooltipOverhaulLayoutFixer.fixBoxSize(size, this.context);
     }
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void sts$ensureContextRender(CallbackInfoReturnable<Boolean> cir) {
+    private void smart_tooltip_scroll$beginRender(CallbackInfoReturnable<Boolean> cir) {
         TooltipOverhaulStateManager.ensureContext(this.context);
     }
 
-    @Inject(method = "renderOut", at = @At("HEAD"), require = 0)
-    private void sts$ensureContextRenderOut(float progress, CallbackInfo ci) {
+    @Inject(method = "renderOut", at = @At("HEAD"))
+    private void smart_tooltip_scroll$beginRenderOut(float progress, CallbackInfo ci) {
         TooltipOverhaulStateManager.ensureContext(this.context);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void sts$clearContextRender(CallbackInfoReturnable<Boolean> cir) {
+    private void smart_tooltip_scroll$endRender(CallbackInfoReturnable<Boolean> cir) {
         TooltipOverhaulStateManager.clearContext();
     }
 
-    @Inject(method = "renderOut", at = @At("TAIL"), require = 0)
-    private void sts$clearContextRenderOut(float progress, CallbackInfo ci) {
+    @Inject(method = "renderOut", at = @At("TAIL"))
+    private void smart_tooltip_scroll$endRenderOut(float progress, CallbackInfo ci) {
         TooltipOverhaulStateManager.clearContext();
     }
 }

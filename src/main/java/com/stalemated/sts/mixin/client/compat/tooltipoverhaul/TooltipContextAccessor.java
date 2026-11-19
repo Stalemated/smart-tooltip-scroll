@@ -15,5 +15,5 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 public interface TooltipContextAccessor {
     @Mutable
     @Accessor(value = "components")
-    void sts$setComponents(List<ClientTooltipComponent> components);
+    void smart_tooltip_scroll$setComponents(List<ClientTooltipComponent> components);
 }

@@ -3,7 +3,7 @@ package com.stalemated.sts.mixin.client.compat.emi;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.stalemated.lib.mixin.RequiresMod;
-import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
+import com.stalemated.sts.compat.emi.EmiCompat;
 import com.stalemated.sts.state.TooltipDraw;
 import dev.emi.emi.mixin.accessor.DrawContextAccessor;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -25,11 +25,8 @@ public class EmiRenderHelperMixin {
 
     @ModifyVariable(method = "drawTooltip(Lnet/minecraft/client/gui/screens/Screen;Ldev/emi/emi/runtime/EmiDrawContext;Ljava/util/List;IIILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
             at = @At("HEAD"), argsOnly = true, ordinal = 2)
-    private static int sts$adjustMaxWidth(int maxWidth, Screen screen, EmiDrawContext context, List<ClientTooltipComponent> components) {
-        if (SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && components != null && !components.isEmpty()) {
-            return Integer.MAX_VALUE;
-        }
-        return maxWidth;
+    private static int smart_tooltip_scroll$keepLinesWhole(int maxWidth, Screen screen, EmiDrawContext context, List<ClientTooltipComponent> components) {
+        return EmiCompat.tooltipMaxWidth(maxWidth, components);
     }
 
     @WrapOperation(method = "drawTooltip(Lnet/minecraft/client/gui/screens/Screen;Ldev/emi/emi/runtime/EmiDrawContext;Ljava/util/List;IIILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",

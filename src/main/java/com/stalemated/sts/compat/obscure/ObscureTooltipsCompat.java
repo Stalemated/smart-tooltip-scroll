@@ -7,6 +7,7 @@ import com.stalemated.sts.resize.TooltipLayout;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
 import com.stalemated.sts.scroll.TooltipScrollManager;
 import com.stalemated.sts.state.TooltipContextManager;
+import com.stalemated.sts.state.TooltipDraw;
 import dev.obscuria.tooltips.client.component.HeaderComponent;
 import dev.obscuria.tooltips.client.component.SplitComponent;
 import dev.obscuria.tooltips.client.component.StackBuffer;
@@ -15,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.ItemStack;
 
 import static com.stalemated.sts.resize.TooltipBounds.MIN_HEIGHT;
 import static com.stalemated.sts.resize.TooltipBounds.MIN_WIDTH;
@@ -35,9 +38,27 @@ public class ObscureTooltipsCompat {
         return SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && SmartTooltipScrollConfigRegistry.CONFIG.get().obscure_compat;
     }
 
+    public static void beginDraw(GuiGraphics graphics, Font font) {
+        if (isCompatActive()) TooltipDraw.begin(graphics, font);
+    }
+
+    public static List<ClientTooltipComponent> layOut(List<ClientTooltipComponent> postWrapped, Font font) {
+        if (!isCompatActive()) return postWrapped;
+        return processComponents(postWrapped, font);
+    }
+
+    public static float scroll(float obscureScroll) {
+        return isCompatActive() ? 0.0F : obscureScroll;
+    }
+
+    public static void endDraw(boolean drawn) {
+        if (isCompatActive() && drawn) TooltipDraw.end();
+    }
+
     public static boolean isObscureHandling(List<ClientTooltipComponent> components) {
         if (!ClientConfig.ENABLED.get()) return false;
-        boolean isIgnored = TooltipContextManager.currentStack() != null && ClientConfig.isIgnored(TooltipContextManager.currentStack().getItem());
+        ItemStack stack = TooltipContextManager.currentStack();
+        boolean isIgnored = stack != null && ClientConfig.isIgnored(stack.getItem());
         if (isIgnored) return false;
 
         return containsStackBuffer(components);
@@ -57,7 +78,7 @@ public class ObscureTooltipsCompat {
         return false;
     }
 
-    public static List<ClientTooltipComponent> processComponents(List<ClientTooltipComponent> components, Font textRenderer) {
+    private static List<ClientTooltipComponent> processComponents(List<ClientTooltipComponent> components, Font textRenderer) {
         if (components == null || components.isEmpty() || textRenderer == null) {
             return components;
         }

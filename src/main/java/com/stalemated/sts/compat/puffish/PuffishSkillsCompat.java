@@ -5,20 +5,27 @@ import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipBounds;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
 public class PuffishSkillsCompat {
 
-    public static boolean isSkillTooltipContext = false;
+    private static boolean drawingSkillTree;
 
-    public static List<FormattedCharSequence> wrapLines(Minecraft client, Component text) {
-        if (isSkillTooltipContext && SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions && client.font != null) {
-            SharedTooltipState.requestCustomDimensions();
-            int targetWidth = TooltipBounds.current().maxWidth();
-            return client.font.split(text, targetWidth);
-        }
-        return Tooltip.splitTooltip(client, text);
+    public static void beginSkillTree() {
+        drawingSkillTree = true;
+    }
+
+    public static void endSkillTree() {
+        drawingSkillTree = false;
+    }
+
+    public static boolean wrapsSkillTooltips() {
+        return drawingSkillTree && SmartTooltipScrollConfigRegistry.CONFIG.get().custom_tooltip_dimensions;
+    }
+
+    public static List<FormattedCharSequence> splitSkillTooltip(Minecraft client, Component text) {
+        SharedTooltipState.requestCustomDimensions();
+        return client.font.split(text, TooltipBounds.current().maxWidth());
     }
 }
