@@ -4,6 +4,7 @@ plugins {
     id("mod-publishing")
     id("slib")
     id("dev-mods")
+    id("compat-mods")
 }
 
 val compatMods = listOf(
@@ -64,7 +65,7 @@ publishMods {
 
 tasks {
     processResources {
-        exclude("META-INF/neoforge.mods.toml", "META-INF/mods.toml", "pack.mcmeta", "*-forge.mixins.json")
+        exclude("META-INF/neoforge.mods.toml", "META-INF/mods.toml", "pack.mcmeta", "*-forge.mixins.json", "*-neoforge.mixins.json")
     }
 
     named<Copy>("buildAndCollect") {

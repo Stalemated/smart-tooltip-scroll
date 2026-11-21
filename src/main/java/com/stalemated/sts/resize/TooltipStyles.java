@@ -1,8 +1,10 @@
 package com.stalemated.sts.resize;
 
 import com.stalemated.sts.compat.LoadedMods;
+import com.stalemated.sts.compat.TierifyTooltip;
+//? if legendary_tooltips
 import com.stalemated.sts.compat.legendarytooltips.LegendaryTooltipsStyle;
-import com.stalemated.sts.compat.tierify.TierifyCompat;
+//? if tooltip_overhaul
 import com.stalemated.sts.compat.tooltipoverhaul.TooltipOverhaulStyle;
 import com.stalemated.sts.state.TooltipContexts;
 
@@ -21,12 +23,14 @@ public final class TooltipStyles {
     }
 
     public static boolean drawsModelOffsetNatively() {
-        return TierifyCompat.isDrawing() || LOADED.drawsModelOffset();
+        return TierifyTooltip.isDrawing() || LOADED.drawsModelOffset();
     }
 
     private static TooltipStyle forLoadedMods() {
         TooltipStyle style = new VanillaTooltipStyle();
+        //? if tooltip_overhaul
         if (LoadedMods.TOOLTIP_OVERHAUL) style = new TooltipOverhaulStyle(style);
+        //? if legendary_tooltips
         if (LoadedMods.LEGENDARY_TOOLTIPS) style = new LegendaryTooltipsStyle(style);
         return style;
     }

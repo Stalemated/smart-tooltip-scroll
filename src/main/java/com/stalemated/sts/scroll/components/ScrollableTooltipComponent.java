@@ -1,7 +1,7 @@
 package com.stalemated.sts.scroll.components;
 
 import com.stalemated.lib.util.math.MathUtils;
-import com.stalemated.sts.compat.tierify.TierifyCompat;
+import com.stalemated.sts.compat.TierifyTooltip;
 import com.stalemated.sts.resize.TooltipBounds;
 import com.stalemated.sts.resize.TooltipStyles;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
@@ -38,7 +38,7 @@ public class ScrollableTooltipComponent implements ClientTooltipComponent {
         }
         
         int maxPinnedWidth = TitleCenteringProcessor.getCleanPinnedWidth(pinned, textRenderer, TooltipStyles.currentModelOffset());
-        int minBound = TierifyCompat.isDrawing() ? TooltipBounds.MIN_WIDTH : 0;
+        int minBound = TierifyTooltip.isDrawing() ? TooltipBounds.MIN_WIDTH : 0;
 
         int contentWidth = Math.max(maxComponentWidth + SCROLLBAR_WIDTH, maxPinnedWidth);
         this.maxWidth = MathUtils.clamp(contentWidth, minBound, maxWidth);

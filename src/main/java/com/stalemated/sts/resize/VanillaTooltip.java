@@ -2,6 +2,7 @@ package com.stalemated.sts.resize;
 
 import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.compat.LoadedMods;
+//? if obscure_tooltips
 import com.stalemated.sts.compat.obscure.ObscureTooltipsCompat;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.state.TooltipContext;
@@ -23,6 +24,7 @@ public final class VanillaTooltip {
 
     public static List<ClientTooltipComponent> layOut(List<ClientTooltipComponent> components) {
         if (!customDimensions()) return components;
+        //? if obscure_tooltips
         if (LoadedMods.OBSCURE_TOOLTIPS && ObscureTooltipsCompat.isObscureHandling(components)) return components;
 
         TooltipContext context = TooltipContexts.peek();

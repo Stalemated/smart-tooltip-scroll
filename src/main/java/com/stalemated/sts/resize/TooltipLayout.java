@@ -1,6 +1,6 @@
 package com.stalemated.sts.resize;
 
-import com.stalemated.sts.compat.tierify.TierifyCompat;
+import com.stalemated.sts.compat.TierifyTooltip;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.centering.TitleCenteringProcessor;
 import com.stalemated.sts.resize.overflow.TitleOverflowStrategyFactory;
@@ -57,7 +57,7 @@ public final class TooltipLayout {
 
         int titleWidth = TitleCenteringProcessor.getCleanPinnedWidth(title, font, modelOffset);
         int tooltipWidth = Math.max(titleWidth, width(body, font));
-        if (TierifyCompat.isDrawing()) tooltipWidth = Math.max(tooltipWidth, TooltipBounds.MIN_WIDTH);
+        if (TierifyTooltip.isDrawing()) tooltipWidth = Math.max(tooltipWidth, TooltipBounds.MIN_WIDTH);
 
         title = TitleCenteringProcessor.applyCentering(title, font, tooltipWidth, modelOffset);
         TooltipDraw.setTitleComponents(title);
@@ -105,7 +105,7 @@ public final class TooltipLayout {
         for (ClientTooltipComponent component : components) {
             width = Math.max(width, component.getWidth(font));
         }
-        if (TierifyCompat.isDrawing()) width = Math.max(width, TooltipBounds.MIN_WIDTH);
+        if (TierifyTooltip.isDrawing()) width = Math.max(width, TooltipBounds.MIN_WIDTH);
         return width;
     }
 
@@ -115,7 +115,7 @@ public final class TooltipLayout {
 
     private static int titleMaxWidth(TooltipStyle style, int maxWidth, int modelOffset) {
         int width = Math.max(maxWidth, TooltipBounds.MIN_WIDTH);
-        boolean reservesModelWidth = TierifyCompat.isDrawing() || style.titleReservesModelWidth(SmartTooltipScrollConfigRegistry.CONFIG.get().title_overflow_mode);
+        boolean reservesModelWidth = TierifyTooltip.isDrawing() || style.titleReservesModelWidth(SmartTooltipScrollConfigRegistry.CONFIG.get().title_overflow_mode);
         return reservesModelWidth ? width - modelOffset : width;
     }
 }

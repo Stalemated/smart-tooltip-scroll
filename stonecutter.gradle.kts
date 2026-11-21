@@ -13,6 +13,7 @@ stonecutter parameters {
 
     constants {
         match(loader, "fabric", "neoforge", "forge")
+        putAll(COMPAT_PACKAGES.keys.associateWith { properties.getOrNull<String>("deps.$it") != null })
     }
 
     replacements {

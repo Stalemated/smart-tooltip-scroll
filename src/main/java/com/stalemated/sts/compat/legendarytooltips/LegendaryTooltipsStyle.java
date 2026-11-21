@@ -4,7 +4,7 @@ import com.anthonyhilyard.iceberg.util.Tooltips;
 import com.anthonyhilyard.legendarytooltips.config.LegendaryTooltipsConfig;
 import com.anthonyhilyard.legendarytooltips.tooltip.ItemModelComponent;
 import com.anthonyhilyard.legendarytooltips.tooltip.PaddingComponent;
-import com.stalemated.sts.compat.tierify.TierifyCompat;
+import com.stalemated.sts.compat.TierifyTooltip;
 import com.stalemated.sts.resize.TitleOverflowMode;
 import com.stalemated.sts.resize.TooltipStyle;
 import com.stalemated.sts.state.TooltipContexts;
@@ -39,7 +39,7 @@ public final class LegendaryTooltipsStyle implements TooltipStyle {
     public int modelOffset(ItemStack stack, List<ClientTooltipComponent> components) {
         if (stack == null || stack.isEmpty()) return 0;
         if (!LegendaryTooltipsConfig.showModelForItem(stack)) return 0;
-        if (TierifyCompat.isDrawing()) return ITEM_MODEL_WIDTH;
+        if (TierifyTooltip.isDrawing()) return ITEM_MODEL_WIDTH;
 
         List<ClientTooltipComponent> title = TooltipDraw.titleComponents();
         if (!title.isEmpty()) return containsItemModel(title) ? ITEM_MODEL_WIDTH : 0;
@@ -67,7 +67,7 @@ public final class LegendaryTooltipsStyle implements TooltipStyle {
         if (lines.size() <= 1 || line != lines.size() - 1) return 0;
 
         boolean hasModel = currentModelOffset() > 0;
-        if (TierifyCompat.isDrawing()) return hasModel ? 2 : 1;
+        if (TierifyTooltip.isDrawing()) return hasModel ? 2 : 1;
         return hasModel ? 0 : 1;
     }
 

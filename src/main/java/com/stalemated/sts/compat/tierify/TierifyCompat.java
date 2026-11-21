@@ -1,6 +1,7 @@
 package com.stalemated.sts.compat.tierify;
 
 import com.stalemated.sts.compat.LoadedMods;
+import com.stalemated.sts.compat.TierifyTooltip;
 import com.stalemated.sts.config.SmartTooltipScrollConfig;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.resize.TooltipLayout;
@@ -14,18 +15,12 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositione
 import java.util.List;
 
 public final class TierifyCompat {
-    private static boolean drawing;
-
     private TierifyCompat() {
-    }
-
-    public static boolean isDrawing() {
-        return drawing;
     }
 
     public static void beginDraw(GuiGraphics graphics, Font font, int x, int y, ClientTooltipPositioner positioner) {
         TooltipDraw.begin(graphics, font);
-        drawing = true;
+        TierifyTooltip.beginDraw();
         if (LoadedMods.TOOLTIP_OVERHAUL) TierifyTOBridge.captureState(graphics, font, x, y, positioner);
     }
 
@@ -55,7 +50,7 @@ public final class TierifyCompat {
     public static void endDraw(GuiGraphics graphics, List<ClientTooltipComponent> components) {
         if (LoadedMods.LEGENDARY_TOOLTIPS) TierifyLegendaryBridge.drawSeparator(graphics, components);
 
-        drawing = false;
+        TierifyTooltip.endDraw();
         TooltipDraw.end();
 
         if (LoadedMods.TOOLTIP_OVERHAUL) TierifyTOBridge.clearState();

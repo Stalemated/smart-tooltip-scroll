@@ -13,6 +13,7 @@ plugins {
     id("mod-publishing")
     id("slib")
     id("dev-mods")
+    id("compat-mods")
 }
 
 val modId = property("mod.id") as String
@@ -100,7 +101,7 @@ publishMods {
 
 tasks {
     processResources {
-        exclude("fabric.mod.json", "META-INF/neoforge.mods.toml")
+        exclude("fabric.mod.json", "META-INF/neoforge.mods.toml", "*-neoforge.mixins.json")
 
         val mixinConfigFiles = mixinConfigs.map { destinationDir.resolve(it) }
         val refmap = "$modId.refmap.json"
