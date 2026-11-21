@@ -140,10 +140,20 @@ deps.yacl = "3.6.6+1.20.6"
 mod.mc_compat = ">=1.20.5 <=1.20.6"
 deps.fabric_api = "0.100.8+1.20.6"
 deps.modmenu = "10.0.0"
+deps.legendary_tooltips = "maven.modrinth:legendary-tooltips:P7o2ppJw"
+deps.iceberg = "maven.modrinth:iceberg:xs03Scvd"
+deps.prism = "maven.modrinth:prism-lib:8JYabc0K"
+deps.forge_config_api_port = "maven.modrinth:forge-config-api-port:LDpciQaD"
+deps.emi = "dev.emi:emi-fabric:1.1.22+1.20.6"
+runtime.legendary_tooltips = ["legendary_tooltips", "iceberg", "prism", "forge_config_api_port"]
+runtime.iceberg = ["iceberg"]
+runtime.emi = ["emi"]
 
 [neoforge."1.20.6"]
 mod.mc_compat = "[1.20.5, 1.20.6]"
 deps.neo_loader = "20.6.141"
+deps.emi = "dev.emi:emi-neoforge:1.1.22+1.20.6"
+runtime.emi = ["emi"]
 
 
 ["1.21.1"]

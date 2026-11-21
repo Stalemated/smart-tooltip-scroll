@@ -38,11 +38,15 @@ implements ClientModInitializer
         registerTooltipEvent();
     }
 
-    //? if fabric {
+    //? if fabric && <1.20.5 {
     private static void registerTooltipEvent() {
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> onItemTooltip(stack));
     }
-    //?} elif forge {
+    //?} elif fabric {
+    /*private static void registerTooltipEvent() {
+        ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> onItemTooltip(stack));
+    }
+    *///?} elif forge {
     /*private static void registerTooltipEvent() {
         MinecraftForge.EVENT_BUS.addListener((ItemTooltipEvent event) -> onItemTooltip(event.getItemStack()));
     }
