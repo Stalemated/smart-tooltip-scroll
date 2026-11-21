@@ -1,6 +1,6 @@
 package com.stalemated.sts.forge;
 
-//? if forge {
+//? if forge || neoforge {
 /*import com.stalemated.lib.util.state.SharedTooltipState;
 import com.stalemated.sts.config.SmartTooltipScrollConfigRegistry;
 import com.stalemated.sts.state.TooltipContexts;

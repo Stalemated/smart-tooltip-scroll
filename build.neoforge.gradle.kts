@@ -11,9 +11,30 @@ plugins {
     id("mod-publishing")
     id("slib")
     id("dev-mods")
+    id("compat-mods")
+}
+
+val compatMods = listOf("legendary_tooltips", "iceberg", "prism", "emi", "tooltip_overhaul", "obscure_tooltips", "spell_engine")
+
+repositories {
+    exclusiveContent {
+        forRepository { maven("https://cursemaven.com") { name = "CurseMaven" } }
+        filter { includeGroup("curse.maven") }
+    }
+    exclusiveContent {
+        forRepository { maven("https://maven.terraformersmc.com/releases") { name = "TerraformersMC EMI" } }
+        filter { includeGroup("dev.emi") }
+    }
+    exclusiveContent {
+        forRepository { maven("https://raw.githubusercontent.com/ObscuriaLithium/modding/main/maven/") { name = "Obscuria" } }
+        filter { includeGroup("dev.obscuria") }
+    }
 }
 
 dependencies {
+    compatMods.forEach { mod -> findProperty("deps.$mod")?.let { compileOnly(it as String) } }
+    findProperty("deps.fragmentum")?.let { compileOnly(it as String) }
+
     testRuntimeOnly(files(sourceSets.main.get().runtimeClasspath))
     testRuntimeOnly("org.slf4j:slf4j-api:${property("deps.slf4j")}")
 }
@@ -56,7 +77,7 @@ if (providers.systemProperty("idea.sync.active").orNull == "true") {
 
 tasks {
     processResources {
-        exclude("fabric.mod.json", "META-INF/mods.toml", "pack.mcmeta")
+        exclude("fabric.mod.json", "META-INF/mods.toml", "pack.mcmeta", "*-forge.mixins.json")
 
         if (sc.current.parsed < "1.20.5") {
             filesMatching("META-INF/neoforge.mods.toml") { path = "META-INF/mods.toml" }

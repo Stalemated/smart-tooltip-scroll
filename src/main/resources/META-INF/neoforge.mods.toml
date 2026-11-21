@@ -17,23 +17,33 @@ displayURL = "${sources}"
 [[mixins]]
 config = "${id}.mixins.json"
 
+[[mixins]]
+config = "${id}-neoforge.mixins.json"
+
 [[dependencies.${id}]]
 modId = "neoforge"
 type = "required"
 versionRange = "${neoforge}"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
 
 [[dependencies.${id}]]
 modId = "minecraft"
 type = "required"
 versionRange = "${minecraft}"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
 
 [[dependencies.${id}]]
 modId = "s_lib"
 type = "required"
 versionRange = "[${slib},)"
 ordering = "AFTER"
-side = "BOTH"
+side = "CLIENT"
+
+[[dependencies.${id}]]
+modId = "yet_another_config_lib_v3"
+type = "optional"
+versionRange = "[3.6.2,)"
+ordering = "AFTER"
+side = "CLIENT"

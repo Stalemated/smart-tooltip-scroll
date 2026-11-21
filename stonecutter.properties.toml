@@ -111,11 +111,25 @@ deps.yacl = "3.6.6+1.20.4"
 mod.mc_compat = ">=1.20.2 <=1.20.4"
 deps.fabric_api = "0.97.1+1.20.4"
 deps.modmenu = "9.2.0"
+deps.legendary_tooltips = "maven.modrinth:legendary-tooltips:y08hPXLb"
+deps.iceberg = "maven.modrinth:iceberg:ZioCfzuX"
+deps.prism = "maven.modrinth:prism-lib:4PcfwwpA"
+deps.forge_config_api_port = "maven.modrinth:forge-config-api-port:xbVGsTLe"
+deps.emi = "dev.emi:emi-fabric:1.1.22+1.20.4"
+deps.puffish_skills = "maven.modrinth:skills:jZ3BAfWt"
+runtime.legendary_tooltips = ["legendary_tooltips", "iceberg", "prism", "forge_config_api_port"]
+runtime.iceberg = ["iceberg"]
+runtime.emi = ["emi"]
+runtime.puffish_skills = ["puffish_skills"]
 
 [neoforge."1.20.4"]
 mod.mc_releases = ["1.20.4"]
 mod.mc_compat = "[1.20.4]"
 deps.neo_loader = "20.4.251"
+deps.emi = "dev.emi:emi-neoforge:1.1.22+1.20.4"
+deps.puffish_skills = "maven.modrinth:skills:9DcPEFyU"
+runtime.emi = ["emi"]
+runtime.puffish_skills = ["puffish_skills"]
 
 
 ["1.20.6"]

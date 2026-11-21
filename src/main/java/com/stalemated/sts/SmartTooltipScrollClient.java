@@ -13,6 +13,9 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 //?} elif forge {
 /*import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+*///?} elif neoforge {
+/*import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 *///?}
 
 public final class SmartTooltipScrollClient //? if fabric
@@ -42,6 +45,10 @@ implements ClientModInitializer
     //?} elif forge {
     /*private static void registerTooltipEvent() {
         MinecraftForge.EVENT_BUS.addListener((ItemTooltipEvent event) -> onItemTooltip(event.getItemStack()));
+    }
+    *///?} elif neoforge {
+    /*private static void registerTooltipEvent() {
+        NeoForge.EVENT_BUS.addListener((ItemTooltipEvent event) -> onItemTooltip(event.getItemStack()));
     }
     *///?}
 
